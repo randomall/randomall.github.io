@@ -1,3 +1,3 @@
 ## Welcome to Random Chain
 
-Everything is coming soon.
+Coming soon.
