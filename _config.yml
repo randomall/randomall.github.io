@@ -10,10 +10,10 @@
 ############################
 
 # Name of website
-title: Randomall
+title: Lucy99
 
 # Your name to show in the footer
-author: Welike
+author: Lucy
 
 ###############################################
 # --- List of links in the navigation bar --- #
@@ -54,7 +54,7 @@ social-network-links:
 #  rss: true  # remove this line if you don't want to show an RSS link at the bottom
 #  facebook: deanattali
 #  github: daattali
-  X: welikenodes
+  Twitter: welikenodes
 #  patreon: DeanAttali
 #  youtube: "@daattali"
 #  medium: yourname
@@ -98,7 +98,7 @@ share-links-active:
 
 # How to display the link to your website in the footer
 # Remove this if you don't want a link in the footer
-url-pretty: "randomall.github.io"
+url-pretty: "Lucy's place"
 
 # Add the website title to the title of every page
 title-on-all-pages: true
