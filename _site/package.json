@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "firebase": "^10.8.0"
+  },
+  "name": "randomall.github.io",
+  "description": "- [Features](#features) - [Sponsors 🏆](#sponsors) - [**Build your website in 3 steps**](#build-your-website-in-3-steps) - [Plans](#plans) - [Add your own content](#add-your-own-content) - [Customizing parameters for each page](#customizing-parameters-for-each-page) - [Supported parameters](#supported-parameters) - [Featured users (success stories!)](#featured-users-success-stories) - [Next steps](#next-steps) - [Getting help](#getting-help) - [Credits and contributions](#contributions)",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode=development",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.90.1",
+    "webpack-cli": "^5.1.4"
+  }
+}
