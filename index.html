@@ -9,60 +9,7 @@ subtitle: This is my playground.
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
-
   </head>
 <body>
-
-  <button id="google-signin-btn">Sign in with Google</button>
-  
-    <!-- Add the Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-
-<!-- Initialize Firebase -->
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyDfBIXTHiGrUhv3rtBUgrGlIelxPMd1hGc",
-    authDomain: "randomall.firebaseapp.com",
-    projectId: "randomall",
-    appId: "1:16783300762:web:a9f6e5abddb6d37212a723"
-  };
-
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-
-  // Check if Firebase is initialized
-if (firebase && firebase.apps && firebase.apps.length > 0) {
-    console.log("Firebase is initialized");
-  } else {
-    console.log("Firebase is not initialized");
-  }
-
-  // Get a reference to the Google sign-in button
-const googleSignInBtn = document.getElementById('google-signin-btn');
-
-// Add a click event listener to the button
-googleSignInBtn.addEventListener('click', () => {
-  // Create a Google provider instance
-  const provider = new firebase.auth.GoogleAuthProvider();
-
-  // Sign in with Google
-  firebase.auth().signInWithPopup(provider)
-    .then((userCredential) => {
-      // Sign-in successful
-      const user = userCredential.user;
-      console.log('User signed in with Google:', user);
-      // Add any additional logic or redirection here
-    })
-    .catch((error) => {
-      // Sign-in failed
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.error('Google sign-in error:', errorCode, errorMessage);
-      // Display error message to the user or handle it accordingly
-    });
-});
-</script>
-
 </body>
 </html>
