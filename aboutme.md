@@ -1,10 +1,10 @@
 ---
 layout: page
 title: About me
-subtitle: Why you'd want to go on a date with me
+subtitle: Why you'd want to go on playing with me
 ---
 
-My name is **Lucy**. I'm trying to build a useful website.
+My name is **Lucy**. What can I help?
 
 ### Let's go
 
