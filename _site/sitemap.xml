@@ -14,6 +14,9 @@
 <loc>http://localhost:4000/</loc>
 </url>
 <url>
+<loc>http://localhost:4000/ipayu/</loc>
+</url>
+<url>
 <loc>http://localhost:4000/mywallet/</loc>
 </url>
 <url>
