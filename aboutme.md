@@ -8,4 +8,4 @@ My name is **Lucy**. I'm trying to build a useful website.
 
 ### Let's go
 
-* [AskLucy Bot](https://poe.com/AskLucy)
+* <a href="https://poe.com/AskLucy" target="_blank">Ask Me Anything</a>
