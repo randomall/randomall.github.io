@@ -1,5 +1,5 @@
 ---
 layout: page
+title: I pay U
+subtitle: What do you sell?
 ---
-
-### Sell me something and I'll pay U.
