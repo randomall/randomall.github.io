@@ -21,10 +21,11 @@ author: Lucy
 
 navbar-links:
   About Me: "aboutme"
-#  Resources:
-#    - Beautiful Jekyll: "https://beautifuljekyll.com"
-#    - Learn markdown: "https://www.markdowntutorial.com/"
-#  Author's home: "https://deanattali.com"
+  Resources:
+    - Asteroid Protocol: "https://asteroidprotocol.io/"
+    - Cosmos Network: "https://cosmos.network/"
+    - Osmosis: "https://osmosis.zone/"
+  #Author's home: "https://deanattali.com"
 
 ################
 # --- Logo --- #
