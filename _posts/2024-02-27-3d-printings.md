@@ -2,12 +2,13 @@
 layout: post
 title: My 3D Printings
 subtitle: Bambu Lab A1 Mini
-cover-img:/assets/img/GreenCup.jpg
-thumbnail-img:/assets/img/GreenCup.jpg
-share-img:/assets/img/GreenCup.jpg
+cover-img: /assets/img/GreenCup.jpg
+thumbnail-img: /assets/img/GreenCup.jpg
+share-img: /assets/img/GreenCup.jpg
 tags: [3D, Models]
 author: Matthew
 ---
+My 3D Printings
 
 ![Green Cup](/assets/img/GreenCup.jpg)
 
