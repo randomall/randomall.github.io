@@ -1,7 +1,7 @@
 ---
 layout: post
 title: My 3D Printings
-subtitle: By Bambu Lab A1 Mini
+subtitle: Bambu Lab A1 Mini
 cover-img:/assets/img/GreenCup.jpg
 thumbnail-img:/assets/img/GreenCup.jpg
 share-img:/assets/img/GreenCup.jpg
