@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>星座Codex</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#070b16; --star:#eef1f8; --muted:#8d93a8; --clay:#e0654a; --peri:#9fb0ff;
+  --line:rgba(190,200,230,.18); --line2:rgba(190,200,230,.09);
+  --surface:rgba(150,168,220,.05); --surface2:rgba(150,168,220,.09);
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:#070b16}
+body{
+  margin:0; background:transparent; color:var(--star); font-family:var(--sans);
+  line-height:1.55; -webkit-font-smoothing:antialiased;
+  padding:max(20px,5vw) max(18px,4.5vw) 64px; max-width:560px; margin:0 auto;
+}
+
+.sky{position:fixed; inset:0; z-index:-1; overflow:hidden;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -8%, rgba(86,72,170,.40), transparent 60%),
+    radial-gradient(circle at 14% 18%, rgba(44,96,150,.30), transparent 46%),
+    radial-gradient(circle at 88% 30%, rgba(126,64,128,.26), transparent 48%),
+    radial-gradient(ellipse 120% 60% at 50% 118%, rgba(20,90,104,.34), transparent 58%),
+    var(--bg);
+}
+.stars,.stars2{position:absolute; top:0; left:0; width:1px; height:1px; border-radius:50%; background:transparent; transform:translateZ(0)}
+.stars::after,.stars2::after{content:""; position:absolute; top:2000px; left:0; width:1px; height:1px; border-radius:50%; box-shadow:inherit}
+@keyframes drift{from{transform:translateY(0)}to{transform:translateY(-2000px)}}
+@keyframes tw{from{opacity:.5}to{opacity:1}}
+.stars{animation:drift 170s linear infinite, tw 6s ease-in-out infinite alternate}
+.stars2{animation:drift 100s linear infinite, tw 4.2s ease-in-out infinite alternate}
+
+.mono{font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--peri)}
+
+header{margin-bottom:26px}
+.brand{display:flex; align-items:baseline; gap:10px}
+h1{
+  font-family:"STXingkai","华文行楷","Xingkai SC","KaiTi","楷体","Segoe Print",cursive;
+  font-size:clamp(34px,10vw,50px); font-weight:500; letter-spacing:.08em; margin:0;
+  background:linear-gradient(110deg,#ffffff,#bcc6ff 55%,#f0d7c8);
+  background-size:220% 100%; -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation:shim 9s ease-in-out infinite;
+  text-shadow:0 0 22px rgba(188,198,255,.28), 0 0 46px rgba(224,101,74,.16);
+}
+@keyframes shim{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.tag{color:var(--muted); font-size:13px; margin:8px 2px 0}
+
+.panel{border:1px solid var(--line); background:var(--surface); padding:18px 16px 16px;
+  border-radius:2px; box-shadow:0 1px 0 rgba(255,255,255,.04) inset, 0 18px 50px rgba(0,0,0,.35)}
+.field{margin-bottom:14px}
+.field:last-of-type{margin-bottom:18px}
+label{display:block; margin-bottom:6px}
+.lab{font-family:var(--mono); font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted)}
+.opt{color:var(--clay); margin-left:6px; letter-spacing:0}
+input,select{
+  width:100%; font-family:var(--sans); font-size:16px; color:var(--star);
+  background:var(--surface2); border:1px solid var(--line); border-radius:2px;
+  padding:12px 12px; -webkit-appearance:none; appearance:none;
+}
+input::placeholder{color:var(--muted)}
+input:focus,select:focus{outline:none; border-color:var(--peri); box-shadow:0 0 0 3px rgba(159,176,255,.16)}
+.row{display:flex; gap:10px}
+.row .field{flex:1}
+.seg{display:flex; border:1px solid var(--line); border-radius:2px; overflow:hidden}
+.seg button{
+  flex:1; font-family:var(--sans); font-size:14px; padding:11px 4px; background:transparent;
+  border:none; border-right:1px solid var(--line); color:var(--muted); cursor:pointer;
+}
+.seg button:last-child{border-right:none}
+.seg button[aria-pressed="true"]{background:var(--clay); color:#fff; text-shadow:0 0 12px rgba(224,101,74,.6)}
+.go{
+  width:100%; font-family:var(--mono); font-size:13px; letter-spacing:.16em; text-transform:uppercase;
+  background:linear-gradient(120deg,#e0654a,#c9492f); color:#fff; border:none; border-radius:2px; padding:15px; cursor:pointer;
+  box-shadow:0 0 22px rgba(224,101,74,.38), 0 1px 0 rgba(255,255,255,.18) inset;
+}
+.go:active{filter:brightness(.92)}
+.go.alt{background:transparent; color:var(--star); border:1px solid var(--line); box-shadow:none}
+.go.alt:active{background:var(--surface2)}
+.hint{color:var(--clay); font-size:12.5px; margin:10px 2px 0; min-height:0}
+
+#out{margin-top:30px}
+.tabs{display:flex; border-bottom:1px solid var(--line); margin-bottom:20px; overflow-x:auto}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase;
+  background:none; border:none; color:var(--muted); padding:10px 2px 12px; margin-right:24px;
+  cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; white-space:nowrap; flex:0 0 auto;
+}
+.tabs button[aria-selected="true"]{color:var(--star); border-bottom-color:var(--clay); text-shadow:0 0 14px rgba(224,101,74,.4)}
+
+.sign-top{display:flex; align-items:center; gap:18px; margin-bottom:6px}
+.glyph{font-size:min(20vw,76px); line-height:.9; color:var(--clay); text-shadow:0 0 26px rgba(224,101,74,.55), 0 0 60px rgba(224,101,74,.25)}
+.sign-name{font-size:clamp(24px,7vw,30px); font-weight:650; margin:0}
+.sign-en{font-family:var(--mono); font-size:11px; letter-spacing:.18em; color:var(--peri); margin-top:5px}
+.sign-meta{font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:var(--muted); margin-top:4px}
+.oneline{font-size:17px; margin:18px 0 16px; line-height:1.55}
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px}
+.chip{font-size:13px; padding:5px 12px; border:1px solid var(--line); border-radius:2px; color:var(--star); background:var(--surface)}
+.facts{display:grid; grid-template-columns:1fr 1fr; border-top:1px solid var(--line)}
+.facts div{padding:13px 2px; border-bottom:1px solid var(--line2)}
+.facts div:nth-child(odd){border-right:1px solid var(--line2)}
+.facts .k{font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+.facts .v{font-size:15px; margin-top:3px}
+
+details{border-top:1px solid var(--line); margin-top:20px}
+summary{
+  list-style:none; cursor:pointer; padding:15px 2px; display:flex; align-items:center;
+  font-family:var(--mono); font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted);
+}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+"; color:var(--clay); font-size:16px; margin-right:10px; transform:translateY(-1px)}
+details[open] summary::before{content:"–"}
+.drawer{padding:2px 2px 20px; font-size:15px; line-height:1.7; color:#d6dae6}
+.drawer p{margin:0 0 12px}
+.drawer .sub{font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--peri); margin:0 0 4px}
+.drawer .blk{margin-bottom:14px}
+.drawer .chips{margin:8px 0 10px}
+.gemc{margin:0 0 4px; font-size:15px}
+.dot{display:inline-block; width:12px; height:12px; border-radius:50%; border:1px solid rgba(255,255,255,.5); vertical-align:-1px; margin-right:8px; box-shadow:0 0 8px rgba(255,255,255,.12)}
+
+.qbox{border-bottom:1px solid var(--line); padding-bottom:20px; margin-bottom:24px}
+.qhead{color:var(--muted); font-size:13.5px; margin:0 0 16px}
+
+.f-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:4px}
+.f-head h2{font-size:21px; font-weight:600; margin:0; white-space:nowrap}
+.f-date{font-family:var(--mono); font-size:11px; letter-spacing:.04em; color:var(--peri); text-align:right}
+.f-overall{font-size:14px; color:var(--muted); margin:0 0 22px}
+.f-card{border-top:1px solid var(--line); padding:16px 2px}
+.f-card:last-of-type{border-bottom:1px solid var(--line)}
+.f-card .top{display:flex; align-items:center; justify-content:space-between; margin-bottom:7px}
+.f-card .name{font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--star)}
+.stars-r{font-size:13px; letter-spacing:2px; color:var(--clay); text-shadow:0 0 12px rgba(224,101,74,.45)}
+.stars-r .e{color:rgba(190,200,230,.22); text-shadow:none}
+.f-card .say{font-size:15.5px; line-height:1.6}
+.lucky{display:grid; grid-template-columns:1fr 1fr; gap:0 16px; margin-top:22px; border-top:1px solid var(--line)}
+.lucky div{padding:13px 2px; border-bottom:1px solid var(--line2)}
+.lucky .k{font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+.lucky .v{font-size:15px; margin-top:3px}
+.note{font-size:13px; color:var(--muted); line-height:1.65; margin:20px 0 0}
+
+.hide{display:none}
+footer{margin-top:44px; font-family:var(--mono); font-size:10px; letter-spacing:.1em; color:var(--muted); text-transform:uppercase}
+@media(prefers-reduced-motion:no-preference){
+  #out>*{animation:rise .5s ease both}
+  @keyframes rise{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
+}
+@media(prefers-reduced-motion:reduce){ .stars,.stars2{animation:none; opacity:.85} h1{animation:none} }
+</style>
+</head>
+<body>
+<div class="sky" aria-hidden="true"><div class="stars" id="stars"></div><div class="stars2" id="stars2"></div></div>
+
+<header>
+  <div class="brand"><h1>星座Codex</h1></div>
+  <p class="tag">输入生辰看看星座的启示。</p>
+</header>
+
+<div class="panel">
+  <div class="field">
+    <label><span class="lab">出生日期</span></label>
+    <input type="date" id="bdate" min="1920-01-01" max="2035-12-31">
+  </div>
+  <div class="field">
+    <label><span class="lab">性别 <span class="opt">选填</span></span></label>
+    <div class="seg" id="sex">
+      <button type="button" data-v="她" aria-pressed="false">她</button>
+      <button type="button" data-v="他" aria-pressed="false">他</button>
+      <button type="button" data-v="ta" aria-pressed="false">不限</button>
+    </div>
+  </div>
+  <button class="go" id="go">查 询</button>
+  <p class="hint" id="hint"></p>
+</div>
+
+<section id="out" class="hide">
+  <div class="tabs">
+    <button id="t1" aria-selected="true" onclick="tab(1)">星座</button>
+    <button id="t2" aria-selected="false" onclick="tab(2)">今日启示</button>
+    <button id="t3" aria-selected="false" onclick="tab(3)">特定时空启示</button>
+  </div>
+  <div id="p1"></div>
+  <div id="p2" class="hide"></div>
+  <div id="p3" class="hide">
+    <div class="qbox">
+      <p class="qhead">挑一个时刻和地点,看那时那地的启示。</p>
+      <div class="field"><label><span class="lab">日期</span></label><input type="date" id="qdate" min="1900-01-01" max="2099-12-31"></div>
+      <div class="row">
+        <div class="field"><label><span class="lab">时间 <span class="opt">选填</span></span></label><input type="time" id="qtime"></div>
+        <div class="field"><label><span class="lab">地点 <span class="opt">选填</span></span></label><input type="text" id="qplace" placeholder="如 巴黎" autocomplete="off"></div>
+      </div>
+      <button class="go alt" id="qgo">看 启 示</button>
+      <p class="hint" id="qhint"></p>
+    </div>
+    <div id="p3out"></div>
+  </div>
+</section>
+
+<footer>SINGLE FILE · NO TRACKING · 仅供参考娱乐</footer>
+
+<script>
+const S=[
+ {k:'aries',cn:'白羊座',en:'ARIES',g:'♈',r:'3.21–4.19',el:'火象',pl:'火星',
+  line:'想到就去做,热情来得快、行动力满格。',kw:['直率','冲劲','勇敢'],
+  detail:'你是十二星座里的"先锋",对新鲜事毫无抵抗力,喜欢当第一个吃螃蟹的人。情绪写在脸上,不太会拐弯抹角。',
+  pro:'行动力强 · 坦诚 · 有领导欲',con:'三分钟热度 · 容易冲动',mt:'狮子 · 射手',
+  gemColor:'正红 · 赤橙',gemHex:'#c0392b',gem:['红玛瑙','石榴石','太阳石'],
+  gemNote:'暖而有劲的红系,传说能助燃行动力、稳住那股冲劲。'},
+ {k:'taurus',cn:'金牛座',en:'TAURUS',g:'♉',r:'4.20–5.20',el:'土象',pl:'金星',
+  line:'慢热但靠谱,喜欢看得见摸得着的安稳。',kw:['稳重','务实','有耐心'],
+  detail:'你对舒适和美食有执念,认定的事很难被说动。表面慢吞吞,其实心里那笔账算得很清楚。',
+  pro:'可靠 · 有耐心 · 审美在线',con:'有点固执 · 恋旧',mt:'处女 · 摩羯',
+  gemColor:'大地绿 · 奶咖',gemHex:'#4e7a52',gem:['绿幽灵','绿东陵','和田碧玉'],
+  gemNote:'沉稳的绿系,绿幽灵常被视作招正财、聚气安心的经典款。'},
+ {k:'gemini',cn:'双子座',en:'GEMINI',g:'♊',r:'5.21–6.21',el:'风象',pl:'水星',
+  line:'脑子转得快、嘴也快,走到哪儿都不冷场。',kw:['机灵','健谈','好奇'],
+  detail:'你是天生的话题发动机,信息一点就通,但也容易这山望着那山高。和你聊天,基本不会无聊。',
+  pro:'反应快 · 风趣 · 适应力强',con:'善变 · 注意力难集中',mt:'天秤 · 水瓶',
+  gemColor:'明黄 · 天蓝',gemHex:'#e6b422',gem:['黄水晶','蓝纹玛瑙','萤石'],
+  gemNote:'清亮的黄蓝,传说有助表达与沟通、让脑子更清爽。'},
+ {k:'cancer',cn:'巨蟹座',en:'CANCER',g:'♋',r:'6.22–7.22',el:'水象',pl:'月亮',
+  line:'心软又顾家,对在乎的人掏心掏肺。',kw:['温柔','念旧','体贴'],
+  detail:'你像个会移动的安全屋,记得每个人的喜好,也容易把别人的情绪揽到自己身上。家和回忆是你的充电站。',
+  pro:'有同理心 · 忠诚 · 会照顾人',con:'容易多想 · 情绪化',mt:'天蝎 · 双鱼',
+  gemColor:'月白 · 柔粉',gemHex:'#e3a3ad',gem:['月光石','粉晶','珍珠'],
+  gemNote:'温柔的白粉系,常被认为能柔化情绪、招来好人缘与温柔的缘分。'},
+ {k:'leo',cn:'狮子座',en:'LEO',g:'♌',r:'7.23–8.22',el:'火象',pl:'太阳',
+  line:'自带主角光环,大方又爱面子。',kw:['自信','慷慨','热情'],
+  detail:'你天生喜欢被看见,也愿意为身边人撑场子。被认可时能量爆棚,被忽略时会有点小失落。',
+  pro:'有魅力 · 大气 · 讲义气',con:'爱面子 · 偶尔强势',mt:'白羊 · 射手',
+  gemColor:'金黄 · 琥珀',gemHex:'#cf9b3a',gem:['金发晶','黄水晶','虎眼石'],
+  gemNote:'耀眼的金系,传说能旺气场、给自信加成、撑得起场面。'},
+ {k:'virgo',cn:'处女座',en:'VIRGO',g:'♍',r:'8.23–9.22',el:'土象',pl:'水星',
+  line:'细节控,什么都想做到刚刚好。',kw:['细致','务实','负责'],
+  detail:'你眼里容不下将就,习惯把事情拆解到位再动手。对自己要求高,有时也会不小心要求到别人头上。',
+  pro:'靠谱 · 有条理 · 肯付出',con:'爱操心 · 容易挑剔',mt:'金牛 · 摩羯',
+  gemColor:'橄榄绿 · 烟灰',gemHex:'#6e7a45',gem:['绿东陵','茶晶','和田碧玉'],
+  gemNote:'低饱和的绿与烟灰,常被用来静心、理顺思绪、少操点心。'},
+ {k:'libra',cn:'天秤座',en:'LIBRA',g:'♎',r:'9.23–10.23',el:'风象',pl:'金星',
+  line:'讲究平衡和美感,天生的和事佬。',kw:['优雅','公平','随和'],
+  detail:'你在意关系里的舒服与体面,擅长站在中间把话说漂亮。选择困难是你的小烦恼——因为每一边你都想顾到。',
+  pro:'有品味 · 好相处 · 会换位思考',con:'犹豫 · 怕冲突',mt:'双子 · 水瓶',
+  gemColor:'雾粉 · 浅紫',gemHex:'#cf9fc2',gem:['粉晶','紫水晶','海蓝宝'],
+  gemNote:'柔和的粉紫,传说招桃花、添和谐,衬天秤的好品味。'},
+ {k:'scorpio',cn:'天蝎座',en:'SCORPIO',g:'♏',r:'10.24–11.22',el:'水象',pl:'冥王星',
+  line:'外冷内热,认定的事一条道走到黑。',kw:['深情','专注','敏锐'],
+  detail:'你不轻易交心,一旦投入就是全部。直觉极准,看人入木三分,也记得清谁对你好、谁对你不好。',
+  pro:'专一 · 有洞察力 · 意志强',con:'爱钻牛角尖 · 占有欲强',mt:'巨蟹 · 双鱼',
+  gemColor:'墨黑 · 酒红',gemHex:'#7d2f3c',gem:['黑曜石','石榴石','拉长石'],
+  gemNote:'深色系,黑曜石常被当作护身定心的经典款,衬天蝎的神秘。'},
+ {k:'sagittarius',cn:'射手座',en:'SAGITTARIUS',g:'♐',r:'11.23–12.21',el:'火象',pl:'木星',
+  line:'爱自由爱远方,乐观得有点没心没肺。',kw:['乐观','爽朗','爱冒险'],
+  detail:'你的人生关键词是"出发",对世界永远好奇。讨厌被框住,说话直来直去,坏情绪也来得快、去得也快。',
+  pro:'豁达 · 真诚 · 有行动力',con:'大条 · 说话不过脑',mt:'白羊 · 狮子',
+  gemColor:'深蓝 · 松石绿',gemHex:'#2bb6a8',gem:['绿松石','青金石','紫水晶'],
+  gemNote:'辽阔的蓝绿,绿松石自古被视作旅人的护身石,呼应射手爱远行。'},
+ {k:'capricorn',cn:'摩羯座',en:'CAPRICORN',g:'♑',r:'12.22–1.19',el:'土象',pl:'土星',
+  line:'闷头爬坡的实干派,目标感拉满。',kw:['自律','务实','有耐力'],
+  detail:'你习惯把野心藏在沉默里,愿意为长远的事忍一时。不爱画饼,更信"先做出来再说"。',
+  pro:'靠谱 · 能扛事 · 有规划',con:'太较真 · 不太会放松',mt:'金牛 · 处女',
+  gemColor:'玄黑 · 深绿',gemHex:'#355c44',gem:['黑曜石','缟玛瑙','石榴石'],
+  gemNote:'厚重的黑绿,传说助沉稳专注、稳住毅力,陪摩羯长跑。'},
+ {k:'aquarius',cn:'水瓶座',en:'AQUARIUS',g:'♒',r:'1.20–2.18',el:'风象',pl:'天王星',
+  line:'想法清奇的"外星人",独立又博爱。',kw:['独立','创新','理性'],
+  detail:'你看世界的角度总和别人不太一样,讨厌随大流。重朋友、讲道理,但情感上偶尔有点抽离。',
+  pro:'有想法 · 不带偏见 · 够仗义',con:'固执己见 · 有点高冷',mt:'双子 · 天秤',
+  gemColor:'紫罗兰 · 冰蓝',gemHex:'#9b78c4',gem:['紫水晶','海蓝宝','白水晶'],
+  gemNote:'通透的紫蓝,常被认为助清醒理性、激发灵感,衬水瓶的独立。'},
+ {k:'pisces',cn:'双鱼座',en:'PISCES',g:'♓',r:'2.19–3.20',el:'水象',pl:'海王星',
+  line:'浪漫的造梦家,共情力满到溢出来。',kw:['温柔','感性','有想象力'],
+  detail:'你心里住着诗和远方,容易被故事和情绪打动。对人很软,有时分不清是同情还是心动。',
+  pro:'善良 · 有灵气 · 肯包容',con:'易逃避 · 心软到没原则',mt:'巨蟹 · 天蝎',
+  gemColor:'海蓝 · 梦紫',gemHex:'#5fb0c9',gem:['海蓝宝','紫水晶','月光石'],
+  gemNote:'梦幻的蓝紫,传说能安抚情绪、助灵感与好梦。'}
+];
+
+function signOf(m,d){
+ const x=m*100+d;
+ if(x>=321&&x<=419)return 'aries';
+ if(x>=420&&x<=520)return 'taurus';
+ if(x>=521&&x<=621)return 'gemini';
+ if(x>=622&&x<=722)return 'cancer';
+ if(x>=723&&x<=822)return 'leo';
+ if(x>=823&&x<=922)return 'virgo';
+ if(x>=923&&x<=1023)return 'libra';
+ if(x>=1024&&x<=1122)return 'scorpio';
+ if(x>=1123&&x<=1221)return 'sagittarius';
+ if(x>=1222||x<=119)return 'capricorn';
+ if(x>=120&&x<=218)return 'aquarius';
+ return 'pisces';
+}
+
+const F={
+ ov:{hi:['整体状态在线,想推进的事不妨往前迈一步。','气场顺手,见招拆招都比平时轻松些。','心态够稳,做决定时跟着直觉走多半不会错。'],
+     lo:['节奏慢一点没关系,把要紧的事做好就够了。','别跟自己较劲,留点余地反而走得更顺。','适合收一收锋芒,先观察、再出手。']},
+ lv:{hi:['桃花气场不错,主动一点也许有惊喜。','和在意的人多聊两句,默契会慢慢回来。','单身的话,留意身边那个眼熟的人。'],
+     lo:['感情上别急着要答案,给彼此一点空间。','容易因小事多想,先照顾好自己的情绪。','比起追问,更适合安静地陪伴。']},
+ cr:{hi:['思路清晰,适合处理需要拍板的事。','配合度高,你的意见会比平时更有分量。','灵感来得快,把想法随手记下来别让它溜走。'],
+     lo:['琐事偏多,先理清优先级再动手。','不必硬扛,适当求助会省下不少力气。','适合打基础、补细节,大动作可以缓一缓。']},
+ mn:{hi:['进账或意外小惊喜的概率比平时高一点。','适合做点长远的小规划,眼光放远些。','该花的别太抠,投资自己往往最划算。'],
+     lo:['钱包看紧些,冲动消费先放进购物车冷静一下。','大额决定不妨睡一觉再定。','适合记账、盘点,把漏掉的小钱找回来。']},
+ color:['陶土橙','雾霾蓝','奶油白','橄榄绿','暖姜黄','藕粉','墨黑','山岩灰','松石绿','砖红','燕麦色','深酒红'],
+ yi:['早起','散步十五分钟','整理桌面','主动联系老朋友','尝试一道新菜','早点睡','清空一项待办','给自己买杯好喝的'],
+ ji:['熬夜','冲动下单','钻牛角尖','翻旧账','答应得太满','久坐不动','跟自己较劲','报复性刷手机']
+};
+
+function h32(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function rng32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function pick(arr,r){return arr[Math.floor(r()*arr.length)];}
+function starStr(n){let s='';for(let i=0;i<5;i++)s+= i<n?'★':'<span class="e">★</span>';return s;}
+const pad=n=>String(n).padStart(2,'0');
+
+function field(n,maxx,glow){let a=[];for(let i=0;i<n;i++){const x=Math.floor(Math.random()*maxx),y=Math.floor(Math.random()*2000),c=['#fff','#cdd6ff','#bcd0ff','#ffe4d4'][Math.floor(Math.random()*4)];a.push(glow?`${x}px ${y}px 1px .3px ${c}`:`${x}px ${y}px ${c}`);}return a.join(',');}
+(function(){const w=Math.max(window.innerWidth,640);
+  document.getElementById('stars').style.boxShadow=field(130,w,false);
+  document.getElementById('stars2').style.boxShadow=field(46,w,true);})();
+
+let SEX='';
+document.querySelectorAll('#sex button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#sex button').forEach(x=>x.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true'); SEX=b.dataset.v;
+});
+
+let cur=null;
+function ageFrom(d){const t=new Date();let a=t.getFullYear()-d.getFullYear();if(t.getMonth()<d.getMonth()||(t.getMonth()===d.getMonth()&&t.getDate()<d.getDate()))a--;return a;}
+
+function eshiHTML(mode,s,age,seedStr,rightLabel){
+  const r=rng32(h32(seedStr));
+  const dims=[{key:'lv',name:'爱情'},{key:'cr',name:'事业'},{key:'mn',name:'财运'}];
+  const rolled=dims.map(dm=>{const st=2+Math.floor(r()*4);return{...dm,st,say:pick(F[dm.key][st>=3?'hi':'lo'],r)};});
+  const ov=Math.round(rolled.reduce((a,b)=>a+b.st,0)/3);
+  const ovSay=pick(F.ov[ov>=3?'hi':'lo'],r);
+  const color=pick(F.color,r), num=Math.floor(r()*9)+1, yi=pick(F.yi,r), ji=pick(F.ji,r);
+  const who=[s.cn, age>0?age+' 岁':'', SEX==='她'?'她':SEX==='他'?'他':''].filter(Boolean).join(' · ');
+  const title= mode==='today'?'今日启示':'特定时空启示';
+  const cards=[{name:'综合',st:ov,say:ovSay},...rolled].map(c=>`
+    <div class="f-card"><div class="top"><span class="name">${c.name}</span><span class="stars-r">${starStr(c.st)}</span></div><div class="say">${c.say}</div></div>`).join('');
+  const explain= mode==='today'
+   ? '今日启示根据「今天日期 + 你的星座 / 性别 / 年龄」在你手机本地算出来——同一个人当天结果固定,每天会换一批,纯属轻松参考。'
+   : '特定时空启示根据「你选的日期 / 时间 / 地点 + 你的星座 / 性别 / 年龄」在本地算出来——同一组输入结果固定,换个时空就换一批。';
+  return `
+   <div class="f-head"><h2>${title}</h2><span class="f-date">${rightLabel}</span></div>
+   <p class="f-overall">${who}</p>
+   ${cards}
+   <div class="lucky">
+     <div><div class="k">幸运色</div><div class="v">${color}</div></div>
+     <div><div class="k">幸运数字</div><div class="v">${num}</div></div>
+     <div><div class="k">宜</div><div class="v">${yi}</div></div>
+     <div><div class="k">忌</div><div class="v">${ji}</div></div>
+   </div>
+   <details><summary>这启示怎么来的?</summary><div class="drawer">
+     <p>${explain}</p>
+     <p>它不连任何占星服务,也不上传你的任何信息。真正的好日子,是你自己过出来的。</p>
+   </div></details>
+   <p class="note">※ 仅供娱乐参考,请别拿它做重要决定喔。</p>`;
+}
+
+function renderSign(s){const pron=SEX==='她'?'她':SEX==='他'?'他':'你';
+  document.getElementById('p1').innerHTML=`
+   <div class="sign-top">
+     <div class="glyph">${s.g}</div>
+     <div>
+       <p class="sign-name">${s.cn}</p>
+       <div class="sign-en">${s.en}</div>
+       <div class="sign-meta">${s.r}</div>
+     </div>
+   </div>
+   <p class="oneline">${s.line}</p>
+   <div class="chips">${s.kw.map(k=>`<span class="chip">${k}</span>`).join('')}</div>
+   <div class="facts">
+     <div><div class="k">元素</div><div class="v">${s.el}</div></div>
+     <div><div class="k">守护星</div><div class="v">${s.pl}</div></div>
+     <div><div class="k">优点</div><div class="v">${s.pro}</div></div>
+     <div><div class="k">需留意</div><div class="v">${s.con}</div></div>
+   </div>
+   <details>
+     <summary>展开看更多</summary>
+     <div class="drawer">
+       <div class="blk"><p class="sub">性格速写</p><p>${s.detail.replace(/你/g,pron)}</p></div>
+       <div class="blk">
+         <p class="sub">适合的颜色 × 天然石</p>
+         <p class="gemc"><span class="dot" style="background:${s.gemHex}"></span>${s.gemColor}</p>
+         <div class="chips">${s.gem.map(g=>`<span class="chip">${g}</span>`).join('')}</div>
+         <p>${s.gemNote}戴在自己手上提提气,挑这几款珠子送同星座的朋友也很合适。</p>
+       </div>
+       <div class="blk"><p class="sub">和谁比较合拍</p><p>${s.mt}(只是个轻松参考,合不合拍终究看相处。)</p></div>
+       <div class="blk"><p class="sub">小提醒</p><p>正好出生在星座交界那一两天?个别年份日期会差一天,以你常用的为准,也可以两个星座都看看。</p></div>
+     </div>
+   </details>`;
+}
+
+document.getElementById('go').onclick=()=>{
+  const v=document.getElementById('bdate').value;
+  const hint=document.getElementById('hint');
+  if(!v){hint.textContent='先选一下出生日期吧～'; return;}
+  hint.textContent='';
+  const [y,m,d]=v.split('-').map(Number);
+  const bd=new Date(y,m-1,d);
+  const sign=S.find(s=>s.k===signOf(m,d));
+  const age=ageFrom(bd);
+  cur={sign,age};
+  renderSign(sign);
+  const t=new Date(), ty=t.getFullYear(), tm=t.getMonth()+1, td=t.getDate();
+  const right=`${ty}/${pad(tm)}/${pad(td)}`;
+  const seed=`${ty}${tm}${td}|today|${sign.k}|${SEX}|${age}`;
+  document.getElementById('p2').innerHTML=eshiHTML('today',sign,age,seed,right);
+  const q=document.getElementById('qdate'); if(!q.value) q.value=`${ty}-${pad(tm)}-${pad(td)}`;
+  document.getElementById('p3out').innerHTML='';
+  document.getElementById('out').classList.remove('hide');
+  tab(1);
+  document.getElementById('out').scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+document.getElementById('qgo').onclick=()=>{
+  const qhint=document.getElementById('qhint');
+  if(!cur){qhint.textContent='先在上面查一下你的星座吧～'; return;}
+  const qv=document.getElementById('qdate').value;
+  if(!qv){qhint.textContent='挑个日期吧～'; return;}
+  qhint.textContent='';
+  const [qy,qm,qd]=qv.split('-').map(Number);
+  const qt=document.getElementById('qtime').value;
+  const qp=document.getElementById('qplace').value.trim();
+  const right=[`${qy}/${pad(qm)}/${pad(qd)}`, qt, qp].filter(Boolean).join(' · ');
+  const seed=`${qy}${qm}${qd}|spec|${qt}|${qp}|${cur.sign.k}|${SEX}|${cur.age}`;
+  const out=document.getElementById('p3out');
+  out.innerHTML=eshiHTML('spec',cur.sign,cur.age,seed,right);
+  out.scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+function tab(n){
+  [1,2,3].forEach(i=>{
+    document.getElementById('t'+i).setAttribute('aria-selected', i===n);
+    document.getElementById('p'+i).classList.toggle('hide', i!==n);
+  });
+}
+</script>
+</body>
+</html>
+
