@@ -14,15 +14,19 @@
       --bg-3: #0a0a1f;
       --fg: #f5f1e6;
       --gold: #f5e6a8;
+      --gold-soft: rgba(245, 230, 168, 0.7);
       --dim: #8a85a3;
-      --glow: rgba(245, 230, 168, 0.45);
+      --line: rgba(245, 230, 168, 0.18);
+      --line-strong: rgba(245, 230, 168, 0.4);
+      --card-bg: rgba(20, 16, 40, 0.55);
+      --card-hover: rgba(40, 30, 70, 0.65);
+      --shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
-      height: 100%;
-      overflow: hidden;
+      min-height: 100%;
       background: var(--bg-3);
       color: var(--fg);
       font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "SimSun", "Microsoft YaHei", serif;
@@ -32,13 +36,17 @@
 
     body {
       position: relative;
+      min-height: 100vh;
       background:
-        radial-gradient(ellipse at 50% 30%, rgba(75, 50, 110, 0.45) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 80%, rgba(40, 60, 110, 0.35) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 0%, rgba(75, 50, 110, 0.4) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 90%, rgba(40, 60, 110, 0.3) 0%, transparent 55%),
         linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 60%, var(--bg-3) 100%);
+      background-attachment: fixed;
+      padding-bottom: 4rem;
     }
 
-    .stars, .stars-far {
+    /* starfield */
+    .stars {
       position: fixed;
       inset: 0;
       pointer-events: none;
@@ -46,137 +54,343 @@
     }
     .star {
       position: absolute;
-      width: 2px;
-      height: 2px;
+      width: 2px; height: 2px;
       background: var(--fg);
       border-radius: 50%;
       opacity: 0;
       animation: twinkle 6s ease-in-out infinite;
     }
-    .star.big { width: 3px; height: 3px; box-shadow: 0 0 6px var(--glow); }
+    .star.big { width: 3px; height: 3px; box-shadow: 0 0 6px rgba(245,230,168,0.45); }
     .star.tiny { width: 1px; height: 1px; }
-
     @keyframes twinkle {
-      0%, 100% { opacity: 0.15; }
-      50%      { opacity: 0.95; }
+      0%, 100% { opacity: 0.12; }
+      50%      { opacity: 0.85; }
     }
 
-    .stage {
+    /* layout */
+    .wrap {
       position: relative;
       z-index: 1;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1.5rem;
-      text-align: center;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 3.5rem 1.25rem 0;
     }
 
+    header.hero {
+      text-align: center;
+      padding-bottom: 2.5rem;
+    }
+    h1 {
+      font-size: clamp(2.25rem, 7vw, 3.5rem);
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      padding-left: 0.3em;
+      color: var(--gold);
+      text-shadow:
+        0 0 16px rgba(245, 230, 168, 0.3),
+        0 0 36px rgba(245, 230, 168, 0.15);
+      animation: breathe 6s ease-in-out infinite;
+    }
+    .sub {
+      margin-top: 1rem;
+      font-size: clamp(0.85rem, 2.5vw, 1.05rem);
+      letter-spacing: 0.45em;
+      padding-left: 0.45em;
+      color: var(--fg);
+      opacity: 0.75;
+    }
     .ornament {
       width: 64px;
       height: 1px;
       background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
-      opacity: 0.6;
-      margin-bottom: 2.5rem;
-      animation: fadein 2s 0.2s ease both;
+      opacity: 0.5;
+      margin: 1.5rem auto;
     }
 
-    h1 {
-      font-size: clamp(3rem, 12vw, 6rem);
-      font-weight: 500;
+    /* section heading */
+    .section {
+      margin-top: 2.5rem;
+    }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .section-title {
+      font-size: 1.1rem;
       letter-spacing: 0.4em;
       padding-left: 0.4em;
-      color: var(--gold);
-      text-shadow:
-        0 0 18px rgba(245, 230, 168, 0.35),
-        0 0 40px rgba(245, 230, 168, 0.18);
-      animation:
-        fadein 2.4s ease both,
-        breathe 6s 2.4s ease-in-out infinite;
+      color: var(--gold-soft);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .section-title::before {
+      content: "";
+      width: 18px; height: 1px;
+      background: var(--line-strong);
     }
 
-    .sub {
-      margin-top: 2rem;
-      font-size: clamp(1rem, 3.5vw, 1.35rem);
-      letter-spacing: 0.5em;
-      padding-left: 0.5em;
+    /* grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      position: relative;
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1.25rem 1.1rem 1.1rem;
+      cursor: pointer;
+      transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 180px;
+      font-family: inherit;
+      color: inherit;
+      text-align: left;
+      width: 100%;
+    }
+    .card:hover, .card:focus-visible {
+      background: var(--card-hover);
+      border-color: var(--line-strong);
+      transform: translateY(-2px);
+      outline: none;
+    }
+    .card .icon {
+      font-size: 2.25rem;
+      line-height: 1;
+      margin-bottom: 0.85rem;
+      filter: drop-shadow(0 0 8px rgba(245, 230, 168, 0.2));
+    }
+    .card .name {
+      font-size: 1.05rem;
+      letter-spacing: 0.1em;
       color: var(--fg);
-      opacity: 0.82;
-      animation: fadein 2.4s 0.6s ease both;
+      margin-bottom: 0.35rem;
+    }
+    .card .cat {
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      padding-left: 0.3em;
+      color: var(--dim);
+      margin-bottom: 0.65rem;
+    }
+    .card .desc {
+      font-size: 0.85rem;
+      line-height: 1.55;
+      color: rgba(245, 241, 230, 0.7);
+      margin-top: auto;
+    }
+    .card .want {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.95rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      padding-left: 0.3em;
+      color: var(--gold-soft);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .card:hover .want, .card:focus-visible .want { opacity: 1; }
+
+    /* add card */
+    .card.add {
+      border: 1px dashed var(--line-strong);
+      background: transparent;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--gold-soft);
+      min-height: 180px;
+    }
+    .card.add:hover {
+      background: rgba(245, 230, 168, 0.04);
+    }
+    .card.add .plus {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      line-height: 1;
+    }
+    .card.add .label {
+      font-size: 0.9rem;
+      letter-spacing: 0.35em;
+      padding-left: 0.35em;
     }
 
-    .ornament.bottom {
-      margin-top: 2.75rem;
-      margin-bottom: 3rem;
-      animation-delay: 1s;
+    /* my wishes */
+    .mine {
+      margin-top: 0.5rem;
     }
-
-    .enter {
+    .mine-empty {
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--dim);
+      font-size: 0.95rem;
+      letter-spacing: 0.2em;
+      padding-left: 0.2em;
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+    }
+    .mine-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .mine-item {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.85rem 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+    .mine-item .micon { font-size: 1.4rem; flex-shrink: 0; }
+    .mine-item .mbody { flex: 1; min-width: 0; }
+    .mine-item .mname {
+      font-size: 0.98rem;
+      color: var(--fg);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .mine-item .mmeta {
+      font-size: 0.72rem;
+      color: var(--dim);
+      letter-spacing: 0.2em;
+      padding-left: 0.2em;
+      margin-top: 0.2rem;
+    }
+    .mine-item .mremove {
       background: none;
-      border: 1px solid rgba(245, 230, 168, 0.35);
+      border: none;
+      color: var(--dim);
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 0.3rem 0.5rem;
+      font-family: inherit;
+      transition: color 0.2s ease;
+    }
+    .mine-item .mremove:hover { color: var(--gold); }
+
+    /* modal */
+    .scrim {
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 7, 26, 0.7);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 10;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+    .scrim.show { display: flex; }
+    .modal {
+      background: linear-gradient(180deg, #1a1235 0%, #0f0a22 100%);
+      border: 1px solid var(--line-strong);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 460px;
+      padding: 1.75rem;
+    }
+    .modal h2 {
+      font-size: 1.15rem;
+      letter-spacing: 0.3em;
+      padding-left: 0.3em;
       color: var(--gold);
+      margin-bottom: 1.25rem;
+      font-weight: 500;
+    }
+    .field { margin-bottom: 0.9rem; }
+    .field label {
+      display: block;
+      font-size: 0.78rem;
+      letter-spacing: 0.25em;
+      padding-left: 0.25em;
+      color: var(--dim);
+      margin-bottom: 0.4rem;
+    }
+    .field input, .field textarea, .field select {
+      width: 100%;
+      background: rgba(7, 7, 26, 0.6);
+      border: 1px solid var(--line);
+      color: var(--fg);
+      padding: 0.6rem 0.75rem;
+      border-radius: 8px;
       font-family: inherit;
       font-size: 0.95rem;
-      letter-spacing: 0.4em;
-      padding: 0.7rem 1.6rem 0.7rem 2rem;
-      cursor: pointer;
-      border-radius: 999px;
-      transition: background 0.35s ease, border-color 0.35s ease, transform 0.2s ease;
-      animation:
-        fadein 2.4s 1.2s ease both,
-        glow 4s 1.2s ease-in-out infinite;
+      letter-spacing: 0.05em;
+      transition: border-color 0.2s ease;
     }
-    .enter:hover, .enter:focus {
-      background: rgba(245, 230, 168, 0.08);
-      border-color: var(--gold);
+    .field input:focus, .field textarea:focus, .field select:focus {
       outline: none;
-      transform: translateY(-1px);
+      border-color: var(--line-strong);
     }
-    .enter:active { transform: translateY(0); }
+    .field textarea { resize: vertical; min-height: 70px; }
 
-    .whisper {
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+    .btn {
+      background: none;
+      border: 1px solid var(--line);
+      color: var(--fg);
+      font-family: inherit;
+      font-size: 0.88rem;
+      letter-spacing: 0.3em;
+      padding: 0.55rem 1.2rem 0.55rem 1.5rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    }
+    .btn:hover { border-color: var(--line-strong); background: rgba(245, 230, 168, 0.05); }
+    .btn.primary {
+      color: var(--gold);
+      border-color: var(--line-strong);
+    }
+    .btn.primary:hover { background: rgba(245, 230, 168, 0.1); }
+
+    /* toast */
+    .toast {
       position: fixed;
       left: 50%;
-      bottom: calc(env(safe-area-inset-bottom, 0px) + 4rem);
+      bottom: 2rem;
       transform: translate(-50%, 1rem);
+      background: rgba(20, 14, 40, 0.92);
+      border: 1px solid var(--line-strong);
       color: var(--gold);
-      letter-spacing: 0.5em;
-      padding-left: 0.5em;
-      font-size: 0.95rem;
+      padding: 0.7rem 1.4rem 0.7rem 1.7rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      letter-spacing: 0.3em;
       opacity: 0;
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transition: opacity 0.5s ease, transform 0.5s ease;
       pointer-events: none;
+      z-index: 20;
+      box-shadow: var(--shadow);
     }
-    .whisper.show {
-      opacity: 0.85;
+    .toast.show {
+      opacity: 1;
       transform: translate(-50%, 0);
     }
 
-    footer {
-      position: fixed;
-      left: 0; right: 0;
-      bottom: calc(env(safe-area-inset-bottom, 0px) + 1.25rem);
-      text-align: center;
-      color: var(--dim);
-      font-size: 0.75rem;
-      letter-spacing: 0.35em;
-      padding-left: 0.35em;
-      opacity: 0.55;
-      animation: fadein 3s 2s ease both;
-    }
-
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
     @keyframes breathe {
-      0%, 100% { text-shadow: 0 0 18px rgba(245, 230, 168, 0.35), 0 0 40px rgba(245, 230, 168, 0.18); }
-      50%      { text-shadow: 0 0 28px rgba(245, 230, 168, 0.55), 0 0 60px rgba(245, 230, 168, 0.30); }
-    }
-    @keyframes glow {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 230, 168, 0.0); }
-      50%      { box-shadow: 0 0 24px 2px rgba(245, 230, 168, 0.18); }
+      0%, 100% { text-shadow: 0 0 16px rgba(245, 230, 168, 0.3), 0 0 36px rgba(245, 230, 168, 0.15); }
+      50%      { text-shadow: 0 0 24px rgba(245, 230, 168, 0.5), 0 0 52px rgba(245, 230, 168, 0.25); }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -185,32 +399,85 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.001ms !important;
       }
-      .star { opacity: 0.7; }
+      .star { opacity: 0.6; }
+    }
+
+    @media (max-width: 480px) {
+      .wrap { padding-top: 2.5rem; }
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+      .card { min-height: 160px; padding: 1rem 0.85rem 0.9rem; }
+      .card .icon { font-size: 1.9rem; }
+      .card .name { font-size: 0.95rem; }
+      .card .desc { font-size: 0.78rem; }
     }
   </style>
 </head>
 <body>
   <div class="stars" id="stars" aria-hidden="true"></div>
 
-  <main class="stage">
-    <div class="ornament" aria-hidden="true"></div>
+  <div class="wrap">
+    <header class="hero">
+      <h1>念想成真</h1>
+      <p class="sub">念念不忘&nbsp;&nbsp;必有回响</p>
+      <div class="ornament" aria-hidden="true"></div>
+    </header>
 
-    <h1 lang="zh-CN">念想成真</h1>
-    <p class="sub" lang="zh-CN">念念不忘&nbsp;&nbsp;必有回响</p>
+    <section class="section" aria-labelledby="cabinet-title">
+      <div class="section-head">
+        <h2 class="section-title" id="cabinet-title">念 想 橱 窗</h2>
+      </div>
+      <div class="grid" id="cabinet"></div>
+    </section>
 
-    <div class="ornament bottom" aria-hidden="true"></div>
+    <section class="section" aria-labelledby="mine-title">
+      <div class="section-head">
+        <h2 class="section-title" id="mine-title">我 的 念 想</h2>
+      </div>
+      <div class="mine" id="mine"></div>
+    </section>
+  </div>
 
-    <button class="enter" id="enter" type="button" aria-label="开始">开 始</button>
+  <!-- add wish modal -->
+  <div class="scrim" id="scrim" role="dialog" aria-modal="true" aria-labelledby="add-title">
+    <div class="modal">
+      <h2 id="add-title">添 加 念 想</h2>
+      <form id="add-form">
+        <div class="field">
+          <label for="f-name">名 称</label>
+          <input id="f-name" name="name" type="text" required maxlength="50" placeholder="想要的具体东西…">
+        </div>
+        <div class="field">
+          <label for="f-cat">类 别</label>
+          <select id="f-cat" name="category">
+            <option value="衣物">衣物</option>
+            <option value="书籍">书籍</option>
+            <option value="手串">手串</option>
+            <option value="票券">票券</option>
+            <option value="鲜花">鲜花</option>
+            <option value="饮品">饮品</option>
+            <option value="文具">文具</option>
+            <option value="其他" selected>其他</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-desc">描 述 (可选)</label>
+          <textarea id="f-desc" name="desc" maxlength="200" placeholder="颜色、款式、版本、风格…"></textarea>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn" id="cancel">取 消</button>
+          <button type="submit" class="btn primary">记 下</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-    <div class="whisper" id="whisper" lang="zh-CN" aria-live="polite">敬 请 期 待</div>
-  </main>
-
-  <footer lang="zh-CN">w c t · 念 想 成 真</footer>
+  <div class="toast" id="toast" aria-live="polite">已 为 你 记 下</div>
 
   <script>
     (function () {
+      // starfield
       const layer = document.getElementById('stars');
-      const count = window.innerWidth < 600 ? 70 : 130;
+      const count = window.innerWidth < 600 ? 50 : 90;
       const frag = document.createDocumentFragment();
       for (let i = 0; i < count; i++) {
         const s = document.createElement('span');
@@ -224,13 +491,150 @@
       }
       layer.appendChild(frag);
 
-      const enter = document.getElementById('enter');
-      const whisper = document.getElementById('whisper');
-      let timer;
-      enter.addEventListener('click', () => {
-        whisper.classList.add('show');
-        clearTimeout(timer);
-        timer = setTimeout(() => whisper.classList.remove('show'), 2400);
+      // preset items
+      const PRESETS = [
+        { id: 'p1', icon: '📖', name: '一本旧书',         category: '书籍', desc: '泛黄书页，扉页有人题过字。' },
+        { id: 'p2', icon: '🧥', name: '暖色长大衣',       category: '衣物', desc: '燕麦、驼色、奶白，独自走在风里也暖。' },
+        { id: 'p3', icon: '📿', name: '一条木质念珠手串', category: '手串', desc: '小叶紫檀或沉香木，常温有香。' },
+        { id: 'p4', icon: '🎬', name: '周末电影票',       category: '票券', desc: '一场不急着评分的午夜场。' },
+        { id: 'p5', icon: '💐', name: '一束应季鲜花',     category: '鲜花', desc: '随手包好，不必昂贵。' },
+        { id: 'p6', icon: '🍵', name: '一杯热茶',         category: '饮品', desc: '冷天的窗边，热气还没散。' }
+      ];
+
+      const KEY = 'wct.mine.v1';
+      const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
+      const save = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
+
+      // render presets
+      const cabinet = document.getElementById('cabinet');
+      const cabFrag = document.createDocumentFragment();
+      PRESETS.forEach(p => {
+        const b = document.createElement('button');
+        b.className = 'card';
+        b.type = 'button';
+        b.dataset.id = p.id;
+        b.innerHTML = `
+          <span class="want">想 要 →</span>
+          <span class="icon" aria-hidden="true">${p.icon}</span>
+          <div class="name">${p.name}</div>
+          <div class="cat">${p.category}</div>
+          <div class="desc">${p.desc}</div>
+        `;
+        b.addEventListener('click', () => addWish({
+          source: 'preset',
+          presetId: p.id,
+          icon: p.icon,
+          name: p.name,
+          category: p.category,
+          desc: p.desc
+        }));
+        cabFrag.appendChild(b);
+      });
+      // add-your-own card
+      const addCard = document.createElement('button');
+      addCard.className = 'card add';
+      addCard.type = 'button';
+      addCard.innerHTML = `<span class="plus" aria-hidden="true">+</span><span class="label">添 加 我 的 念 想</span>`;
+      addCard.addEventListener('click', openModal);
+      cabFrag.appendChild(addCard);
+      cabinet.appendChild(cabFrag);
+
+      // toast
+      const toast = document.getElementById('toast');
+      let toastTimer;
+      function showToast(text) {
+        toast.textContent = text;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+      }
+
+      // add wish
+      function addWish(item) {
+        const arr = load();
+        arr.unshift({ ...item, id: 'w' + Date.now() + Math.random().toString(36).slice(2,6), at: Date.now() });
+        save(arr);
+        renderMine();
+        showToast('已 为 你 记 下');
+      }
+
+      // my wishes render
+      const mine = document.getElementById('mine');
+      function fmtDate(ts) {
+        const d = new Date(ts);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}.${m}.${day}`;
+      }
+      function renderMine() {
+        const arr = load();
+        if (!arr.length) {
+          mine.innerHTML = `<div class="mine-empty">还 没 有 念 想 · 从 上 方 选 一 个 ， 或 自 己 添 加</div>`;
+          return;
+        }
+        const list = document.createElement('div');
+        list.className = 'mine-list';
+        arr.forEach(w => {
+          const row = document.createElement('div');
+          row.className = 'mine-item';
+          row.innerHTML = `
+            <span class="micon" aria-hidden="true">${w.icon || '✦'}</span>
+            <div class="mbody">
+              <div class="mname"></div>
+              <div class="mmeta"></div>
+            </div>
+            <button class="mremove" type="button" aria-label="移除" title="移除">×</button>
+          `;
+          row.querySelector('.mname').textContent = w.name;
+          row.querySelector('.mmeta').textContent = `${w.category || '其他'} · ${fmtDate(w.at)}`;
+          row.querySelector('.mremove').addEventListener('click', () => {
+            const cur = load().filter(x => x.id !== w.id);
+            save(cur);
+            renderMine();
+          });
+          list.appendChild(row);
+        });
+        mine.innerHTML = '';
+        mine.appendChild(list);
+      }
+      renderMine();
+
+      // modal
+      const scrim  = document.getElementById('scrim');
+      const form   = document.getElementById('add-form');
+      const cancel = document.getElementById('cancel');
+      const fname  = document.getElementById('f-name');
+
+      const ICON_BY_CAT = {
+        '衣物': '🧥', '书籍': '📖', '手串': '📿', '票券': '🎫',
+        '鲜花': '💐', '饮品': '🍵', '文具': '✒️', '其他': '✦'
+      };
+
+      function openModal() {
+        scrim.classList.add('show');
+        setTimeout(() => fname.focus(), 50);
+      }
+      function closeModal() {
+        scrim.classList.remove('show');
+        form.reset();
+      }
+      cancel.addEventListener('click', closeModal);
+      scrim.addEventListener('click', e => { if (e.target === scrim) closeModal(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && scrim.classList.contains('show')) closeModal(); });
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        const data = new FormData(form);
+        const name = (data.get('name') || '').toString().trim();
+        if (!name) return;
+        const category = data.get('category').toString();
+        const desc = (data.get('desc') || '').toString().trim();
+        addWish({
+          source: 'user',
+          icon: ICON_BY_CAT[category] || '✦',
+          name, category, desc
+        });
+        closeModal();
       });
     })();
   </script>
