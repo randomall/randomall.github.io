@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>念想成真</title>
-  <meta name="description" content="念想成真 · 念念不忘必有回响">
+  <title>念想兴义</title>
+  <meta name="description" content="念想兴义 · 在兴义说出你的念想，我们为你实现">
   <meta name="theme-color" content="#0a0a1f">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0a1f'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23f5e6a8'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%23f5e6a8' stroke-opacity='0.3'/%3E%3C/svg%3E">
   <style>
@@ -98,6 +98,12 @@
       padding-left: 0.45em;
       color: var(--fg);
       opacity: 0.75;
+    }
+    .lede {
+      margin-top: 0.9rem;
+      font-size: clamp(0.78rem, 2.2vw, 0.92rem);
+      color: var(--gold-soft);
+      opacity: 0.85;
     }
     .ornament {
       width: 64px;
@@ -417,8 +423,9 @@
 
   <div class="wrap">
     <header class="hero">
-      <h1>念想成真</h1>
+      <h1>念想兴义</h1>
       <p class="sub">念念不忘&nbsp;&nbsp;必有回响</p>
+      <p class="lede">在 兴 义 说 出 你 的 念 想 · 我 们 为 你 实 现</p>
       <div class="ornament" aria-hidden="true"></div>
     </header>
 
@@ -444,24 +451,24 @@
       <form id="add-form">
         <div class="field">
           <label for="f-name">名 称</label>
-          <input id="f-name" name="name" type="text" required maxlength="50" placeholder="想要的具体东西…">
+          <input id="f-name" name="name" type="text" required maxlength="50" placeholder="你想在兴义得到的东西…">
         </div>
         <div class="field">
           <label for="f-cat">类 别</label>
           <select id="f-cat" name="category">
-            <option value="衣物">衣物</option>
-            <option value="书籍">书籍</option>
-            <option value="手串">手串</option>
-            <option value="票券">票券</option>
-            <option value="鲜花">鲜花</option>
-            <option value="饮品">饮品</option>
-            <option value="文具">文具</option>
+            <option value="小吃">小吃</option>
+            <option value="景观">景观</option>
+            <option value="手作">手作</option>
+            <option value="特产">特产</option>
+            <option value="体验">体验</option>
+            <option value="民宿">民宿</option>
+            <option value="伴手礼">伴手礼</option>
             <option value="其他" selected>其他</option>
           </select>
         </div>
         <div class="field">
           <label for="f-desc">描 述 (可选)</label>
-          <textarea id="f-desc" name="desc" maxlength="200" placeholder="颜色、款式、版本、风格…"></textarea>
+          <textarea id="f-desc" name="desc" maxlength="200" placeholder="样子、份量、地点、时间…"></textarea>
         </div>
         <div class="actions">
           <button type="button" class="btn" id="cancel">取 消</button>
@@ -491,14 +498,14 @@
       }
       layer.appendChild(frag);
 
-      // preset items
+      // preset items — 兴义本地
       const PRESETS = [
-        { id: 'p1', icon: '📖', name: '一本旧书',         category: '书籍', desc: '泛黄书页，扉页有人题过字。' },
-        { id: 'p2', icon: '🧥', name: '暖色长大衣',       category: '衣物', desc: '燕麦、驼色、奶白，独自走在风里也暖。' },
-        { id: 'p3', icon: '📿', name: '一条木质念珠手串', category: '手串', desc: '小叶紫檀或沉香木，常温有香。' },
-        { id: 'p4', icon: '🎬', name: '周末电影票',       category: '票券', desc: '一场不急着评分的午夜场。' },
-        { id: 'p5', icon: '💐', name: '一束应季鲜花',     category: '鲜花', desc: '随手包好，不必昂贵。' },
-        { id: 'p6', icon: '🍵', name: '一杯热茶',         category: '饮品', desc: '冷天的窗边，热气还没散。' }
+        { id: 'p1', icon: '🍜', name: '一碗羊肉粉',         category: '小吃', desc: '清晨街角，热汤宽粉，鲜香扑面。' },
+        { id: 'p2', icon: '🌄', name: '万峰林日出',         category: '景观', desc: '万千锥峰之上，一缕薄雾，一线金光。' },
+        { id: 'p3', icon: '🧶', name: '布依族手工织锦',     category: '手作', desc: '土布扎染，一针一线，山水入纹。' },
+        { id: 'p4', icon: '🌿', name: '当地三七',           category: '特产', desc: '高山所植，根块结实，老茶配凉。' },
+        { id: 'p5', icon: '🥟', name: '一份鸡肉汤圆',       category: '小吃', desc: '咸口糯团，汤鲜肉嫩，外地难寻。' },
+        { id: 'p6', icon: '🛶', name: '马岭河峡谷漂流',     category: '体验', desc: '青壁千仞，溪流跌宕，一程清凉。' }
       ];
 
       const KEY = 'wct.mine.v1';
@@ -607,8 +614,8 @@
       const fname  = document.getElementById('f-name');
 
       const ICON_BY_CAT = {
-        '衣物': '🧥', '书籍': '📖', '手串': '📿', '票券': '🎫',
-        '鲜花': '💐', '饮品': '🍵', '文具': '✒️', '其他': '✦'
+        '小吃': '🍜', '景观': '🌄', '手作': '🧶', '特产': '🌿',
+        '体验': '🛶', '民宿': '🏮', '伴手礼': '🎁', '其他': '✦'
       };
 
       function openModal() {
