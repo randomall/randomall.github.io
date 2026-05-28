@@ -478,13 +478,13 @@
         <div class="field">
           <label for="f-cat">类 别</label>
           <select id="f-cat" name="category">
-            <option value="小吃">小吃</option>
-            <option value="景观">景观</option>
-            <option value="手作">手作</option>
-            <option value="特产">特产</option>
-            <option value="体验">体验</option>
-            <option value="民宿">民宿</option>
-            <option value="伴手礼">伴手礼</option>
+            <option value="饮品">饮品</option>
+            <option value="美食">美食</option>
+            <option value="礼金">礼金</option>
+            <option value="鲜花">鲜花</option>
+            <option value="手串">手串</option>
+            <option value="衣物">衣物</option>
+            <option value="配饰">配饰</option>
             <option value="其他" selected>其他</option>
           </select>
         </div>
@@ -520,14 +520,16 @@
       }
       layer.appendChild(frag);
 
-      // preset items — 兴义本地
+      // preset items
       const PRESETS = [
-        { id: 'p1', icon: '🍜', name: '一碗羊肉粉',         category: '小吃', desc: '清晨街角，热汤宽粉，鲜香扑面。' },
-        { id: 'p2', icon: '🌄', name: '万峰林日出',         category: '景观', desc: '万千锥峰之上，一缕薄雾，一线金光。' },
-        { id: 'p3', icon: '🧶', name: '布依族手工织锦',     category: '手作', desc: '土布扎染，一针一线，山水入纹。' },
-        { id: 'p4', icon: '🌿', name: '当地三七',           category: '特产', desc: '高山所植，根块结实，老茶配凉。' },
-        { id: 'p5', icon: '🥟', name: '一份鸡肉汤圆',       category: '小吃', desc: '咸口糯团，汤鲜肉嫩，外地难寻。' },
-        { id: 'p6', icon: '🛶', name: '马岭河峡谷漂流',     category: '体验', desc: '青壁千仞，溪流跌宕，一程清凉。' }
+        { id: 'p1', icon: '🧋', name: '一杯奶茶',       category: '饮品', desc: '甜甜的，一口下去什么都好了。' },
+        { id: 'p2', icon: '🥩', name: '一份好吃的牛排', category: '美食', desc: '三分熟，带点微焦，刀切开的声音。' },
+        { id: 'p3', icon: '🧧', name: '一个红包',       category: '礼金', desc: '数字不重要，心意最重要。' },
+        { id: 'p4', icon: '💐', name: '一束鲜花',       category: '鲜花', desc: '随手一束，放在窗台上最好看。' },
+        { id: 'p5', icon: '💚', name: '一条绿幽灵手串', category: '手串', desc: '透绿幽深，一粒粒戴着安静。' },
+        { id: 'p6', icon: '👗', name: '一条小黑裙',     category: '衣物', desc: '哪里都能穿，什么时候都对。' },
+        { id: 'p7', icon: '🕶️', name: '一副墨镜',       category: '配饰', desc: '夏日街头，戴上什么都有型。' },
+        { id: 'p8', icon: '🍸', name: '一杯调酒',       category: '饮品', desc: '一杯好酒，今晚慢慢喝。' }
       ];
 
       const KEY = 'wct.mine.v1';
@@ -636,8 +638,8 @@
       const fname  = document.getElementById('f-name');
 
       const ICON_BY_CAT = {
-        '小吃': '🍜', '景观': '🌄', '手作': '🧶', '特产': '🌿',
-        '体验': '🛶', '民宿': '🏮', '伴手礼': '🎁', '其他': '✦'
+        '饮品': '🧋', '美食': '🍽️', '礼金': '🧧', '鲜花': '💐',
+        '手串': '💚', '衣物': '👗', '配饰': '🕶️', '其他': '✦'
       };
 
       function openModal() {
