@@ -1,13 +1,65 @@
----
-layout: default
-title: 404 - Page not found
-permalink: /404.html
----
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 — randomall</title>
+  <meta name="robots" content="noindex">
+  <style>
+    :root {
+      --bg: #0b0f0a;
+      --fg: #e6e6e6;
+      --dim: #6b7a6b;
+      --accent: #50fa7b;
+      --accent-hover: #8aff9f;
+      --err: #ff6b6b;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); }
+    body {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 2rem 1.25rem 4rem;
+      display: flex;
+      justify-content: center;
+    }
+    main { width: 100%; max-width: 640px; }
+    .prompt { color: var(--accent); user-select: none; margin-right: 0.5ch; }
+    .err { color: var(--err); }
+    h1 { font-size: 1rem; font-weight: normal; margin: 0 0 1.5rem; }
+    .block { margin: 0 0 1.75rem; }
+    .block p { margin: 0; }
+    a { color: var(--fg); }
+    a:hover { color: var(--accent-hover); }
+    .cursor {
+      display: inline-block;
+      width: 0.6ch;
+      height: 1em;
+      background: var(--accent);
+      vertical-align: -2px;
+      animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink { 50% { background: transparent; } }
+    @media (prefers-reduced-motion: reduce) {
+      .cursor { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1><span class="prompt">$</span>cat /requested/page</h1>
+    <div class="block">
+      <p class="err">error: 404 — no such file or directory</p>
+    </div>
 
-<div class="text-center">
-  <h1>Whoops, this page doesn't exist.</h1>
-  <h1>Move along. (404 error)</h1>
-  <br/>
+    <h1><span class="prompt">$</span>cd ~</h1>
+    <div class="block">
+      <p><a href="/">→ back to home</a></p>
+    </div>
 
-  <img src="{{ 'assets/img/404-southpark.jpg' | relative_url }}" alt="Not found" />
-</div>
+    <p><span class="prompt">$</span><span class="cursor" aria-hidden="true"></span></p>
+  </main>
+</body>
+</html>

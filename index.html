@@ -1,15 +1,127 @@
----
-layout: home
-title: Lucy
-subtitle: This is my playground.
----
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>randomall</title>
+  <meta name="description" content="randomall — links and projects.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230b0f0a'/%3E%3Ctext x='2' y='12' font-family='monospace' font-size='12' fill='%2350fa7b'%3E%3E%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #0b0f0a;
+      --fg: #e6e6e6;
+      --dim: #6b7a6b;
+      --accent: #50fa7b;
+      --accent-hover: #8aff9f;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); }
+    body {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 2rem 1.25rem 4rem;
+      display: flex;
+      justify-content: center;
+    }
+    main {
+      width: 100%;
+      max-width: 640px;
+    }
+    .prompt { color: var(--accent); user-select: none; margin-right: 0.5ch; }
+    .cmd    { color: var(--fg); }
+    .out    { color: var(--fg); }
+    .dim    { color: var(--dim); }
+
+    h1 {
+      font-size: 1rem;
+      font-weight: normal;
+      margin: 0 0 1.5rem;
+      letter-spacing: 0;
+    }
+    .block { margin: 0 0 1.75rem; }
+    .block p { margin: 0; }
+
+    ul.links {
+      list-style: none;
+      padding: 0;
+      margin: 0.25rem 0 0;
+    }
+    ul.links li { padding: 0; }
+    ul.links a {
+      color: var(--fg);
+      text-decoration: none;
+      display: inline-block;
+      padding: 0.05rem 0;
+      border-bottom: 1px solid transparent;
+    }
+    ul.links a::before {
+      content: "→ ";
+      color: var(--dim);
+    }
+    ul.links a:hover,
+    ul.links a:focus {
+      color: var(--accent-hover);
+      border-bottom-color: var(--accent-hover);
+      outline: none;
+    }
+    ul.links a:hover::before,
+    ul.links a:focus::before {
+      color: var(--accent-hover);
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 0.6ch;
+      height: 1em;
+      background: var(--accent);
+      vertical-align: -2px;
+      animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink { 50% { background: transparent; } }
+
+    footer {
+      margin-top: 2.5rem;
+      color: var(--dim);
+      font-size: 0.85rem;
+    }
+    footer a { color: var(--dim); }
+    footer a:hover { color: var(--accent-hover); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cursor { animation: none; }
+    }
+  </style>
 </head>
 <body>
+  <main>
+    <h1><span class="prompt">$</span><span class="cmd">whoami</span></h1>
+
+    <div class="block">
+      <p class="out">randomall</p>
+    </div>
+
+    <h1><span class="prompt">$</span><span class="cmd">ls links/</span></h1>
+
+    <div class="block">
+      <!--
+        Edit this list to add your links. Each entry is:
+          <li><a href="URL">label</a></li>
+        Add or remove <li>s freely.
+      -->
+      <ul class="links">
+        <li><a href="#">link-1</a></li>
+        <li><a href="#">link-2</a></li>
+        <li><a href="#">link-3</a></li>
+      </ul>
+    </div>
+
+    <p><span class="prompt">$</span><span class="cursor" aria-hidden="true"></span></p>
+
+    <footer>
+      <span class="dim"># </span><a href="https://github.com/randomall">github.com/randomall</a>
+    </footer>
+  </main>
 </body>
 </html>
