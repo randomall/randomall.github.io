@@ -54,6 +54,16 @@ header{display:flex;align-items:center;gap:10px;padding:8px 14px;
   border:1.5px solid var(--border);border-radius:7px;cursor:pointer;
   background:var(--surface2);color:var(--muted);transition:all .15s;min-height:30px}
 .sbtn.active{border-color:var(--accent);color:var(--accent);background:rgba(200,160,96,.12)}
+.wrist-row{display:flex;align-items:center;gap:8px;padding:6px 12px;
+  border-bottom:1px solid var(--border);flex-shrink:0;font-size:12px}
+.wrist-label{color:var(--muted);flex-shrink:0}
+.wrist-val{color:var(--accent);font-weight:700;min-width:48px;text-align:center}
+.wbtn{background:var(--surface2);border:1px solid var(--border);border-radius:6px;
+  width:28px;height:28px;cursor:pointer;color:var(--text);font-size:16px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:background .15s;line-height:1}
+.wbtn:hover{background:var(--accent);color:#000;border-color:var(--accent)}
+.wrist-info{font-size:10px;color:var(--muted);flex:1;text-align:right}
 
 .bead-strip{display:flex;gap:8px;padding:8px 12px;
   overflow-x:auto;scrollbar-width:none;align-items:center;flex-shrink:0;min-height:82px}
@@ -96,6 +106,7 @@ header{display:flex;align-items:center;gap:10px;padding:8px 14px;
     border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0}
   .size-strip{flex-direction:column;border-bottom:none;border-top:1px solid var(--border);
     overflow-x:visible;overflow-y:visible;flex-wrap:wrap;gap:4px;padding:8px}
+  .wrist-row{flex-wrap:wrap;}
   .sbtn{flex:none}
   .bead-strip{flex-direction:column;overflow-y:auto;overflow-x:hidden;
     min-height:0;padding:8px;flex:1}
@@ -125,6 +136,13 @@ header{display:flex;align-items:center;gap:10px;padding:8px 14px;
   <!-- Left / Bottom: palette -->
   <div class="bottom-bar" id="paletteBar">
     <div class="size-strip" id="sizeStrip"></div>
+    <div class="wrist-row">
+      <span class="wrist-label">手围</span>
+      <button class="wbtn" id="wristMinus">−</button>
+      <span class="wrist-val" id="wristVal">16.5cm</span>
+      <button class="wbtn" id="wristPlus">+</button>
+      <span class="wrist-info" id="wristInfo"></span>
+    </div>
     <div class="bead-strip" id="beadStrip"></div>
   </div>
 
@@ -237,8 +255,13 @@ const ACCESSORIES = [
 ];
 
 const SIZES = [4,6,8,10,12,14,16];
-const BEAD_COUNTS = {4:40,6:27,8:20,10:16,12:13,14:11,16:10};
 const WRIST_R = 26;
+// Wrist circumference range (mm), step 5mm
+const WRIST_MIN = 130, WRIST_MAX = 220, WRIST_STEP = 5;
+function beadCount(sizeMm, wristMm) {
+  // beads fit around the circumference with ~2% gap
+  return Math.max(3, Math.floor((wristMm * 1.02) / sizeMm));
+}
 
 // ══════════════════════════════════════════════════════════
 //  STATE
@@ -246,12 +269,21 @@ const WRIST_R = 26;
 const state = {
   selectedId: null,
   sizeMm: 8,
+  wristMm: 165,
   slots: [],
   viewMode: 'product',
   autoRotate: true,
   rendered: false,
 };
-function initSlots(){const n=BEAD_COUNTS[state.sizeMm];const old=state.slots.slice();state.slots=Array.from({length:n},(_,i)=>old[i]??null);}
+function initSlots(){
+  const n=beadCount(state.sizeMm, state.wristMm);
+  const old=state.slots.slice();
+  state.slots=Array.from({length:n},(_,i)=>old[i]??null);
+}
+function updateWristUI(){
+  document.getElementById('wristVal').textContent=(state.wristMm/10).toFixed(1)+'cm';
+  document.getElementById('wristInfo').textContent=`${beadCount(state.sizeMm,state.wristMm)}颗`;
+}
 
 // ══════════════════════════════════════════════════════════
 //  TEXTURE GENERATORS
@@ -542,9 +574,10 @@ function buildPalette(){
 function buildSizes(){
   const strip=document.getElementById('sizeStrip');strip.innerHTML='';
   SIZES.forEach(s=>{
+    const n=beadCount(s,state.wristMm);
     const btn=document.createElement('button');btn.className='sbtn'+(s===state.sizeMm?' active':'');
-    btn.textContent=s+'mm';
-    btn.addEventListener('click',()=>{state.sizeMm=s;initSlots();buildSizes();drawTray();updateCount();if(state.rendered)buildBracelet();});
+    btn.textContent=`${s}mm`;btn.title=`${n}颗`;
+    btn.addEventListener('click',()=>{state.sizeMm=s;initSlots();buildSizes();updateWristUI();drawTray();updateCount();if(state.rendered)buildBracelet();});
     strip.appendChild(btn);
   });
 }
@@ -555,6 +588,15 @@ function selectBead(id){
 }
 
 function updateCount(){const t=state.slots.filter(Boolean).length;document.getElementById('beadCountLbl').textContent=`${t} / ${state.slots.length} 颗珠子`;}
+
+// ── Wrist size ─────────────────────────────────────────────
+function changeWrist(delta){
+  state.wristMm=Math.max(WRIST_MIN,Math.min(WRIST_MAX,state.wristMm+delta));
+  initSlots();updateWristUI();buildSizes();drawTray();updateCount();
+  if(state.rendered)buildBracelet();
+}
+document.getElementById('wristMinus').addEventListener('click',()=>changeWrist(-WRIST_STEP));
+document.getElementById('wristPlus').addEventListener('click',()=>changeWrist(WRIST_STEP));
 
 // ── Controls ───────────────────────────────────────────────
 document.getElementById('clearBtn').addEventListener('click',()=>{state.slots.fill(null);drawTray();updateCount();if(state.rendered)buildBracelet();});
@@ -582,7 +624,7 @@ ro.observe(document.getElementById('trayArea'));
 ro.observe(document.getElementById('preview3D'));
 
 // ── Init ───────────────────────────────────────────────────
-initSlots();buildPalette();buildSizes();resizeTray();resizeRenderer();drawTray();updateCount();
+initSlots();buildPalette();buildSizes();updateWristUI();resizeTray();resizeRenderer();drawTray();updateCount();
 </script>
 </body>
 </html>
