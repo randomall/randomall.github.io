@@ -183,6 +183,46 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 // ══════════════════════════════════════════════════════════
+//  REAL MINERAL PHOTO URLS (Wikipedia Commons, CC licensed)
+// ══════════════════════════════════════════════════════════
+const W = 'https://upload.wikimedia.org/wikipedia/commons/thumb/';
+const BEAD_PHOTOS = {
+  green_phantom: W+'6/6a/QuartzFantome.jpg/512px-QuartzFantome.jpg',
+  rose_quartz:   W+'3/3a/Rose_quartz_12.jpg/512px-Rose_quartz_12.jpg',
+  clear_quartz:  W+'2/2f/Pure_Quartz_at_Senckenberg_Natural_History_Museum.jpg/512px-Pure_Quartz_at_Senckenberg_Natural_History_Museum.jpg',
+  amethyst:      W+'b/b5/Amatista_Laye_2.jpg/512px-Amatista_Laye_2.jpg',
+  citrine:       W+'d/d0/Citrine_taillee.jpg/512px-Citrine_taillee.jpg',
+  aquamarine:    W+'6/6e/Aquamarine_P1000141.JPG/512px-Aquamarine_P1000141.JPG',
+  smoky:         W+'3/32/Smoky-quartz-TUCQTZ09-03-arkenstone-irocks.png/512px-Smoky-quartz-TUCQTZ09-03-arkenstone-irocks.png',
+  moonstone:     W+'f/fe/AdulaireSuisse2.jpg/512px-AdulaireSuisse2.jpg',
+  strawberry:    W+'3/3a/Rose_quartz_12.jpg/512px-Rose_quartz_12.jpg',
+  garnet:        W+'5/5e/Garnet_Andradite20.jpg/512px-Garnet_Andradite20.jpg',
+  rutile_gold:   W+'8/8b/Quartz-159777.jpg/512px-Quartz-159777.jpg',
+  obsidian:      W+'1/17/Lipari-Obsidienne_%285%29.jpg/512px-Lipari-Obsidienne_%285%29.jpg',
+  blue_goldstone:W+'4/4e/Tumble_Polished_Blue_Goldstone_.JPG/512px-Tumble_Polished_Blue_Goldstone_.JPG',
+  red_goldstone: W+'9/92/Goldfluss_%28Aventuringlas%29.jpg/512px-Goldfluss_%28Aventuringlas%29.jpg',
+  tigers_eye:    W+'b/be/Tiger%27s_eye.jpg/512px-Tiger%27s_eye.jpg',
+  lapis:         W+'d/da/Lapis-lazuli_hg.jpg/512px-Lapis-lazuli_hg.jpg',
+  turquoise:     W+'7/7d/Turquoise-40031.jpg/512px-Turquoise-40031.jpg',
+  red_agate:     W+'2/26/Malawi_Agate_%28Malawi%2C_southeastern_Africa%29_%2832734668126%29.jpg/512px-Malawi_Agate_%28Malawi%2C_southeastern_Africa%29_%2832734668126%29.jpg',
+  malachite:     W+'5/55/Malachite%2C_Zaire.jpg/512px-Malachite%2C_Zaire.jpg',
+  labradorite:   W+'3/38/Labradorite_polie_3%28Madagascar%29.jpg/512px-Labradorite_polie_3%28Madagascar%29.jpg',
+};
+const loadedImgs = {}; // id → HTMLImageElement
+const loadedTex  = {}; // id → THREE.Texture
+
+async function preloadPhotos() {
+  await Promise.all(Object.entries(BEAD_PHOTOS).map(([id,url])=>
+    new Promise(res=>{
+      const img=new Image(); img.crossOrigin='anonymous';
+      img.onload=()=>{loadedImgs[id]=img;res();};
+      img.onerror=()=>res(); // graceful fallback to gradient
+      img.src=url;
+    })
+  ));
+}
+
+// ══════════════════════════════════════════════════════════
 //  BEAD DATABASE
 // ══════════════════════════════════════════════════════════
 const BEADS = [
@@ -357,26 +397,61 @@ function drawBead2D(ctx,cx,cy,r,id,hover){
   }
   const bead=BEADS.find(b=>b.id===id)||ACCESSORIES.find(a=>a.id===id);
   if(!bead)return;
-  ctx.save();ctx.shadowColor='rgba(0,0,0,.55)';ctx.shadowBlur=r*.65;ctx.shadowOffsetY=r*.22;
+
+  // Shadow
+  ctx.save();
+  ctx.shadowColor='rgba(0,0,0,.6)';ctx.shadowBlur=r*.7;ctx.shadowOffsetY=r*.25;
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle='#000';ctx.fill();
+  ctx.restore();
+
+  // Clip to circle
+  ctx.save();
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.clip();
+
   if(bead.icon){
-    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
     ctx.fillStyle=bead.shape==='spacer'?(bead.color===0xc8a040?'#c8a040':'#c0c0c0'):'#909090';
     ctx.fill();
   } else {
-    const{g,alpha}=bead.tray;
-    const grad=ctx.createRadialGradient(cx-r*.37,cy-r*.42,r*.04,cx,cy,r);
-    grad.addColorStop(0,g[0]);grad.addColorStop(.33,g[1]);grad.addColorStop(.7,g[2]);grad.addColorStop(1,g[3]);
-    ctx.globalAlpha=alpha??1;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();ctx.globalAlpha=1;
+    const img=loadedImgs[id];
+    if(img){
+      // Draw real mineral photo, zoomed slightly for better crop
+      const s=r*2.2;
+      try{ ctx.drawImage(img,cx-s/2,cy-s/2,s,s); }catch(e){drawGradBead(ctx,cx,cy,r,bead);}
+    } else {
+      drawGradBead(ctx,cx,cy,r,bead);
+    }
+    // Darken edges (sphere shading)
+    const edge=ctx.createRadialGradient(cx,cy,r*.5,cx,cy,r);
+    edge.addColorStop(0,'rgba(0,0,0,0)');edge.addColorStop(1,'rgba(0,0,0,.52)');
+    ctx.fillStyle=edge;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
+    // For translucent stones, add slight inner glow
+    const{alpha}=bead.tray;
+    if((alpha??1)<.95){
+      const glow=ctx.createRadialGradient(cx,cy,0,cx,cy,r*.7);
+      glow.addColorStop(0,`rgba(255,255,255,${.08*(1-alpha)})`);glow.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.fillStyle=glow;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
+    }
   }
   ctx.restore();
-  // Highlight
-  const hl=ctx.createRadialGradient(cx-r*.33,cy-r*.38,0,cx-r*.18,cy-r*.24,r*.58);
-  hl.addColorStop(0,'rgba(255,255,255,.88)');hl.addColorStop(.38,'rgba(255,255,255,.28)');hl.addColorStop(1,'rgba(255,255,255,0)');
+
+  // Specular highlight (top-left)
+  const hl=ctx.createRadialGradient(cx-r*.32,cy-r*.38,0,cx-r*.16,cy-r*.22,r*.62);
+  hl.addColorStop(0,'rgba(255,255,255,.92)');hl.addColorStop(.3,'rgba(255,255,255,.38)');
+  hl.addColorStop(.7,'rgba(255,255,255,.06)');hl.addColorStop(1,'rgba(255,255,255,0)');
   ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=hl;ctx.fill();
-  const hl2=ctx.createRadialGradient(cx+r*.28,cy+r*.3,0,cx+r*.14,cy+r*.18,r*.42);
-  hl2.addColorStop(0,'rgba(255,255,255,.15)');hl2.addColorStop(1,'rgba(255,255,255,0)');
+  // Secondary glint (bottom-right)
+  const hl2=ctx.createRadialGradient(cx+r*.3,cy+r*.32,0,cx+r*.15,cy+r*.18,r*.38);
+  hl2.addColorStop(0,'rgba(255,255,255,.18)');hl2.addColorStop(1,'rgba(255,255,255,0)');
   ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=hl2;ctx.fill();
-  if(hover){ctx.beginPath();ctx.arc(cx,cy,r+1.5,0,Math.PI*2);ctx.strokeStyle='rgba(200,160,80,.55)';ctx.lineWidth=1.5;ctx.stroke();}
+
+  if(hover){ctx.beginPath();ctx.arc(cx,cy,r+2,0,Math.PI*2);ctx.strokeStyle='rgba(200,160,80,.7)';ctx.lineWidth=2;ctx.stroke();}
+}
+
+function drawGradBead(ctx,cx,cy,r,bead){
+  const{g,alpha}=bead.tray;
+  const grad=ctx.createRadialGradient(cx-r*.37,cy-r*.42,r*.04,cx,cy,r);
+  grad.addColorStop(0,g[0]);grad.addColorStop(.33,g[1]);grad.addColorStop(.7,g[2]);grad.addColorStop(1,g[3]);
+  ctx.globalAlpha=alpha??1;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();ctx.globalAlpha=1;
 }
 
 function slotAt(x,y){
@@ -451,6 +526,11 @@ function getMat(id){
   const p={color:m3.color,roughness:m3.roughness??0,metalness:m3.metalness??0,envMapIntensity:m3.envI??1.5};
   if(m3.transmission>0){p.transmission=m3.transmission;p.transparent=true;p.ior=m3.ior??1.5;p.thickness=m3.thick??8;
     if(m3.att){p.attenuationColor=new THREE.Color(m3.att);p.attenuationDistance=m3.attD??20;}}
+  // Use real Wikipedia photo texture if no procedural map
+  if(!map && BEAD_PHOTOS[id]){
+    if(loadedTex[id]){ map=loadedTex[id]; }
+    else { const t=new THREE.TextureLoader().load(BEAD_PHOTOS[id]);t.wrapS=t.wrapT=THREE.RepeatWrapping;loadedTex[id]=t;map=t; }
+  }
   if(map)p.map=map;
   return matCache[id]=new THREE.MeshPhysicalMaterial(p);
 }
@@ -542,18 +622,28 @@ animate();
 // ══════════════════════════════════════════════════════════
 function mkIcon(bead,size=40){
   const c=document.createElement('canvas');c.width=c.height=size;
-  const ctx=c.getContext('2d'),r=size/2-2,cx=size/2,cy=size/2;
+  const ctx=c.getContext('2d'),r=size/2-1,cx=size/2,cy=size/2;
   if(bead.icon){
-    ctx.font=`${size*.55}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillStyle=bead.shape==='spacer'?(bead.color===0xc8a040?'#c8a040':'#ccc'):'#aaa';
-    ctx.fillText(bead.icon,cx,cy);return c;
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.fillStyle=bead.shape==='spacer'?(bead.color===0xc8a040?'#c8a040':'#ccc'):'#888';ctx.fill();
+    ctx.font=`${size*.5}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillStyle='rgba(0,0,0,.5)';ctx.fillText(bead.icon,cx+.5,cy+.5);
+    ctx.fillStyle='#fff';ctx.fillText(bead.icon,cx,cy);
+    return c;
   }
-  const{g,alpha}=bead.tray;
-  const grad=ctx.createRadialGradient(cx-r*.37,cy-r*.42,r*.04,cx,cy,r);
-  grad.addColorStop(0,g[0]);grad.addColorStop(.33,g[1]);grad.addColorStop(.7,g[2]);grad.addColorStop(1,g[3]);
-  ctx.globalAlpha=alpha??1;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();ctx.globalAlpha=1;
-  const hl=ctx.createRadialGradient(cx-r*.33,cy-r*.38,0,cx-r*.18,cy-r*.24,r*.58);
-  hl.addColorStop(0,'rgba(255,255,255,.88)');hl.addColorStop(.4,'rgba(255,255,255,.26)');hl.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.clip();
+  const img=loadedImgs[bead.id];
+  if(img){
+    try{ctx.drawImage(img,0,0,size,size);}catch(e){drawGradBead(ctx,cx,cy,r,bead);}
+    const edge=ctx.createRadialGradient(cx,cy,r*.38,cx,cy,r);
+    edge.addColorStop(0,'rgba(0,0,0,0)');edge.addColorStop(1,'rgba(0,0,0,.48)');
+    ctx.fillStyle=edge;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
+  } else {
+    drawGradBead(ctx,cx,cy,r,bead);
+  }
+  ctx.restore();
+  const hl=ctx.createRadialGradient(cx-r*.32,cy-r*.38,0,cx-r*.14,cy-r*.2,r*.55);
+  hl.addColorStop(0,'rgba(255,255,255,.82)');hl.addColorStop(.35,'rgba(255,255,255,.28)');hl.addColorStop(1,'rgba(255,255,255,0)');
   ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=hl;ctx.fill();
   return c;
 }
@@ -624,7 +714,13 @@ ro.observe(document.getElementById('trayArea'));
 ro.observe(document.getElementById('preview3D'));
 
 // ── Init ───────────────────────────────────────────────────
-initSlots();buildPalette();buildSizes();updateWristUI();resizeTray();resizeRenderer();drawTray();updateCount();
+initSlots();buildSizes();updateWristUI();resizeTray();resizeRenderer();drawTray();updateCount();
+// Load real mineral photos, then refresh palette and tray
+buildPalette(); // build with fallback gradients first
+preloadPhotos().then(()=>{
+  buildPalette(); // rebuild with real photos
+  drawTray();     // redraw tray beads with real photos
+});
 </script>
 </body>
 </html>
