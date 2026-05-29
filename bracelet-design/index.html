@@ -6,147 +6,151 @@
 <title>手串设计师 · Larme De Sirène</title>
 <style>
 :root{
-  --bg:#0e0e0e;--surface:#181818;--surface2:#222;--border:#2e2e2e;
-  --text:#f0ede8;--muted:#888;--accent:#c8a060;--accentH:#d8b070;
-  --tray-bg:#1a1208;
+  --bg:#0e0e0e;--surface:#161616;--surface2:#202020;--border:#2a2a2a;
+  --text:#f0ede8;--muted:#777;--accent:#c8a060;--tray-bg:#120e06;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
-  height:100dvh;display:flex;flex-direction:column;overflow:hidden;user-select:none}
-header{display:flex;align-items:center;gap:12px;padding:10px 18px;
-  background:rgba(255,255,255,.03);border-bottom:1px solid var(--border);flex-shrink:0}
-.logo{font-size:13px;font-weight:700;letter-spacing:.08em;color:var(--accent)}
-.logo span{color:var(--muted);font-weight:400}
-header h1{font-size:14px;font-weight:600;flex:1}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);
+  font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
+  display:flex;flex-direction:column;height:100dvh;user-select:none}
+
+/* ── HEADER ── */
+header{display:flex;align-items:center;gap:10px;padding:8px 14px;
+  background:rgba(255,255,255,.03);border-bottom:1px solid var(--border);
+  flex-shrink:0;height:48px}
+.logo{font-size:12px;font-weight:800;letter-spacing:.07em;color:var(--accent);flex:1}
+.logo small{display:block;font-size:10px;font-weight:400;color:var(--muted);letter-spacing:.04em}
 .hbtn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;
-  padding:6px 14px;font-size:12px;color:var(--text);cursor:pointer;font-weight:600;
-  transition:all .15s;white-space:nowrap}
-.hbtn:hover{background:var(--accent);border-color:var(--accent);color:#000}
-.hbtn.active{background:var(--accent);border-color:var(--accent);color:#000}
+  padding:6px 12px;font-size:12px;color:var(--text);cursor:pointer;font-weight:600;
+  transition:all .15s;white-space:nowrap;min-height:34px}
+.hbtn:hover,.hbtn.active{background:var(--accent);border-color:var(--accent);color:#000}
 
-.workspace{display:grid;grid-template-columns:220px 1fr 1fr;flex:1;overflow:hidden;gap:0}
+/* ── LAYOUT ── */
+/* Mobile-first: vertical stack */
+.app-body{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
 
-/* ── PALETTE PANEL ── */
-.palette{display:flex;flex-direction:column;background:var(--surface);
-  border-right:1px solid var(--border);overflow:hidden}
-.panel-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.1em;
-  padding:10px 14px 6px;text-transform:uppercase;border-bottom:1px solid var(--border)}
-.palette-scroll{flex:1;overflow-y:auto;padding:8px}
-.palette-scroll::-webkit-scrollbar{width:4px}
-.palette-scroll::-webkit-scrollbar-track{background:transparent}
-.palette-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-.cat-label{font-size:10px;color:var(--muted);padding:6px 4px 3px;letter-spacing:.06em}
-.bead-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:4px}
-.bead-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 4px;
-  border:1.5px solid transparent;border-radius:10px;cursor:pointer;transition:all .15s;
-  background:var(--surface2)}
+/* Tray area — main view on mobile */
+.tray-area{flex:1;min-height:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;background:var(--tray-bg);
+  position:relative;padding:10px 10px 6px}
+#trayCanvas{touch-action:none;cursor:pointer;display:block;max-width:100%;max-height:100%}
+.tray-btns{display:flex;gap:8px;margin-top:8px;flex-shrink:0}
+.tbtn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;padding:7px 14px;font-size:12px;color:var(--text);cursor:pointer;
+  transition:background .15s;min-height:36px;font-weight:600}
+.tbtn:hover{background:rgba(255,255,255,.14)}
+.tbtn.primary{background:var(--accent);border-color:var(--accent);color:#000}
+.tbtn.primary:hover{background:#d8b070}
+
+/* Bottom palette — mobile horizontal strip */
+.bottom-bar{flex-shrink:0;background:var(--surface);
+  border-top:1px solid var(--border);display:flex;flex-direction:column}
+
+.size-strip{display:flex;gap:5px;padding:7px 12px;
+  overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border);flex-shrink:0}
+.size-strip::-webkit-scrollbar{display:none}
+.sbtn{flex-shrink:0;padding:5px 10px;font-size:12px;font-weight:700;
+  border:1.5px solid var(--border);border-radius:7px;cursor:pointer;
+  background:var(--surface2);color:var(--muted);transition:all .15s;min-height:30px}
+.sbtn.active{border-color:var(--accent);color:var(--accent);background:rgba(200,160,96,.12)}
+
+.bead-strip{display:flex;gap:8px;padding:8px 12px;
+  overflow-x:auto;scrollbar-width:none;align-items:center;flex-shrink:0;min-height:82px}
+.bead-strip::-webkit-scrollbar{display:none}
+.bead-btn{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:6px 7px;border:1.5px solid transparent;border-radius:10px;cursor:pointer;
+  background:var(--surface2);transition:all .15s;min-width:54px}
 .bead-btn:hover{border-color:var(--border)}
-.bead-btn.selected{border-color:var(--accent);background:rgba(200,160,96,.12)}
+.bead-btn.selected{border-color:var(--accent);background:rgba(200,160,96,.13)}
 .bead-btn canvas{border-radius:50%;display:block}
 .bead-btn span{font-size:10px;text-align:center;color:var(--muted);line-height:1.2;
-  word-break:keep-all}
+  white-space:nowrap;max-width:52px;overflow:hidden;text-overflow:ellipsis}
+.acc-sep{width:1px;background:var(--border);flex-shrink:0;height:50px;margin:0 4px}
 
-.size-row{display:flex;flex-wrap:wrap;gap:4px;padding:8px 8px 6px}
-.size-btn{flex:1;min-width:30px;padding:5px 4px;text-align:center;font-size:11px;
-  font-weight:700;border:1.5px solid var(--border);border-radius:7px;cursor:pointer;
-  background:var(--surface2);color:var(--muted);transition:all .15s}
-.size-btn:hover{border-color:var(--accent);color:var(--accent)}
-.size-btn.selected{border-color:var(--accent);background:rgba(200,160,96,.15);color:var(--accent)}
-
-.acc-grid{display:flex;flex-wrap:wrap;gap:4px;padding:6px 8px 10px}
-.acc-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 8px;
-  border:1.5px solid transparent;border-radius:10px;cursor:pointer;background:var(--surface2);
-  transition:all .15s;min-width:52px}
-.acc-btn:hover{border-color:var(--border)}
-.acc-btn.selected{border-color:var(--accent);background:rgba(200,160,96,.12)}
-.acc-btn span{font-size:10px;color:var(--muted)}
-.acc-icon{font-size:22px;line-height:1}
-
-/* ── TRAY PANEL ── */
-.tray-panel{display:flex;flex-direction:column;align-items:center;
-  justify-content:center;background:var(--tray-bg);border-right:1px solid var(--border);
-  position:relative;gap:8px;padding:12px}
-#trayCanvas{border-radius:50%;cursor:pointer;touch-action:none;display:block}
-.tray-hint{font-size:11px;color:rgba(255,255,255,.25);text-align:center;line-height:1.5}
-.tray-actions{display:flex;gap:8px}
-.tray-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
-  border-radius:8px;padding:6px 14px;font-size:12px;color:var(--text);cursor:pointer;
-  transition:all .15s}
-.tray-btn:hover{background:rgba(255,255,255,.12)}
-
-/* ── 3D PREVIEW PANEL ── */
-.preview{display:flex;flex-direction:column;background:#0a0a0a;position:relative}
-#threeCanvas{flex:1;display:block;width:100%;height:100%;min-height:0}
-.preview-bar{display:flex;align-items:center;gap:8px;padding:8px 14px;
-  background:rgba(255,255,255,.03);border-top:1px solid var(--border);flex-shrink:0}
-.preview-bar span{font-size:11px;color:var(--muted);flex:1}
+/* ── 3D PREVIEW OVERLAY (mobile full-screen) ── */
+.preview-overlay{position:fixed;inset:0;z-index:200;background:#080808;
+  flex-direction:column;display:none}
+.preview-overlay.open{display:flex}
+.preview-topbar{display:flex;align-items:center;gap:10px;padding:8px 14px;
+  background:rgba(255,255,255,.04);border-bottom:1px solid var(--border);flex-shrink:0}
+.preview-topbar .back{font-size:18px;cursor:pointer;padding:4px 8px;color:var(--muted)}
+.preview-topbar .back:hover{color:var(--text)}
+.preview-topbar .title{flex:1;font-size:13px;font-weight:700}
+#threeCanvas{flex:1;display:block;width:100%;min-height:0}
+.preview-btmbar{display:flex;align-items:center;gap:8px;padding:8px 14px;
+  background:rgba(255,255,255,.03);border-top:1px solid var(--border);flex-shrink:0;
+  flex-wrap:wrap}
+#beadCountLbl{font-size:11px;color:var(--muted);flex:1}
 .pbtn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;
-  padding:6px 14px;font-size:12px;color:var(--text);cursor:pointer;transition:all .15s}
+  padding:7px 13px;font-size:12px;color:var(--text);cursor:pointer;
+  transition:all .15s;min-height:34px;font-weight:600}
 .pbtn:hover{background:var(--accent);border-color:var(--accent);color:#000}
 .pbtn.active{background:rgba(200,160,96,.2);border-color:var(--accent);color:var(--accent)}
-.render-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  text-align:center;pointer-events:none}
-.render-hint p{font-size:13px;color:rgba(255,255,255,.25);line-height:1.8}
 
-/* Mobile */
-@media(max-width:700px){
-  .workspace{grid-template-columns:1fr;grid-template-rows:auto 300px 1fr}
-  .palette{flex-direction:row;overflow-x:auto;overflow-y:hidden;
-    border-right:none;border-bottom:1px solid var(--border);max-height:160px}
-  .palette-scroll{display:flex;gap:4px;padding:4px;flex-direction:row;overflow-x:auto;min-width:0}
-  .bead-grid{display:flex;gap:4px;flex-wrap:nowrap}
-  .tray-panel{border-right:none;border-bottom:1px solid var(--border)}
-  #trayCanvas{max-width:260px;max-height:260px}
+/* ── DESKTOP: 3-column layout ── */
+@media(min-width:768px){
+  .app-body{flex-direction:row}
+  /* Left: vertical palette */
+  .bottom-bar{flex-direction:column;width:180px;border-top:none;
+    border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0}
+  .size-strip{flex-direction:column;border-bottom:none;border-top:1px solid var(--border);
+    overflow-x:visible;overflow-y:visible;flex-wrap:wrap;gap:4px;padding:8px}
+  .sbtn{flex:none}
+  .bead-strip{flex-direction:column;overflow-y:auto;overflow-x:hidden;
+    min-height:0;padding:8px;flex:1}
+  .bead-btn{width:100%;min-width:unset;flex-direction:row;gap:8px;padding:6px 8px}
+  .bead-btn canvas{flex-shrink:0}
+  .bead-btn span{font-size:11px;text-align:left;max-width:none}
+  .acc-sep{width:100%;height:1px;margin:4px 0}
+  /* Tray: middle column */
+  .tray-area{flex:1}
+  /* 3D: right column, always visible (not overlay) */
+  .preview-overlay{position:static;display:flex !important;flex:1;z-index:auto}
+  .preview-topbar .back{display:none}
+  .show3d-btn{display:none} /* no need for open button on desktop */
 }
 </style>
 </head>
 <body>
+
 <header>
-  <span class="logo">LARME DE SIRÈNE <span>人鱼之水手串专门店</span></span>
-  <h1>手串设计师</h1>
-  <button class="hbtn active" id="viewProduct">平放视图</button>
-  <button class="hbtn" id="viewWrist">手腕视图</button>
+  <div class="logo">LARME DE SIRÈNE<small>手串设计师</small></div>
+  <button class="hbtn" id="viewProductBtn">平放</button>
+  <button class="hbtn" id="viewWristBtn">手腕</button>
+  <button class="hbtn show3d-btn" id="show3dBtn">3D 预览 ↗</button>
 </header>
 
-<div class="workspace">
-  <!-- LEFT: Palette -->
-  <aside class="palette">
-    <div class="panel-title">珠子</div>
-    <div class="palette-scroll">
-      <div class="cat-label">透明水晶</div>
-      <div class="bead-grid" id="crystalGrid"></div>
-      <div class="cat-label">不透明矿石</div>
-      <div class="bead-grid" id="opaqueGrid"></div>
-    </div>
-    <div class="panel-title" style="border-top:1px solid var(--border)">尺寸</div>
-    <div class="size-row" id="sizeRow"></div>
-    <div class="panel-title" style="border-top:1px solid var(--border)">配饰</div>
-    <div class="acc-grid" id="accGrid"></div>
-  </aside>
+<div class="app-body">
+  <!-- Left / Bottom: palette -->
+  <div class="bottom-bar" id="paletteBar">
+    <div class="size-strip" id="sizeStrip"></div>
+    <div class="bead-strip" id="beadStrip"></div>
+  </div>
 
-  <!-- CENTER: Tray -->
-  <main class="tray-panel">
+  <!-- Center: tray -->
+  <div class="tray-area" id="trayArea">
     <canvas id="trayCanvas"></canvas>
-    <div class="tray-hint">选择珠子后点击手串位置放置<br>右键或长按清除</div>
-    <div class="tray-actions">
-      <button class="tray-btn" id="clearBtn">清空</button>
-      <button class="tray-btn" id="randomBtn">随机填充</button>
-      <button class="tray-btn" id="render3dBtn">→ 渲染3D</button>
+    <div class="tray-btns">
+      <button class="tbtn" id="clearBtn">清空</button>
+      <button class="tbtn" id="randomBtn">随机</button>
+      <button class="tbtn primary show3d-btn" id="render3dBtn">渲染 3D →</button>
     </div>
-  </main>
+  </div>
 
-  <!-- RIGHT: 3D Preview -->
-  <aside class="preview">
+  <!-- Right / Overlay: 3D preview -->
+  <div class="preview-overlay" id="preview3D">
+    <div class="preview-topbar">
+      <span class="back" id="backBtn">←</span>
+      <span class="title">3D 预览</span>
+      <button class="pbtn active" id="autoRotBtn">⟳ 旋转</button>
+      <button class="pbtn" id="saveBtn">💾 保存</button>
+    </div>
     <canvas id="threeCanvas"></canvas>
-    <div class="render-hint" id="renderHint">
-      <p>在左侧制作盘设计好手串<br>点击「渲染3D」查看效果</p>
+    <div class="preview-btmbar">
+      <span id="beadCountLbl">0 颗珠子</span>
     </div>
-    <div class="preview-bar">
-      <span id="beadCount">0 颗珠子</span>
-      <button class="pbtn active" id="autoRotBtn">⟳ 自动旋转</button>
-      <button class="pbtn" id="saveBtn">💾 保存图片</button>
-    </div>
-  </aside>
+  </div>
 </div>
 
 <script type="importmap">
@@ -160,815 +164,425 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  BEAD DATABASE
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 const BEADS = [
-  // ─── Transparent Crystals ─────────────────────────────────
   { id:'green_phantom', name:'绿幽灵', cat:'crystal',
-    tray:{ g:['#e0f0e8','#8dc8a8','#3a7858','#1b3d2a'], alpha:.88 },
-    m3:{ color:0x80b898, roughness:.018, transmission:.88, ior:1.544, thick:12,
-         att:0x60a878, attD:20, envI:2.2 }, special:'phantom_green' },
+    tray:{g:['#d8f0e4','#7ab898','#2e6848','#142e1e'],alpha:.9},
+    m3:{color:0x78b090,roughness:.018,transmission:.88,ior:1.544,thick:12,att:0x50a070,attD:20,envI:2.2},special:'phantom_green'},
   { id:'rose_quartz', name:'粉水晶', cat:'crystal',
-    tray:{ g:['#fff0f0','#f5c0c0','#e08080','#b05050'], alpha:.78 },
-    m3:{ color:0xf0b0b0, roughness:.025, transmission:.7, ior:1.544, thick:10,
-         att:0xe89090, attD:22, envI:1.8 } },
+    tray:{g:['#fff0f0','#f5c0c0','#de8080','#a85050'],alpha:.8},
+    m3:{color:0xf0b0b0,roughness:.025,transmission:.7,ior:1.544,thick:10,att:0xe09090,attD:22,envI:1.8}},
   { id:'clear_quartz', name:'白水晶', cat:'crystal',
-    tray:{ g:['#ffffff','#f0f0f0','#d0d8d0','#a0b0a8'], alpha:.92 },
-    m3:{ color:0xf0f0ee, roughness:.015, transmission:.92, ior:1.544, thick:14,
-         att:0xf8f8f8, attD:40, envI:2.5 } },
+    tray:{g:['#ffffff','#eef0ee','#c8d0c8','#98a898'],alpha:.93},
+    m3:{color:0xf0f0ee,roughness:.015,transmission:.93,ior:1.544,thick:14,att:0xf8f8f8,attD:40,envI:2.5}},
   { id:'amethyst', name:'紫水晶', cat:'crystal',
-    tray:{ g:['#f0d8ff','#c090f0','#8040c0','#4a1880'], alpha:.75 },
-    m3:{ color:0xa060d8, roughness:.02, transmission:.65, ior:1.544, thick:10,
-         att:0x8840b8, attD:18, envI:2.0 } },
+    tray:{g:['#f0d8ff','#c090f0','#7030c0','#3a1070'],alpha:.78},
+    m3:{color:0xa060d8,roughness:.02,transmission:.65,ior:1.544,thick:10,att:0x8840b8,attD:18,envI:2.0}},
   { id:'citrine', name:'黄水晶', cat:'crystal',
-    tray:{ g:['#fff8c0','#f8d840','#c8a010','#886000'], alpha:.8 },
-    m3:{ color:0xf0c030, roughness:.022, transmission:.72, ior:1.544, thick:10,
-         att:0xe0a800, attD:20, envI:1.9 } },
-  { id:'smoky', name:'茶晶', cat:'crystal',
-    tray:{ g:['#c0a890','#8c6848','#5a3820','#2e1808'], alpha:.72 },
-    m3:{ color:0x806040, roughness:.025, transmission:.58, ior:1.544, thick:10,
-         att:0x604020, attD:16, envI:1.6 } },
+    tray:{g:['#fff8c0','#f8d840','#c8a010','#805808'],alpha:.82},
+    m3:{color:0xf0c030,roughness:.022,transmission:.72,ior:1.544,thick:10,att:0xe0a800,attD:20,envI:1.9}},
   { id:'aquamarine', name:'海蓝宝', cat:'crystal',
-    tray:{ g:['#d8f8ff','#80d8f0','#2090c0','#0050a0'], alpha:.82 },
-    m3:{ color:0x60c0e0, roughness:.018, transmission:.78, ior:1.567, thick:12,
-         att:0x40a0c8, attD:28, envI:2.1 } },
+    tray:{g:['#d8f8ff','#70d0f0','#1880c0','#004898'],alpha:.84},
+    m3:{color:0x58b8e0,roughness:.018,transmission:.78,ior:1.567,thick:12,att:0x3898c8,attD:28,envI:2.1}},
+  { id:'smoky', name:'茶晶', cat:'crystal',
+    tray:{g:['#c0a890','#8a6040','#503018','#281008'],alpha:.75},
+    m3:{color:0x785840,roughness:.025,transmission:.58,ior:1.544,thick:10,att:0x583820,attD:16,envI:1.6}},
   { id:'moonstone', name:'月光石', cat:'crystal',
-    tray:{ g:['#ffffff','#d8e0f8','#a0b8e8','#6080c0'], alpha:.7 },
-    m3:{ color:0xd0d8f0, roughness:.06, transmission:.45, ior:1.52, thick:8,
-         att:0xc0c8e8, attD:15, envI:1.5 }, special:'moonstone' },
+    tray:{g:['#ffffff','#d8e0f8','#98b0e8','#5878c0'],alpha:.72},
+    m3:{color:0xd0d8f0,roughness:.06,transmission:.45,ior:1.52,thick:8,att:0xc0c8e8,attD:15,envI:1.5},special:'moonstone'},
   { id:'strawberry', name:'草莓晶', cat:'crystal',
-    tray:{ g:['#ffe0e0','#f09090','#d04040','#900020'], alpha:.72 },
-    m3:{ color:0xe06060, roughness:.03, transmission:.5, ior:1.544, thick:9,
-         att:0xc83838, attD:14, envI:1.7 }, special:'strawberry' },
+    tray:{g:['#ffe0e0','#f09090','#c83838','#880018'],alpha:.74},
+    m3:{color:0xe06060,roughness:.03,transmission:.5,ior:1.544,thick:9,att:0xc83030,attD:14,envI:1.7},special:'strawberry'},
   { id:'garnet', name:'石榴石', cat:'crystal',
-    tray:{ g:['#ff8080','#c02020','#800000','#400000'], alpha:.65 },
-    m3:{ color:0xaa1010, roughness:.02, transmission:.42, ior:1.76, thick:8,
-         att:0x880808, attD:10, envI:2.0 } },
+    tray:{g:['#ff7070','#c01818','#780000','#380000'],alpha:.68},
+    m3:{color:0xa81010,roughness:.02,transmission:.42,ior:1.76,thick:8,att:0x880808,attD:10,envI:2.0}},
   { id:'rutile_gold', name:'金钛晶', cat:'crystal',
-    tray:{ g:['#fffff0','#f8e880','#d0a800','#806000'], alpha:.85 },
-    m3:{ color:0xf0d840, roughness:.015, transmission:.82, ior:1.544, thick:12,
-         att:0xe0c020, attD:30, envI:2.3 }, special:'rutile_gold' },
-
-  // ─── Opaque / Semi-opaque ─────────────────────────────────
+    tray:{g:['#fffff0','#f8e870','#c8a000','#785800'],alpha:.87},
+    m3:{color:0xecd838,roughness:.015,transmission:.82,ior:1.544,thick:12,att:0xd8c018,attD:30,envI:2.3},special:'rutile_gold'},
   { id:'obsidian', name:'黑曜石', cat:'opaque',
-    tray:{ g:['#606060','#202020','#080808','#000000'], alpha:1 },
-    m3:{ color:0x101010, roughness:.005, metalness:.15, transmission:0, envI:2.5 } },
+    tray:{g:['#585858','#181818','#060606','#000000'],alpha:1},
+    m3:{color:0x0c0c0c,roughness:.005,metalness:.15,transmission:0,envI:2.5}},
   { id:'blue_goldstone', name:'蓝砂石', cat:'opaque',
-    tray:{ g:['#4060c0','#0a1a60','#050c30','#020818'], alpha:1 },
-    m3:{ color:0x0a1a50, roughness:.04, metalness:.05, transmission:0, envI:1.2 },
-    special:'goldstone_blue' },
+    tray:{g:['#3858c0','#081860','#040c28','#020610'],alpha:1},
+    m3:{color:0x081848,roughness:.04,metalness:.05,transmission:0,envI:1.2},special:'goldstone_blue'},
   { id:'red_goldstone', name:'金砂石', cat:'opaque',
-    tray:{ g:['#c87030','#8b3010','#4a1408','#200800'], alpha:1 },
-    m3:{ color:0x6b2000, roughness:.04, metalness:.05, transmission:0, envI:1.2 },
-    special:'goldstone_red' },
+    tray:{g:['#c06828','#881808','#401008','#180600'],alpha:1},
+    m3:{color:0x681800,roughness:.04,metalness:.05,transmission:0,envI:1.2},special:'goldstone_red'},
   { id:'tigers_eye', name:'虎眼石', cat:'opaque',
-    tray:{ g:['#e8c060','#b88020','#785000','#3a2008'], alpha:1 },
-    m3:{ color:0xa07020, roughness:.08, metalness:.0, transmission:0, envI:1.0 },
-    special:'tigers_eye' },
+    tray:{g:['#e0b858','#b07818','#704800','#301800'],alpha:1},
+    m3:{color:0x986818,roughness:.08,transmission:0,envI:1.0},special:'tigers_eye'},
   { id:'lapis', name:'青金石', cat:'opaque',
-    tray:{ g:['#4060e0','#1a2880','#0a1040','#050820'], alpha:1 },
-    m3:{ color:0x1a2870, roughness:.12, metalness:.0, transmission:0, envI:.8 },
-    special:'lapis' },
+    tray:{g:['#3858e0','#181878','#080838','#040618'],alpha:1},
+    m3:{color:0x182068,roughness:.12,transmission:0,envI:.8},special:'lapis'},
   { id:'turquoise', name:'绿松石', cat:'opaque',
-    tray:{ g:['#80e0d8','#30a898','#107860','#083830'], alpha:1 },
-    m3:{ color:0x28a090, roughness:.18, metalness:.0, transmission:0, envI:.7 } },
+    tray:{g:['#78d8d0','#289090','#106050','#083028'],alpha:1},
+    m3:{color:0x208888,roughness:.18,transmission:0,envI:.7}},
   { id:'red_agate', name:'红玛瑙', cat:'opaque',
-    tray:{ g:['#ff8060','#d83010','#901000','#400800'], alpha:1 },
-    m3:{ color:0xc02008, roughness:.1, metalness:.0, transmission:0, envI:.9 },
-    special:'agate_red' },
+    tray:{g:['#ff7858','#d02808','#881000','#380800'],alpha:1},
+    m3:{color:0xb81808,roughness:.1,transmission:0,envI:.9},special:'agate_red'},
   { id:'malachite', name:'孔雀石', cat:'opaque',
-    tray:{ g:['#80e080','#208040','#0a5018','#042808'], alpha:1 },
-    m3:{ color:0x186830, roughness:.15, metalness:.0, transmission:0, envI:.8 },
-    special:'malachite' },
+    tray:{g:['#78d878','#188038','#085020','#022808'],alpha:1},
+    m3:{color:0x106028,roughness:.15,transmission:0,envI:.8},special:'malachite'},
   { id:'labradorite', name:'拉长石', cat:'opaque',
-    tray:{ g:['#8090a8','#404858','#1c2230','#080c18'], alpha:1 },
-    m3:{ color:0x282e3a, roughness:.06, metalness:.0, transmission:0, envI:1.5 },
-    special:'labradorite' },
+    tray:{g:['#788898','#38404e','#181e28','#080a10'],alpha:1},
+    m3:{color:0x202830,roughness:.06,transmission:0,envI:1.5},special:'labradorite'},
 ];
 
 const ACCESSORIES = [
   { id:'spacer_silver', name:'银隔片', icon:'○', shape:'spacer', color:0xcccccc },
   { id:'spacer_gold',   name:'金隔片', icon:'◎', shape:'spacer', color:0xc8a040 },
-  { id:'charm_ruyi',    name:'如意', icon:'☯', shape:'charm' },
   { id:'charm_peace',   name:'平安扣', icon:'◉', shape:'charm_ring' },
 ];
 
 const SIZES = [4,6,8,10,12,14,16];
 const BEAD_COUNTS = {4:40,6:27,8:20,10:16,12:13,14:11,16:10};
-const WRIST_R = 26; // mm — bracelet radius reference
+const WRIST_R = 26;
 
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  STATE
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 const state = {
-  selectedId: null,     // selected bead/acc id
-  sizeMm: 8,            // current size
-  slots: [],            // array of {id} or null
-  viewMode: 'product',  // 'product'|'wrist'
+  selectedId: null,
+  sizeMm: 8,
+  slots: [],
+  viewMode: 'product',
   autoRotate: true,
   rendered: false,
 };
+function initSlots(){const n=BEAD_COUNTS[state.sizeMm];const old=state.slots.slice();state.slots=Array.from({length:n},(_,i)=>old[i]??null);}
 
-function initSlots() {
-  const n = BEAD_COUNTS[state.sizeMm];
-  const old = state.slots.slice();
-  state.slots = Array.from({length:n}, (_,i) => old[i] ?? null);
-}
-
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  TEXTURE GENERATORS
-// ══════════════════════════════════════════════════════════════
-const texCache = {};
+// ══════════════════════════════════════════════════════════
+const texCache={};
+function mkTex(id,fn){if(texCache[id])return texCache[id];const c=document.createElement('canvas');c.width=c.height=256;fn(c.getContext('2d'),256);const t=new THREE.CanvasTexture(c);texCache[id]=t;return t;}
+function rng(s){let v=s;return()=>{v=(v*16807)%2147483647;return(v-1)/2147483646;};}
 
-function mkTex(id, fn) {
-  if (texCache[id]) return texCache[id];
-  const c = document.createElement('canvas'); c.width = c.height = 256;
-  fn(c.getContext('2d'), 256);
-  const t = new THREE.CanvasTexture(c);
-  texCache[id] = t; return t;
-}
+function texPhantomGreen(){return mkTex('phg',(ctx,S)=>{const r=rng(42);for(let i=0;i<10;i++){const cx=r()*S,cy=r()*S,rad=18+r()*65;const g=ctx.createRadialGradient(cx,cy,0,cx,cy,rad);g.addColorStop(0,`rgba(6,18,10,${.3+r()*.45})`);g.addColorStop(.5,`rgba(12,30,16,${.12+r()*.18})`);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,rad,0,Math.PI*2);ctx.fill();}});}
+function texWispGreen(){return mkTex('wsg',(ctx,S)=>{const r=rng(99);for(let i=0;i<14;i++){const x1=r()*S,y1=r()*S,x2=r()*S,y2=r()*S;const g=ctx.createLinearGradient(x1,y1,x2,y2);g.addColorStop(0,'rgba(0,100,40,0)');g.addColorStop(.5,`rgba(20,170,60,${.35+r()*.55})`);g.addColorStop(1,'rgba(0,70,25,0)');ctx.strokeStyle=g;ctx.lineWidth=1+r()*5;ctx.beginPath();ctx.moveTo(x1,y1);ctx.bezierCurveTo(r()*S,r()*S,r()*S,r()*S,x2,y2);ctx.stroke();}});}
+function texGoldstone(blue){return mkTex(blue?'gsb':'gsr',(ctx,S)=>{ctx.fillStyle=blue?'#04102a':'#240800';ctx.fillRect(0,0,S,S);const r=rng(blue?11:22);for(let i=0;i<600;i++){const x=r()*S,y=r()*S,sz=.3+r()*2;const br=.5+r()*.5;ctx.fillStyle=blue?`rgba(70,110,255,${br})`:`rgba(255,130,30,${br})`;ctx.beginPath();ctx.arc(x,y,sz,0,Math.PI*2);ctx.fill();}});}
+function texTigersEye(){return mkTex('tge',(ctx,S)=>{for(let y=0;y<S;y++){const v=(Math.sin(y*.07+.5)*.5+.5)*.7+Math.sin(y*.22)*.08+.15;ctx.fillStyle=`rgb(${Math.round(155+v*85)},${Math.round(85+v*50)},0)`;ctx.fillRect(0,y,S,1);}const g=ctx.createLinearGradient(0,0,S,0);g.addColorStop(0,'rgba(255,215,70,0)');g.addColorStop(.45,'rgba(255,235,150,.4)');g.addColorStop(.55,'rgba(255,235,150,.4)');g.addColorStop(1,'rgba(255,215,70,0)');ctx.fillStyle=g;ctx.fillRect(0,0,S,S);});}
+function texLapis(){return mkTex('lap',(ctx,S)=>{ctx.fillStyle='#0e1440';ctx.fillRect(0,0,S,S);const r=rng(3);for(let i=0;i<8;i++){const g=ctx.createRadialGradient(r()*S,r()*S,0,r()*S,r()*S,55+r()*55);g.addColorStop(0,`rgba(4,12,72,${.35+r()*.28})`);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(0,0,S,S);}for(let i=0;i<40;i++){ctx.fillStyle=`rgba(215,178,0,${.3+r()*.7})`;ctx.fillRect(r()*S,r()*S,r()*4+1,r()*4+1);}});}
+function texMalachite(){return mkTex('mal',(ctx,S)=>{const r=rng(5);for(let i=0;i<12;i++){const cx=r()*S*1.2-S*.1,cy=r()*S*1.2-S*.1,base=18+r()*55;for(let j=0;j<6;j++){const rad=base+j*13;ctx.strokeStyle=j%2===0?`rgba(12,90,35,.9)`:`rgba(35,165,65,.85)`;ctx.lineWidth=4+r()*4;ctx.beginPath();ctx.arc(cx,cy,rad,0,Math.PI*2);ctx.stroke();}}});}
+function texRedAgate(){return mkTex('rag',(ctx,S)=>{for(let y=0;y<S;y++){const v=Math.sin(y*.06)*Math.cos(y*.03+.4)*.4+.6;ctx.fillStyle=`rgb(${Math.round(175+v*65)},${Math.round(18+v*28)},${Math.round(4+v*8)})`;ctx.fillRect(0,y,S,1);}});}
+function texLabradorite(){return mkTex('lab',(ctx,S)=>{ctx.fillStyle='#161e28';ctx.fillRect(0,0,S,S);const r=rng(9);for(let i=0;i<6;i++){const x=r()*S,y=r()*S,w=38+r()*75;const g=ctx.createLinearGradient(x-w,y,x+w,y);const h=180+r()*60;g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(.5,`hsla(${h},75%,55%,.55)`);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(x-w,y-30,w*2,60);}});}
+function texRutileGold(){return mkTex('rtg',(ctx,S)=>{const r=rng(17);for(let i=0;i<20;i++){const x1=r()*S,y1=r()*S,dx=(r()-.5)*S*.6,dy=(r()-.5)*S*.5;const g=ctx.createLinearGradient(x1,y1,x1+dx,y1+dy);g.addColorStop(0,'rgba(210,170,0,0)');g.addColorStop(.5,`rgba(255,205,15,${.5+r()*.5})`);g.addColorStop(1,'rgba(175,125,0,0)');ctx.strokeStyle=g;ctx.lineWidth=1+r()*3;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x1+dx,y1+dy);ctx.stroke();}});}
+function texStrawberry(){return mkTex('stw',(ctx,S)=>{const r=rng(23);for(let i=0;i<30;i++){const x=r()*S,y=r()*S,sz=1.5+r()*7;ctx.fillStyle=`rgba(175,15,15,${.35+r()*.6})`;ctx.beginPath();ctx.arc(x,y,sz,0,Math.PI*2);ctx.fill();}});}
 
-function rng(seed) { // simple seeded pseudo-random
-  let s = seed;
-  return () => { s = (s*16807 + 0) % 2147483647; return (s-1)/2147483646; };
-}
-
-function texPhantomGreen() { return mkTex('phg', (ctx,S)=>{
-  const r = rng(42);
-  for(let i=0;i<10;i++){
-    const cx=r()*S,cy=r()*S,rad=20+r()*70;
-    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,rad);
-    g.addColorStop(0,`rgba(8,22,14,${.35+r()*.45})`);
-    g.addColorStop(.5,`rgba(15,35,20,${.15+r()*.2})`);
-    g.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,rad,0,Math.PI*2); ctx.fill();
-  }
-}); }
-
-function texWispGreen() { return mkTex('wsg', (ctx,S)=>{
-  const r=rng(99);
-  ctx.lineWidth=2;
-  for(let i=0;i<14;i++){
-    const x1=r()*S,y1=r()*S,x2=r()*S,y2=r()*S;
-    const g=ctx.createLinearGradient(x1,y1,x2,y2);
-    const a=.4+r()*.6;
-    g.addColorStop(0,'rgba(0,120,50,0)');
-    g.addColorStop(.5,`rgba(20,180,70,${a})`);
-    g.addColorStop(1,'rgba(0,80,30,0)');
-    ctx.strokeStyle=g; ctx.lineWidth=1+r()*5;
-    ctx.beginPath(); ctx.moveTo(x1,y1);
-    ctx.bezierCurveTo(r()*S,r()*S,r()*S,r()*S,x2,y2);
-    ctx.stroke();
-  }
-}); }
-
-function texGoldstone(blue) { return mkTex(blue?'gsb':'gsr', (ctx,S)=>{
-  ctx.fillStyle=blue?'#050d28':'#280a00';
-  ctx.fillRect(0,0,S,S);
-  const r=rng(blue?11:22);
-  for(let i=0;i<600;i++){
-    const x=r()*S,y=r()*S,sz=.4+r()*2.2;
-    const br=.5+r()*.5;
-    const col=blue?`rgba(80,120,255,${br})`:`rgba(255,140,40,${br})`;
-    ctx.fillStyle=col; ctx.beginPath(); ctx.arc(x,y,sz,0,Math.PI*2); ctx.fill();
-  }
-}); }
-
-function texTigersEye() { return mkTex('tge', (ctx,S)=>{
-  const r=rng(7);
-  for(let y=0;y<S;y++){
-    const v=(Math.sin(y*.07+.5)*.5+.5)*.7+Math.sin(y*.23)*.1+.15;
-    const R=Math.round(160+v*80),G=Math.round(90+v*50),B=Math.round(0+v*10);
-    ctx.fillStyle=`rgb(${R},${G},${B})`; ctx.fillRect(0,y,S,1);
-  }
-  // chatoyant sheen
-  const g=ctx.createLinearGradient(0,0,S,0);
-  g.addColorStop(0,'rgba(255,220,80,0)');
-  g.addColorStop(.45,'rgba(255,240,160,.45)');
-  g.addColorStop(.55,'rgba(255,240,160,.45)');
-  g.addColorStop(1,'rgba(255,220,80,0)');
-  ctx.fillStyle=g; ctx.fillRect(0,0,S,S);
-}); }
-
-function texLapis() { return mkTex('lap', (ctx,S)=>{
-  ctx.fillStyle='#101848'; ctx.fillRect(0,0,S,S);
-  const r=rng(3);
-  for(let i=0;i<8;i++){
-    const g=ctx.createRadialGradient(r()*S,r()*S,0,r()*S,r()*S,60+r()*60);
-    g.addColorStop(0,`rgba(5,15,80,${.4+r()*.3})`);
-    g.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.fillStyle=g; ctx.fillRect(0,0,S,S);
-  }
-  for(let i=0;i<40;i++){
-    ctx.fillStyle=`rgba(220,185,0,${.3+r()*.7})`;
-    ctx.fillRect(r()*S,r()*S,r()*4+1,r()*4+1);
-  }
-}); }
-
-function texMalachite() { return mkTex('mal', (ctx,S)=>{
-  const r=rng(5);
-  for(let i=0;i<12;i++){
-    const cx=r()*S*1.2-S*.1,cy=r()*S*1.2-S*.1,base=20+r()*60;
-    for(let j=0;j<6;j++){
-      const rad=base+j*14;
-      ctx.strokeStyle=j%2===0?`rgba(15,100,40,.9)`:`rgba(40,180,70,.85)`;
-      ctx.lineWidth=5+r()*4;
-      ctx.beginPath(); ctx.arc(cx,cy,rad,0,Math.PI*2); ctx.stroke();
-    }
-  }
-}); }
-
-function texRedAgate() { return mkTex('rag', (ctx,S)=>{
-  for(let y=0;y<S;y++){
-    const v=Math.sin(y*.06)*Math.cos(y*.03+.5)*.4+.6;
-    const R=Math.round(180+v*60),G=Math.round(20+v*30),B=Math.round(5+v*10);
-    ctx.fillStyle=`rgb(${R},${G},${B})`; ctx.fillRect(0,y,S,1);
-  }
-}); }
-
-function texLabradorite() { return mkTex('lab', (ctx,S)=>{
-  ctx.fillStyle='#1a2030'; ctx.fillRect(0,0,S,S);
-  const r=rng(9);
-  for(let i=0;i<6;i++){
-    const x=r()*S,y=r()*S,w=40+r()*80,h=20+r()*40;
-    const g=ctx.createLinearGradient(x-w,y,x+w,y);
-    const hue=180+r()*60;
-    g.addColorStop(0,'rgba(0,0,0,0)');
-    g.addColorStop(.5,`hsla(${hue},80%,60%,.6)`);
-    g.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.fillStyle=g; ctx.fillRect(x-w,y-h,w*2,h*2);
-  }
-}); }
-
-function texRutileGold() { return mkTex('rtg', (ctx,S)=>{
-  const r=rng(17);
-  ctx.clearRect(0,0,S,S);
-  for(let i=0;i<20;i++){
-    const x1=r()*S,y1=r()*S,dx=(r()-.5)*S*.6,dy=(r()-.5)*S*.6;
-    const g=ctx.createLinearGradient(x1,y1,x1+dx,y1+dy);
-    const a=.5+r()*.5;
-    g.addColorStop(0,'rgba(220,180,0,0)');
-    g.addColorStop(.5,`rgba(255,210,20,${a})`);
-    g.addColorStop(1,'rgba(180,130,0,0)');
-    ctx.strokeStyle=g; ctx.lineWidth=1+r()*3;
-    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x1+dx,y1+dy); ctx.stroke();
-  }
-}); }
-
-function texStrawberry() { return mkTex('stw', (ctx,S)=>{
-  ctx.clearRect(0,0,S,S);
-  const r=rng(23);
-  for(let i=0;i<30;i++){
-    const x=r()*S,y=r()*S,sz=2+r()*8;
-    ctx.fillStyle=`rgba(180,20,20,${.4+r()*.6})`;
-    ctx.beginPath(); ctx.arc(x,y,sz,0,Math.PI*2); ctx.fill();
-  }
-}); }
-
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  2D TRAY
-// ══════════════════════════════════════════════════════════════
-const trayC = document.getElementById('trayCanvas');
-const trayCtx = trayC.getContext('2d');
-let TRAY_SIZE = 360;
-let hoverSlot = -1;
+// ══════════════════════════════════════════════════════════
+const trayC=document.getElementById('trayCanvas');
+const trayCtx=trayC.getContext('2d');
+let TRAY_SIZE=300, hoverSlot=-1;
 
-function resizeTray() {
-  const panel = document.querySelector('.tray-panel');
-  const avail = Math.min(panel.clientWidth - 40, panel.clientHeight - 120);
-  TRAY_SIZE = Math.max(220, Math.min(avail, 400));
-  trayC.width = trayC.height = TRAY_SIZE;
-  trayC.style.width = trayC.style.height = TRAY_SIZE + 'px';
+function resizeTray(){
+  const area=document.getElementById('trayArea');
+  const W=area.clientWidth-20, H=area.clientHeight-60;
+  TRAY_SIZE=Math.max(180,Math.min(W,H,420));
+  trayC.width=trayC.height=TRAY_SIZE;
   drawTray();
 }
 
-function beadRatioOnTray() {
-  const n = state.slots.length;
-  const TRAY_R = TRAY_SIZE * .36;
-  const circum = 2 * Math.PI * TRAY_R;
-  return Math.min(circum / n * .48, TRAY_SIZE * .09);
+function beadR(){
+  const n=state.slots.length,TRAY_R=TRAY_SIZE*.37;
+  return Math.min((2*Math.PI*TRAY_R/n)*.46,TRAY_SIZE*.1);
 }
 
-function drawTray() {
-  const S = TRAY_SIZE, cx = S/2, cy = S/2;
-  const TRAY_R = S * .36;
-  const bR = beadRatioOnTray();
-  const n = state.slots.length;
+function drawTray(){
+  const S=TRAY_SIZE,cx=S/2,cy=S/2,TR=S*.37,bR=beadR(),n=state.slots.length;
   trayCtx.clearRect(0,0,S,S);
-
-  // Tray dish
-  const dg = trayCtx.createRadialGradient(cx-S*.08,cy-S*.08,0,cx,cy,S*.48);
-  dg.addColorStop(0,'#2a1e0c');
-  dg.addColorStop(.7,'#1a1208');
-  dg.addColorStop(1,'#0e0a04');
-  trayCtx.beginPath(); trayCtx.arc(cx,cy,S*.47,0,Math.PI*2);
-  trayCtx.fillStyle=dg; trayCtx.fill();
-  // Rim highlight
-  trayCtx.beginPath(); trayCtx.arc(cx,cy,S*.47,0,Math.PI*2);
-  trayCtx.strokeStyle='rgba(200,160,80,.3)'; trayCtx.lineWidth=2; trayCtx.stroke();
-  // Inner groove circle
-  trayCtx.beginPath(); trayCtx.arc(cx,cy,TRAY_R,0,Math.PI*2);
-  trayCtx.strokeStyle='rgba(200,160,80,.15)'; trayCtx.lineWidth=bR*2.2;
-  trayCtx.stroke();
-  // Center logo hint
-  trayCtx.font=`${S*.035}px serif`;
-  trayCtx.fillStyle='rgba(200,160,80,.15)';
-  trayCtx.textAlign='center'; trayCtx.textBaseline='middle';
-  trayCtx.fillText('LARME', cx, cy);
-
+  // Dish
+  const dg=trayCtx.createRadialGradient(cx-S*.07,cy-S*.07,0,cx,cy,S*.47);
+  dg.addColorStop(0,'#241a08');dg.addColorStop(.7,'#151005');dg.addColorStop(1,'#0a0804');
+  trayCtx.beginPath();trayCtx.arc(cx,cy,S*.47,0,Math.PI*2);
+  trayCtx.fillStyle=dg;trayCtx.fill();
+  trayCtx.beginPath();trayCtx.arc(cx,cy,S*.47,0,Math.PI*2);
+  trayCtx.strokeStyle='rgba(200,160,80,.25)';trayCtx.lineWidth=1.5;trayCtx.stroke();
+  // Groove
+  trayCtx.beginPath();trayCtx.arc(cx,cy,TR,0,Math.PI*2);
+  trayCtx.strokeStyle='rgba(200,160,80,.12)';trayCtx.lineWidth=bR*2.3;trayCtx.stroke();
+  // Center
+  trayCtx.font=`${S*.032}px serif`;trayCtx.fillStyle='rgba(200,160,80,.12)';
+  trayCtx.textAlign='center';trayCtx.textBaseline='middle';trayCtx.fillText('LARME',cx,cy);
   // Beads
   for(let i=0;i<n;i++){
-    const angle = (i/n)*Math.PI*2 - Math.PI/2;
-    const bx = cx + Math.cos(angle)*TRAY_R;
-    const by = cy + Math.sin(angle)*TRAY_R;
-    const isHover = i===hoverSlot;
-    const isSelected = state.selectedSlotIdx===i;
-    drawBead2D(trayCtx, bx, by, bR, state.slots[i], isHover, isSelected);
+    const a=(i/n)*Math.PI*2-Math.PI/2;
+    const bx=cx+Math.cos(a)*TR,by=cy+Math.sin(a)*TR;
+    drawBead2D(trayCtx,bx,by,bR,state.slots[i],i===hoverSlot);
   }
 }
 
-function drawBead2D(ctx, cx, cy, r, beadId, hover, selected) {
-  if(!beadId) {
-    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
-    ctx.strokeStyle = hover ? 'rgba(200,160,80,.7)' : 'rgba(255,255,255,.2)';
-    ctx.lineWidth = hover ? 1.5 : 1;
-    ctx.setLineDash([3,3]); ctx.stroke(); ctx.setLineDash([]);
-    if(hover){ ctx.fillStyle='rgba(200,160,80,.08)'; ctx.fill(); }
+function drawBead2D(ctx,cx,cy,r,id,hover){
+  if(!id){
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.strokeStyle=hover?'rgba(200,160,80,.65)':'rgba(255,255,255,.18)';
+    ctx.lineWidth=hover?1.5:1;ctx.setLineDash([2.5,2.5]);ctx.stroke();ctx.setLineDash([]);
+    if(hover){ctx.fillStyle='rgba(200,160,80,.07)';ctx.fill();}
     return;
   }
-  const bead = BEADS.find(b=>b.id===beadId) || ACCESSORIES.find(a=>a.id===beadId);
-  if(!bead) return;
-
-  // Shadow
-  ctx.save();
-  ctx.shadowColor='rgba(0,0,0,.6)'; ctx.shadowBlur=r*.6; ctx.shadowOffsetY=r*.2;
-
-  if(bead.icon) {
-    // Accessory
-    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
-    ctx.fillStyle=bead.shape==='spacer'?
-      (bead.color===0xc8a040?'#c8a040':'#cccccc'):'#888';
+  const bead=BEADS.find(b=>b.id===id)||ACCESSORIES.find(a=>a.id===id);
+  if(!bead)return;
+  ctx.save();ctx.shadowColor='rgba(0,0,0,.55)';ctx.shadowBlur=r*.65;ctx.shadowOffsetY=r*.22;
+  if(bead.icon){
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.fillStyle=bead.shape==='spacer'?(bead.color===0xc8a040?'#c8a040':'#c0c0c0'):'#909090';
     ctx.fill();
   } else {
-    const {g,alpha} = bead.tray;
-    const grad = ctx.createRadialGradient(cx-r*.38,cy-r*.4,r*.04,cx,cy,r);
-    grad.addColorStop(0,g[0]); grad.addColorStop(.35,g[1]);
-    grad.addColorStop(.72,g[2]); grad.addColorStop(1,g[3]);
-    ctx.globalAlpha = alpha ?? 1;
-    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
-    ctx.fillStyle=grad; ctx.fill();
-    ctx.globalAlpha=1;
+    const{g,alpha}=bead.tray;
+    const grad=ctx.createRadialGradient(cx-r*.37,cy-r*.42,r*.04,cx,cy,r);
+    grad.addColorStop(0,g[0]);grad.addColorStop(.33,g[1]);grad.addColorStop(.7,g[2]);grad.addColorStop(1,g[3]);
+    ctx.globalAlpha=alpha??1;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();ctx.globalAlpha=1;
   }
   ctx.restore();
-
-  // Specular highlight
-  const hl=ctx.createRadialGradient(cx-r*.32,cy-r*.38,0,cx-r*.18,cy-r*.25,r*.6);
-  hl.addColorStop(0,'rgba(255,255,255,.92)');
-  hl.addColorStop(.35,'rgba(255,255,255,.35)');
-  hl.addColorStop(1,'rgba(255,255,255,0)');
-  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
-  ctx.fillStyle=hl; ctx.fill();
-
-  // Bottom rim glow
-  const hl2=ctx.createRadialGradient(cx+r*.28,cy+r*.32,0,cx+r*.15,cy+r*.2,r*.45);
-  hl2.addColorStop(0,'rgba(255,255,255,.18)');
-  hl2.addColorStop(1,'rgba(255,255,255,0)');
-  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
-  ctx.fillStyle=hl2; ctx.fill();
-
-  // Selection ring
-  if(selected||hover){
-    ctx.beginPath(); ctx.arc(cx,cy,r+2,0,Math.PI*2);
-    ctx.strokeStyle=selected?'rgba(200,160,80,1)':'rgba(200,160,80,.5)';
-    ctx.lineWidth=selected?2:1.5; ctx.stroke();
-  }
+  // Highlight
+  const hl=ctx.createRadialGradient(cx-r*.33,cy-r*.38,0,cx-r*.18,cy-r*.24,r*.58);
+  hl.addColorStop(0,'rgba(255,255,255,.88)');hl.addColorStop(.38,'rgba(255,255,255,.28)');hl.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=hl;ctx.fill();
+  const hl2=ctx.createRadialGradient(cx+r*.28,cy+r*.3,0,cx+r*.14,cy+r*.18,r*.42);
+  hl2.addColorStop(0,'rgba(255,255,255,.15)');hl2.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=hl2;ctx.fill();
+  if(hover){ctx.beginPath();ctx.arc(cx,cy,r+1.5,0,Math.PI*2);ctx.strokeStyle='rgba(200,160,80,.55)';ctx.lineWidth=1.5;ctx.stroke();}
 }
 
-function slotAtPoint(x,y) {
-  const S=TRAY_SIZE, TRAY_R=S*.36, n=state.slots.length;
-  const bR=beadRatioOnTray();
+function slotAt(x,y){
+  const S=TRAY_SIZE,TR=S*.37,n=state.slots.length,bR=beadR();
   for(let i=0;i<n;i++){
-    const angle=(i/n)*Math.PI*2-Math.PI/2;
-    const bx=S/2+Math.cos(angle)*TRAY_R, by=S/2+Math.sin(angle)*TRAY_R;
-    const dx=x-bx,dy=y-by;
-    if(dx*dx+dy*dy<=bR*bR*1.2) return i;
+    const a=(i/n)*Math.PI*2-Math.PI/2;
+    const dx=x-(S/2+Math.cos(a)*TR),dy=y-(S/2+Math.sin(a)*TR);
+    if(dx*dx+dy*dy<=bR*bR*1.3)return i;
   }
   return -1;
 }
+function xy(e){const rect=trayC.getBoundingClientRect(),sc=TRAY_SIZE/rect.width;
+  if(e.touches)return{x:(e.touches[0].clientX-rect.left)*sc,y:(e.touches[0].clientY-rect.top)*sc};
+  return{x:(e.clientX-rect.left)*sc,y:(e.clientY-rect.top)*sc};}
 
-function getXY(e) {
-  const rect=trayC.getBoundingClientRect();
-  const scale=TRAY_SIZE/rect.width;
-  if(e.touches) return {x:(e.touches[0].clientX-rect.left)*scale,y:(e.touches[0].clientY-rect.top)*scale};
-  return {x:(e.clientX-rect.left)*scale,y:(e.clientY-rect.top)*scale};
-}
-
-let longPressTimer=null;
-trayC.addEventListener('mousemove',e=>{const{x,y}=getXY(e);hoverSlot=slotAtPoint(x,y);drawTray();});
+let longT=null,touchMoved=false;
+trayC.addEventListener('mousemove',e=>{const{x,y}=xy(e);hoverSlot=slotAt(x,y);drawTray();});
 trayC.addEventListener('mouseleave',()=>{hoverSlot=-1;drawTray();});
 trayC.addEventListener('click',e=>{
-  const{x,y}=getXY(e);const i=slotAtPoint(x,y);
-  if(i<0)return;
-  if(state.selectedId){ state.slots[i]=state.selectedId; }
-  else { state.slots[i]=null; }
-  drawTray(); updateBeadCount();
-  if(state.rendered) buildBracelet();
+  const{x,y}=xy(e);const i=slotAt(x,y);if(i<0)return;
+  state.slots[i]=state.selectedId||null;drawTray();updateCount();
+  if(state.rendered)buildBracelet();
 });
-trayC.addEventListener('contextmenu',e=>{
-  e.preventDefault();const{x,y}=getXY(e);const i=slotAtPoint(x,y);
-  if(i>=0){state.slots[i]=null;drawTray();updateBeadCount();}
-});
-trayC.addEventListener('touchstart',e=>{
-  const{x,y}=getXY(e); const i=slotAtPoint(x,y); if(i<0)return;
-  longPressTimer=setTimeout(()=>{state.slots[i]=null;drawTray();updateBeadCount();},500);
-},{passive:true});
-trayC.addEventListener('touchend',()=>{clearTimeout(longPressTimer);},{passive:true});
+trayC.addEventListener('contextmenu',e=>{e.preventDefault();const{x,y}=xy(e);const i=slotAt(x,y);if(i>=0){state.slots[i]=null;drawTray();updateCount();}});
+trayC.addEventListener('touchstart',e=>{touchMoved=false;const{x,y}=xy(e);const i=slotAt(x,y);if(i<0)return;longT=setTimeout(()=>{if(!touchMoved){state.slots[i]=null;drawTray();updateCount();}},500);},{passive:true});
+trayC.addEventListener('touchmove',()=>{touchMoved=true;},{passive:true});
+trayC.addEventListener('touchend',()=>clearTimeout(longT),{passive:true});
 
-// ══════════════════════════════════════════════════════════════
-//  THREE.JS SCENE
-// ══════════════════════════════════════════════════════════════
-const threeC = document.getElementById('threeCanvas');
-const renderer = new THREE.WebGLRenderer({canvas:threeC,antialias:true,alpha:true});
+// ══════════════════════════════════════════════════════════
+//  THREE.JS
+// ══════════════════════════════════════════════════════════
+const threeC=document.getElementById('threeCanvas');
+const renderer=new THREE.WebGLRenderer({canvas:threeC,antialias:true,alpha:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.15;
-renderer.shadowMap.enabled=true;
-renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 
-const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x0d0d0d);
-
-const camera=new THREE.PerspectiveCamera(45,1,.1,1000);
-camera.position.set(0,55,85);
-
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x090909);
+const camera=new THREE.PerspectiveCamera(45,1,.1,1000);camera.position.set(0,55,85);
 const controls=new OrbitControls(camera,threeC);
-controls.enableDamping=true; controls.dampingFactor=.08;
-controls.minDistance=40; controls.maxDistance=200;
-controls.autoRotate=true; controls.autoRotateSpeed=1.2;
-controls.target.set(0,0,0);
+controls.enableDamping=true;controls.dampingFactor=.08;controls.minDistance=40;controls.maxDistance=220;
+controls.autoRotate=true;controls.autoRotateSpeed=1.2;controls.target.set(0,0,0);
 
-// Environment
 const pmrem=new THREE.PMREMGenerator(renderer);
-pmrem.compileEquirectangularShader();
-const envTex=pmrem.fromScene(new RoomEnvironment()).texture;
-scene.environment=envTex;
+scene.environment=pmrem.fromScene(new RoomEnvironment()).texture;
 
-// Lighting
-const ambient=new THREE.AmbientLight(0xfff8f0,.4);
-scene.add(ambient);
-const key=new THREE.DirectionalLight(0xfff5e8,2.8);
-key.position.set(40,70,50); key.castShadow=true;
-key.shadow.mapSize.set(2048,2048); key.shadow.bias=-.001;
-scene.add(key);
-const fill=new THREE.DirectionalLight(0xe0e8ff,.8);
-fill.position.set(-50,30,-40); scene.add(fill);
-const rim=new THREE.PointLight(0xffeedd,.9,200);
-rim.position.set(0,60,-60); scene.add(rim);
+scene.add(new THREE.AmbientLight(0xfff8f0,.4));
+const key=new THREE.DirectionalLight(0xfff5e8,2.8);key.position.set(40,70,50);key.castShadow=true;key.shadow.mapSize.set(2048,2048);key.shadow.bias=-.001;scene.add(key);
+const fill=new THREE.DirectionalLight(0xe0e8ff,.8);fill.position.set(-50,30,-40);scene.add(fill);
+const rim=new THREE.PointLight(0xffeedd,.9,200);rim.position.set(0,60,-60);scene.add(rim);
 
-// Ground (for product view)
-const groundGeo=new THREE.CircleGeometry(120,64);
-const groundMat=new THREE.MeshPhysicalMaterial({color:0xf5f0e8,roughness:.8,metalness:0});
-const ground=new THREE.Mesh(groundGeo,groundMat);
-ground.rotation.x=-Math.PI/2; ground.position.y=-1; ground.receiveShadow=true;
-scene.add(ground);
+const ground=new THREE.Mesh(new THREE.CircleGeometry(120,64),new THREE.MeshPhysicalMaterial({color:0xf5f0e8,roughness:.8}));
+ground.rotation.x=-Math.PI/2;ground.position.y=-1;ground.receiveShadow=true;scene.add(ground);
+const wrist=new THREE.Mesh(new THREE.CylinderGeometry(WRIST_R,WRIST_R+2,90,48),new THREE.MeshPhysicalMaterial({color:0xc0987a,roughness:.65}));
+wrist.rotation.z=Math.PI/2;wrist.receiveShadow=true;wrist.castShadow=true;wrist.visible=false;scene.add(wrist);
 
-// Wrist (hidden by default)
-const wristGeo=new THREE.CylinderGeometry(WRIST_R,WRIST_R+2,90,48);
-const wristMat=new THREE.MeshPhysicalMaterial({color:0xc8a080,roughness:.65,metalness:0});
-const wrist=new THREE.Mesh(wristGeo,wristMat);
-wrist.castShadow=true; wrist.receiveShadow=true;
-wrist.rotation.z=Math.PI/2; wrist.visible=false;
-scene.add(wrist);
+let braceletGroup=null;const matCache={};
 
-let braceletGroup=null;
-const matCache={};
-
-function getMaterial(beadId) {
-  if(matCache[beadId]) return matCache[beadId];
-  const bead=BEADS.find(b=>b.id===beadId);
-  if(!bead){ matCache[beadId]=new THREE.MeshStandardMaterial({color:0x888888}); return matCache[beadId]; }
-  const {m3,special}=bead;
-
-  let map=null,roughMap=null;
-  if(special==='goldstone_blue') map=texGoldstone(true);
-  else if(special==='goldstone_red') map=texGoldstone(false);
-  else if(special==='tigers_eye') map=texTigersEye();
-  else if(special==='lapis') map=texLapis();
-  else if(special==='malachite') map=texMalachite();
-  else if(special==='agate_red') map=texRedAgate();
-  else if(special==='labradorite') map=texLabradorite();
-  else if(special==='rutile_gold') map=texRutileGold();
-
-  const props={
-    color:m3.color, roughness:m3.roughness??0,
-    metalness:m3.metalness??0, envMapIntensity:m3.envI??1.5,
-  };
-  if(m3.transmission>0){
-    props.transmission=m3.transmission; props.transparent=true;
-    props.ior=m3.ior??1.5; props.thickness=m3.thick??8;
-    if(m3.att){ props.attenuationColor=new THREE.Color(m3.att); props.attenuationDistance=m3.attD??20; }
-  }
-  if(map) props.map=map;
-
-  const mat=new THREE.MeshPhysicalMaterial(props);
-  matCache[beadId]=mat; return mat;
+function getMat(id){
+  if(matCache[id])return matCache[id];
+  const b=BEADS.find(x=>x.id===id);if(!b)return new THREE.MeshStandardMaterial({color:0x888});
+  const{m3,special}=b;
+  let map=null;
+  if(special==='goldstone_blue')map=texGoldstone(true);
+  else if(special==='goldstone_red')map=texGoldstone(false);
+  else if(special==='tigers_eye')map=texTigersEye();
+  else if(special==='lapis')map=texLapis();
+  else if(special==='malachite')map=texMalachite();
+  else if(special==='agate_red')map=texRedAgate();
+  else if(special==='labradorite')map=texLabradorite();
+  else if(special==='rutile_gold')map=texRutileGold();
+  const p={color:m3.color,roughness:m3.roughness??0,metalness:m3.metalness??0,envMapIntensity:m3.envI??1.5};
+  if(m3.transmission>0){p.transmission=m3.transmission;p.transparent=true;p.ior=m3.ior??1.5;p.thickness=m3.thick??8;
+    if(m3.att){p.attenuationColor=new THREE.Color(m3.att);p.attenuationDistance=m3.attD??20;}}
+  if(map)p.map=map;
+  return matCache[id]=new THREE.MeshPhysicalMaterial(p);
 }
 
-function buildBeadMesh(beadId, radius) {
-  const seg=radius>6?32:24;
-  const bead=BEADS.find(b=>b.id===beadId);
-  const acc=ACCESSORIES.find(a=>a.id===beadId);
-
-  if(acc) {
-    if(acc.shape==='spacer'){
-      const g=new THREE.CylinderGeometry(radius*.9,radius*.9,radius*.4,24);
-      const m=new THREE.MeshPhysicalMaterial({color:acc.color,metalness:.85,roughness:.1});
-      return new THREE.Mesh(g,m);
-    }
-    if(acc.shape==='charm_ring'){
-      const g=new THREE.TorusGeometry(radius*.6,radius*.2,16,32);
-      const m=new THREE.MeshPhysicalMaterial({color:0xdddddd,metalness:.9,roughness:.08});
-      return new THREE.Mesh(g,m);
-    }
-    const g=new THREE.SphereGeometry(radius*.7,24,24);
-    const m=new THREE.MeshPhysicalMaterial({color:0xdddddd,metalness:.8,roughness:.1});
-    return new THREE.Mesh(g,m);
+function mkBeadMesh(id,r){
+  const seg=r>5?32:24;
+  const acc=ACCESSORIES.find(a=>a.id===id);
+  if(acc){
+    if(acc.shape==='spacer'){const m=new THREE.Mesh(new THREE.CylinderGeometry(r*.9,r*.9,r*.4,24),new THREE.MeshPhysicalMaterial({color:acc.color,metalness:.85,roughness:.1}));return m;}
+    const m=new THREE.Mesh(new THREE.TorusGeometry(r*.6,r*.22,16,32),new THREE.MeshPhysicalMaterial({color:0xdddddd,metalness:.9,roughness:.08}));return m;
   }
-
-  if(!bead) return null;
-
-  if(bead.special==='phantom_green'){
-    const grp=new THREE.Group();
-    // Outer shell
-    const shellMat=getMaterial(beadId);
-    grp.add(new THREE.Mesh(new THREE.SphereGeometry(radius,seg,seg),shellMat));
-    // Phantom inclusions
-    const phantomMat=new THREE.MeshPhysicalMaterial({
-      map:texPhantomGreen(),transparent:true,opacity:.72,roughness:.3,side:THREE.FrontSide
-    });
-    grp.add(new THREE.Mesh(new THREE.SphereGeometry(radius*.68,20,20),phantomMat));
-    // Green wisps
-    const wispMat=new THREE.MeshPhysicalMaterial({
-      map:texWispGreen(),transparent:true,opacity:.6,roughness:.4,
-      emissive:new THREE.Color(0x0a3010),emissiveIntensity:.4
-    });
-    grp.add(new THREE.Mesh(new THREE.SphereGeometry(radius*.52,18,18),wispMat));
-    return grp;
+  const b=BEADS.find(x=>x.id===id);if(!b)return null;
+  if(b.special==='phantom_green'){
+    const g=new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.SphereGeometry(r,seg,seg),getMat(id)));
+    g.add(new THREE.Mesh(new THREE.SphereGeometry(r*.68,20,20),new THREE.MeshPhysicalMaterial({map:texPhantomGreen(),transparent:true,opacity:.72,roughness:.3})));
+    g.add(new THREE.Mesh(new THREE.SphereGeometry(r*.52,18,18),new THREE.MeshPhysicalMaterial({map:texWispGreen(),transparent:true,opacity:.6,roughness:.4,emissive:new THREE.Color(0x082810),emissiveIntensity:.45})));
+    return g;
   }
-
-  if(bead.special==='strawberry'){
-    const grp=new THREE.Group();
-    grp.add(new THREE.Mesh(new THREE.SphereGeometry(radius,seg,seg),getMaterial(beadId)));
-    const inclMat=new THREE.MeshPhysicalMaterial({map:texStrawberry(),transparent:true,opacity:.55,roughness:.2});
-    grp.add(new THREE.Mesh(new THREE.SphereGeometry(radius*.72,20,20),inclMat));
-    return grp;
+  if(b.special==='moonstone'){
+    const g=new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.SphereGeometry(r,seg,seg),getMat(id)));
+    g.add(new THREE.Mesh(new THREE.SphereGeometry(r*.95,seg,seg),new THREE.MeshPhysicalMaterial({color:0x7088ff,transparent:true,opacity:.18,roughness:.0,transmission:.25,ior:1.4,emissive:new THREE.Color(0x1828b8),emissiveIntensity:.12})));
+    return g;
   }
-
-  if(bead.special==='rutile_gold'){
-    const grp=new THREE.Group();
-    grp.add(new THREE.Mesh(new THREE.SphereGeometry(radius,seg,seg),getMaterial(beadId)));
-    const needleMat=new THREE.MeshPhysicalMaterial({map:texRutileGold(),transparent:true,opacity:.65,roughness:.15,
-      emissive:new THREE.Color(0x302000),emissiveIntensity:.5});
-    grp.add(new THREE.Mesh(new THREE.SphereGeometry(radius*.65,18,18),needleMat));
-    return grp;
+  if(b.special==='strawberry'){
+    const g=new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.SphereGeometry(r,seg,seg),getMat(id)));
+    g.add(new THREE.Mesh(new THREE.SphereGeometry(r*.72,20,20),new THREE.MeshPhysicalMaterial({map:texStrawberry(),transparent:true,opacity:.55,roughness:.2})));
+    return g;
   }
-
-  if(bead.special==='moonstone'){
-    const grp=new THREE.Group();
-    grp.add(new THREE.Mesh(new THREE.SphereGeometry(radius,seg,seg),getMaterial(beadId)));
-    // Blue adularescence layer
-    const aMat=new THREE.MeshPhysicalMaterial({
-      color:0x8090ff,transparent:true,opacity:.2,roughness:.0,
-      transmission:.3,ior:1.4,emissive:new THREE.Color(0x2030c0),emissiveIntensity:.15
-    });
-    grp.add(new THREE.Mesh(new THREE.SphereGeometry(radius*.96,seg,seg),aMat));
-    return grp;
+  if(b.special==='rutile_gold'){
+    const g=new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.SphereGeometry(r,seg,seg),getMat(id)));
+    g.add(new THREE.Mesh(new THREE.SphereGeometry(r*.65,18,18),new THREE.MeshPhysicalMaterial({map:texRutileGold(),transparent:true,opacity:.65,roughness:.15,emissive:new THREE.Color(0x281800),emissiveIntensity:.5})));
+    return g;
   }
-
-  const mesh=new THREE.Mesh(new THREE.SphereGeometry(radius,seg,seg),getMaterial(beadId));
-  mesh.castShadow=true; mesh.receiveShadow=true;
-  return mesh;
+  const m=new THREE.Mesh(new THREE.SphereGeometry(r,seg,seg),getMat(id));
+  m.castShadow=true;m.receiveShadow=true;return m;
 }
 
-function buildBracelet() {
-  if(braceletGroup){ scene.remove(braceletGroup); braceletGroup.traverse(o=>{
-    if(o.geometry)o.geometry.dispose();
-  }); }
+function buildBracelet(){
+  if(braceletGroup){scene.remove(braceletGroup);}
   braceletGroup=new THREE.Group();
-
-  const sizeMm=state.sizeMm;
-  const beadR=sizeMm/2;
-  const n=state.slots.length;
-
-  let bracR; // bracelet ring radius (distance from center to bead center)
-  if(state.viewMode==='wrist'){
-    bracR=WRIST_R+beadR+.5;
-  } else {
-    bracR=n*beadR*1.02/Math.PI; // fit beads in circle
-  }
-
+  const bR=state.sizeMm/2,n=state.slots.length;
+  const bracR=state.viewMode==='wrist'?WRIST_R+bR+.5:n*bR*1.02/Math.PI;
   for(let i=0;i<n;i++){
-    const id=state.slots[i];
-    if(!id) continue;
-    const angle=(i/n)*Math.PI*2;
-    const x=Math.cos(angle)*bracR, z=Math.sin(angle)*bracR;
-    const mesh=buildBeadMesh(id,beadR);
-    if(!mesh) continue;
-    mesh.position.set(x,0,z);
-    // Rotate bead so its "north pole" faces outward (good for chatoyant stones)
-    mesh.rotation.y=angle+Math.PI/2;
-    if(mesh instanceof THREE.Mesh){ mesh.castShadow=true; mesh.receiveShadow=true; }
+    const id=state.slots[i];if(!id)continue;
+    const a=(i/n)*Math.PI*2;
+    const mesh=mkBeadMesh(id,bR);if(!mesh)continue;
+    mesh.position.set(Math.cos(a)*bracR,0,Math.sin(a)*bracR);
+    mesh.rotation.y=a+Math.PI/2;
     braceletGroup.add(mesh);
   }
-
-  // Elastic cord (thin dark tube through center of beads)
-  const points=[];
-  for(let i=0;i<=64;i++){
-    const angle=(i/64)*Math.PI*2;
-    points.push(new THREE.Vector3(Math.cos(angle)*bracR,0,Math.sin(angle)*bracR));
-  }
-  const cordGeo=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points,true),128,beadR*.08,8,true);
-  const cordMat=new THREE.MeshStandardMaterial({color:0x111111,roughness:.9});
-  braceletGroup.add(new THREE.Mesh(cordGeo,cordMat));
-
+  // Cord
+  const pts=[];for(let i=0;i<=64;i++){const a=(i/64)*Math.PI*2;pts.push(new THREE.Vector3(Math.cos(a)*bracR,0,Math.sin(a)*bracR));}
+  braceletGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,true),128,bR*.07,8,true),new THREE.MeshStandardMaterial({color:0x0a0a0a,roughness:.9})));
   scene.add(braceletGroup);
-  updateCamera();
-  document.getElementById('renderHint').style.display='none';
   state.rendered=true;
+  updateCamera();
 }
 
-function updateCamera() {
-  const sizeMm=state.sizeMm, beadR=sizeMm/2;
-  const n=state.slots.length;
-  const bracR=state.viewMode==='wrist'?WRIST_R+beadR+.5:n*beadR*1.02/Math.PI;
-
+function updateCamera(){
+  const bR=state.sizeMm/2,n=state.slots.length;
+  const bracR=state.viewMode==='wrist'?WRIST_R+bR+.5:n*bR*1.02/Math.PI;
   if(state.viewMode==='wrist'){
-    camera.position.set(0,bracR*1.4+20,bracR*2.2+30);
-    controls.target.set(0,0,0);
-    wrist.visible=true; ground.visible=false;
-    controls.autoRotateSpeed=.8;
+    camera.position.set(0,bracR*1.5+20,bracR*2.4+30);
+    wrist.visible=true;ground.visible=false;controls.autoRotateSpeed=.8;
   } else {
-    camera.position.set(0,bracR*1.6+30,bracR*.4+10);
-    controls.target.set(0,-2,0);
-    wrist.visible=false; ground.visible=true;
-    camera.lookAt(0,0,0);
-    controls.autoRotateSpeed=.4;
+    camera.position.set(0,bracR*1.7+30,bracR*.5+12);
+    wrist.visible=false;ground.visible=true;controls.autoRotateSpeed=.4;
   }
-  controls.update();
+  controls.target.set(0,0,0);controls.update();
 }
 
-// Resize handler
-function resizeRenderer() {
-  const panel=document.querySelector('.preview');
-  const W=panel.clientWidth, H=panel.clientHeight-40;
+function resizeRenderer(){
+  const el=document.getElementById('preview3D');
+  const W=el.clientWidth,H=el.clientHeight-48-44;
+  if(W<1||H<1)return;
   renderer.setSize(W,Math.max(H,100));
-  camera.aspect=W/Math.max(H,1);
-  camera.updateProjectionMatrix();
+  camera.aspect=W/Math.max(H,1);camera.updateProjectionMatrix();
 }
 
-const resizeObs=new ResizeObserver(()=>{ resizeRenderer(); resizeTray(); });
-resizeObs.observe(document.querySelector('.preview'));
-resizeObs.observe(document.querySelector('.tray-panel'));
-
-// Animation
-function animate(){
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene,camera);
-}
+function animate(){requestAnimationFrame(animate);controls.update();renderer.render(scene,camera);}
 animate();
 
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  PALETTE UI
-// ══════════════════════════════════════════════════════════════
-function drawPaletteIcon(bead,size=36) {
-  const c=document.createElement('canvas'); c.width=c.height=size;
-  const ctx=c.getContext('2d'); const r=size/2-2, cx=size/2, cy=size/2;
+// ══════════════════════════════════════════════════════════
+function mkIcon(bead,size=40){
+  const c=document.createElement('canvas');c.width=c.height=size;
+  const ctx=c.getContext('2d'),r=size/2-2,cx=size/2,cy=size/2;
   if(bead.icon){
-    ctx.font=`${size*.55}px serif`; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.font=`${size*.55}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillStyle=bead.shape==='spacer'?(bead.color===0xc8a040?'#c8a040':'#ccc'):'#aaa';
-    ctx.fillText(bead.icon,cx,cy); return c;
+    ctx.fillText(bead.icon,cx,cy);return c;
   }
-  const {g,alpha}=bead.tray;
-  const grad=ctx.createRadialGradient(cx-r*.38,cy-.4*r,r*.04,cx,cy,r);
-  grad.addColorStop(0,g[0]); grad.addColorStop(.35,g[1]);
-  grad.addColorStop(.72,g[2]); grad.addColorStop(1,g[3]);
-  ctx.globalAlpha=alpha??1;
-  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fillStyle=grad; ctx.fill();
-  ctx.globalAlpha=1;
-  const hl=ctx.createRadialGradient(cx-r*.32,cy-r*.38,0,cx-r*.18,cy-r*.25,r*.6);
-  hl.addColorStop(0,'rgba(255,255,255,.9)'); hl.addColorStop(.4,'rgba(255,255,255,.3)');
-  hl.addColorStop(1,'rgba(255,255,255,0)');
-  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fillStyle=hl; ctx.fill();
+  const{g,alpha}=bead.tray;
+  const grad=ctx.createRadialGradient(cx-r*.37,cy-r*.42,r*.04,cx,cy,r);
+  grad.addColorStop(0,g[0]);grad.addColorStop(.33,g[1]);grad.addColorStop(.7,g[2]);grad.addColorStop(1,g[3]);
+  ctx.globalAlpha=alpha??1;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();ctx.globalAlpha=1;
+  const hl=ctx.createRadialGradient(cx-r*.33,cy-r*.38,0,cx-r*.18,cy-r*.24,r*.58);
+  hl.addColorStop(0,'rgba(255,255,255,.88)');hl.addColorStop(.4,'rgba(255,255,255,.26)');hl.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=hl;ctx.fill();
   return c;
 }
 
-function renderPalette() {
-  const crystalGrid=document.getElementById('crystalGrid');
-  const opaqueGrid=document.getElementById('opaqueGrid');
-  crystalGrid.innerHTML=''; opaqueGrid.innerHTML='';
-
-  BEADS.forEach(bead=>{
-    const btn=document.createElement('div');
-    btn.className='bead-btn'; btn.dataset.id=bead.id;
-    const icon=drawPaletteIcon(bead,38);
-    btn.appendChild(icon);
-    const label=document.createElement('span'); label.textContent=bead.name;
-    btn.appendChild(label);
-    btn.addEventListener('click',()=>selectItem(bead.id));
-    (bead.cat==='crystal'?crystalGrid:opaqueGrid).appendChild(btn);
-  });
-
-  const accGrid=document.getElementById('accGrid');
-  accGrid.innerHTML='';
-  ACCESSORIES.forEach(acc=>{
-    const btn=document.createElement('div');
-    btn.className='acc-btn'; btn.dataset.id=acc.id;
-    const icon=document.createElement('div'); icon.className='acc-icon'; icon.textContent=acc.icon;
-    btn.appendChild(icon);
-    const label=document.createElement('span'); label.textContent=acc.name;
-    btn.appendChild(label);
-    btn.addEventListener('click',()=>selectItem(acc.id));
-    accGrid.appendChild(btn);
+function buildPalette(){
+  const strip=document.getElementById('beadStrip');strip.innerHTML='';
+  const all=[...BEADS,...ACCESSORIES];
+  all.forEach((b,idx)=>{
+    if(idx===BEADS.length){const sep=document.createElement('div');sep.className='acc-sep';strip.appendChild(sep);}
+    const btn=document.createElement('div');btn.className='bead-btn';btn.dataset.id=b.id;
+    btn.appendChild(mkIcon(b,40));
+    const lbl=document.createElement('span');lbl.textContent=b.name;btn.appendChild(lbl);
+    btn.addEventListener('click',()=>selectBead(b.id));
+    strip.appendChild(btn);
   });
 }
 
-function renderSizes() {
-  const row=document.getElementById('sizeRow'); row.innerHTML='';
+function buildSizes(){
+  const strip=document.getElementById('sizeStrip');strip.innerHTML='';
   SIZES.forEach(s=>{
-    const btn=document.createElement('button');
-    btn.className='size-btn'+(s===state.sizeMm?' selected':'');
+    const btn=document.createElement('button');btn.className='sbtn'+(s===state.sizeMm?' active':'');
     btn.textContent=s+'mm';
-    btn.addEventListener('click',()=>{
-      state.sizeMm=s; initSlots(); renderSizes(); drawTray(); updateBeadCount();
-      if(state.rendered) buildBracelet();
-    });
-    row.appendChild(btn);
+    btn.addEventListener('click',()=>{state.sizeMm=s;initSlots();buildSizes();drawTray();updateCount();if(state.rendered)buildBracelet();});
+    strip.appendChild(btn);
   });
 }
 
-function selectItem(id) {
+function selectBead(id){
   state.selectedId=state.selectedId===id?null:id;
-  document.querySelectorAll('.bead-btn,.acc-btn').forEach(b=>{
-    b.classList.toggle('selected',b.dataset.id===state.selectedId);
-  });
+  document.querySelectorAll('.bead-btn').forEach(b=>b.classList.toggle('selected',b.dataset.id===state.selectedId));
 }
 
-function updateBeadCount() {
-  const total=state.slots.filter(Boolean).length;
-  document.getElementById('beadCount').textContent=`${total} / ${state.slots.length} 颗珠子`;
+function updateCount(){const t=state.slots.filter(Boolean).length;document.getElementById('beadCountLbl').textContent=`${t} / ${state.slots.length} 颗珠子`;}
+
+// ── Controls ───────────────────────────────────────────────
+document.getElementById('clearBtn').addEventListener('click',()=>{state.slots.fill(null);drawTray();updateCount();if(state.rendered)buildBracelet();});
+document.getElementById('randomBtn').addEventListener('click',()=>{const ids=BEADS.map(b=>b.id);state.slots=state.slots.map(()=>ids[Math.floor(Math.random()*ids.length)]);drawTray();updateCount();if(state.rendered)buildBracelet();});
+
+function open3D(){
+  buildBracelet();
+  const ov=document.getElementById('preview3D');ov.classList.add('open');
+  setTimeout(()=>{resizeRenderer();renderer.render(scene,camera);},50);
 }
+document.getElementById('render3dBtn').addEventListener('click',open3D);
+document.getElementById('show3dBtn')?.addEventListener('click',open3D);
+document.getElementById('backBtn').addEventListener('click',()=>document.getElementById('preview3D').classList.remove('open'));
 
-// ── Controls ────────────────────────────────────────────────
-document.getElementById('clearBtn').addEventListener('click',()=>{
-  state.slots.fill(null); drawTray(); updateBeadCount();
-  if(state.rendered) buildBracelet();
-});
-document.getElementById('randomBtn').addEventListener('click',()=>{
-  const ids=BEADS.map(b=>b.id);
-  state.slots=state.slots.map(()=>ids[Math.floor(Math.random()*ids.length)]);
-  drawTray(); updateBeadCount();
-  if(state.rendered) buildBracelet();
-});
-document.getElementById('render3dBtn').addEventListener('click',()=>{
-  buildBracelet(); updateCamera();
-});
+document.getElementById('viewProductBtn').addEventListener('click',function(){state.viewMode='product';this.classList.add('active');document.getElementById('viewWristBtn').classList.remove('active');if(state.rendered)buildBracelet();});
+document.getElementById('viewWristBtn').addEventListener('click',function(){state.viewMode='wrist';this.classList.add('active');document.getElementById('viewProductBtn').classList.remove('active');if(state.rendered)buildBracelet();});
 
-document.getElementById('viewProduct').addEventListener('click',function(){
-  state.viewMode='product'; this.classList.add('active');
-  document.getElementById('viewWrist').classList.remove('active');
-  if(state.rendered){buildBracelet();updateCamera();}
-});
-document.getElementById('viewWrist').addEventListener('click',function(){
-  state.viewMode='wrist'; this.classList.add('active');
-  document.getElementById('viewProduct').classList.remove('active');
-  if(state.rendered){buildBracelet();updateCamera();}
-});
+const arBtn=document.getElementById('autoRotBtn');
+arBtn.addEventListener('click',()=>{state.autoRotate=!state.autoRotate;controls.autoRotate=state.autoRotate;arBtn.classList.toggle('active',state.autoRotate);arBtn.textContent=state.autoRotate?'⟳ 旋转':'⟳ 暂停';});
+document.getElementById('saveBtn').addEventListener('click',()=>{renderer.render(scene,camera);const a=document.createElement('a');a.href=threeC.toDataURL('image/png');a.download='larme-bracelet.png';a.click();});
 
-const autoRotBtn=document.getElementById('autoRotBtn');
-autoRotBtn.addEventListener('click',()=>{
-  state.autoRotate=!state.autoRotate;
-  controls.autoRotate=state.autoRotate;
-  autoRotBtn.classList.toggle('active',state.autoRotate);
-  autoRotBtn.textContent=state.autoRotate?'⟳ 自动旋转':'⟳ 手动';
-});
+// ── Resize ─────────────────────────────────────────────────
+const ro=new ResizeObserver(()=>{resizeTray();resizeRenderer();});
+ro.observe(document.getElementById('trayArea'));
+ro.observe(document.getElementById('preview3D'));
 
-document.getElementById('saveBtn').addEventListener('click',()=>{
-  renderer.render(scene,camera);
-  const a=document.createElement('a');
-  a.href=threeC.toDataURL('image/png');
-  a.download='larme-bracelet.png'; a.click();
-});
-
-// ── Init ─────────────────────────────────────────────────────
-initSlots();
-renderPalette();
-renderSizes();
-resizeTray();
-resizeRenderer();
-drawTray();
-updateBeadCount();
+// ── Init ───────────────────────────────────────────────────
+initSlots();buildPalette();buildSizes();resizeTray();resizeRenderer();drawTray();updateCount();
 </script>
 </body>
 </html>
