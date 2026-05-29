@@ -394,6 +394,14 @@ function calcEmptySlots(afterAngle){
 }
 
 function drawTrayLogo(ctx, cx, cy, r) {
+  try { _drawTrayLogoInner(ctx, cx, cy, r); } catch(e) {
+    // fallback: just text
+    ctx.save(); ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillStyle='rgba(200,160,80,.4)'; ctx.font=`${r*.25}px serif`;
+    ctx.fillText('⚜', cx, cy); ctx.restore();
+  }
+}
+function _drawTrayLogoInner(ctx, cx, cy, r) {
   ctx.save();
   const g = (a) => `rgba(200,160,80,${a})`;
 
@@ -509,15 +517,17 @@ function drawTray(){
   const S=TRAY_SIZE,cx=S/2,cy=S/2,tr=TR();
   trayCtx.clearRect(0,0,S,S);
 
-  // Dish background
+  // Dish background (dark theme)
   const dg=trayCtx.createRadialGradient(cx-S*.07,cy-S*.07,0,cx,cy,S*.47);
-  dg.addColorStop(0,'#f0e4cc');dg.addColorStop(.7,'#e0d0aa');dg.addColorStop(1,'#c8b880');
+  dg.addColorStop(0,'#2a1e08');dg.addColorStop(.7,'#181008');dg.addColorStop(1,'#0c0804');
   trayCtx.beginPath();trayCtx.arc(cx,cy,S*.47,0,Math.PI*2);
   trayCtx.fillStyle=dg;trayCtx.fill();
-  trayCtx.strokeStyle='rgba(180,140,60,.5)';trayCtx.lineWidth=2;trayCtx.stroke();
+  trayCtx.strokeStyle='rgba(200,160,80,.3)';trayCtx.lineWidth=2;trayCtx.stroke();
   // Groove
   trayCtx.beginPath();trayCtx.arc(cx,cy,tr,0,Math.PI*2);
-  trayCtx.strokeStyle='rgba(160,120,40,.2)';trayCtx.lineWidth=state.selectedSizeMm/state.wristMm*tr*2.5+4;trayCtx.stroke();
+  trayCtx.strokeStyle='rgba(200,160,80,.12)';
+  trayCtx.lineWidth=Math.max(4,(state.selectedSizeMm/state.wristMm)*tr*2.5+4);
+  trayCtx.stroke();
 
   // Center logo
   drawTrayLogo(trayCtx,cx,cy,S*.14);
