@@ -748,7 +748,11 @@ ground=new THREE.Mesh(new THREE.CircleGeometry(120,64),new THREE.MeshPhysicalMat
 ground.rotation.x=-Math.PI/2;ground.position.y=-1;ground.receiveShadow=true;scene.add(ground);
 wrist=new THREE.Mesh(new THREE.CylinderGeometry(WRIST_R,WRIST_R+2,90,48),new THREE.MeshPhysicalMaterial({color:0xc0987a,roughness:.65}));
 wrist.rotation.z=Math.PI/2;wrist.receiveShadow=true;wrist.castShadow=true;wrist.visible=false;scene.add(wrist);
+animate();
+resizeRenderer();
+} // end init3DScene()
 
+// ── 3D helper functions (module scope) ──────────────────────
 // braceletGroup and matCache already declared above
 
 function getMat(id){
@@ -868,9 +872,6 @@ async function open3D(){
 }
 
 function animate(){requestAnimationFrame(animate);if(controls)controls.update();if(renderer&&scene&&camera)renderer.render(scene,camera);}
-animate();
-resizeRenderer();
-} // end init3DScene()
 
 // ═══════════════════════════════════════════════════════════
 //  PALETTE UI
