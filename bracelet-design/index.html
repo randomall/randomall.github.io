@@ -217,19 +217,18 @@ header{display:flex;align-items:center;gap:10px;padding:8px 14px;
 
 <script type="importmap">
 {"imports":{
-  "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  "three":"./vendor/three.module.js"
 }}
 </script>
 <script type="module">
-// Three.js loads dynamically so a CDN failure won't crash the tray/palette
+// Three.js is self-hosted in ./vendor so content blockers can't break it.
 let THREE = null, OrbitControls = null, RoomEnvironment = null;
 async function loadThree() {
   try {
     const [threeModule, ocModule, reModule] = await Promise.all([
       import('three'),
-      import('three/addons/controls/OrbitControls.js'),
-      import('three/addons/environments/RoomEnvironment.js'),
+      import('./vendor/OrbitControls.js'),
+      import('./vendor/RoomEnvironment.js'),
     ]);
     THREE = threeModule;
     OrbitControls = ocModule.OrbitControls;
@@ -243,32 +242,14 @@ async function loadThree() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  PHOTO URLS (Wikipedia Commons CC)
+//  PHOTO URLS — self-hosted (Wikipedia Commons CC, copied to repo)
 // ═══════════════════════════════════════════════════════════
-const W='https://upload.wikimedia.org/wikipedia/commons/thumb/';
-const BEAD_PHOTOS={
-  green_phantom: W+'6/6a/QuartzFantome.jpg/512px-QuartzFantome.jpg',
-  rose_quartz:   W+'3/3a/Rose_quartz_12.jpg/512px-Rose_quartz_12.jpg',
-  clear_quartz:  W+'2/2f/Pure_Quartz_at_Senckenberg_Natural_History_Museum.jpg/512px-Pure_Quartz_at_Senckenberg_Natural_History_Museum.jpg',
-  amethyst:      W+'b/b5/Amatista_Laye_2.jpg/512px-Amatista_Laye_2.jpg',
-  citrine:       W+'d/d0/Citrine_taillee.jpg/512px-Citrine_taillee.jpg',
-  aquamarine:    W+'6/6e/Aquamarine_P1000141.JPG/512px-Aquamarine_P1000141.JPG',
-  smoky:         W+'3/32/Smoky-quartz-TUCQTZ09-03-arkenstone-irocks.png/512px-Smoky-quartz-TUCQTZ09-03-arkenstone-irocks.png',
-  moonstone:     W+'f/fe/AdulaireSuisse2.jpg/512px-AdulaireSuisse2.jpg',
-  strawberry:    W+'3/3a/Rose_quartz_12.jpg/512px-Rose_quartz_12.jpg',
-  garnet:        W+'5/5e/Garnet_Andradite20.jpg/512px-Garnet_Andradite20.jpg',
-  rutile_gold:   W+'8/8b/Quartz-159777.jpg/512px-Quartz-159777.jpg',
-  obsidian:      W+'1/17/Lipari-Obsidienne_%285%29.jpg/512px-Lipari-Obsidienne_%285%29.jpg',
-  blue_goldstone:W+'4/4e/Tumble_Polished_Blue_Goldstone_.JPG/512px-Tumble_Polished_Blue_Goldstone_.JPG',
-  red_goldstone: W+'9/92/Goldfluss_%28Aventuringlas%29.jpg/512px-Goldfluss_%28Aventuringlas%29.jpg',
-  tigers_eye:    W+'b/be/Tiger%27s_eye.jpg/512px-Tiger%27s_eye.jpg',
-  lapis:         W+'d/da/Lapis-lazuli_hg.jpg/512px-Lapis-lazuli_hg.jpg',
-  turquoise:     W+'7/7d/Turquoise-40031.jpg/512px-Turquoise-40031.jpg',
-  red_agate:     W+'2/26/Malawi_Agate_%28Malawi%2C_southeastern_Africa%29_%2832734668126%29.jpg/512px-Malawi_Agate_%28Malawi%2C_southeastern_Africa%29_%2832734668126%29.jpg',
-  malachite:     W+'5/55/Malachite%2C_Zaire.jpg/512px-Malachite%2C_Zaire.jpg',
-  labradorite:   W+'3/38/Labradorite_polie_3%28Madagascar%29.jpg/512px-Labradorite_polie_3%28Madagascar%29.jpg',
-};
+const ID_LIST=['green_phantom','rose_quartz','clear_quartz','amethyst','citrine','aquamarine','smoky','moonstone','strawberry','garnet','rutile_gold','obsidian','blue_goldstone','red_goldstone','tigers_eye','lapis','turquoise','red_agate','malachite','labradorite'];
+const BEAD_PHOTOS={};
+ID_LIST.forEach(id=>{ BEAD_PHOTOS[id]='./vendor/beads/'+id+'.jpg'; });
 const loadedImgs={}, loadedTex={};
+let logoImg=null;
+function loadLogo(){return new Promise(res=>{const img=new Image();img.onload=()=>{logoImg=img;res();};img.onerror=()=>res();img.src='./vendor/logo.jpg';});}
 async function preloadPhotos(){
   await Promise.all(Object.entries(BEAD_PHOTOS).map(([id,url])=>new Promise(res=>{
     const img=new Image(); img.crossOrigin='anonymous';
@@ -410,12 +391,23 @@ function calcEmptySlots(afterAngle){
 }
 
 function drawTrayLogo(ctx, cx, cy, r) {
-  try { _drawTrayLogoInner(ctx, cx, cy, r); } catch(e) {
-    // fallback: just text
-    ctx.save(); ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillStyle='rgba(200,160,80,.4)'; ctx.font=`${r*.25}px serif`;
-    ctx.fillText('⚜', cx, cy); ctx.restore();
+  if (logoImg) {
+    const s = r * 2.1;
+    // light medallion behind the B&W emblem so it reads on the dark tray
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx, cy, r*1.12, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(245,238,225,0.92)';
+    ctx.shadowColor='rgba(0,0,0,.4)'; ctx.shadowBlur=r*.3;
+    ctx.fill();
+    ctx.shadowColor='transparent';
+    ctx.beginPath(); ctx.arc(cx, cy, r*1.12, 0, Math.PI*2); ctx.clip();
+    try { ctx.drawImage(logoImg, cx - s/2, cy - s/2, s, s); } catch(e) {}
+    ctx.restore();
+    return;
   }
+  ctx.save(); ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='rgba(200,160,80,.4)'; ctx.font=`${r*.25}px serif`;
+  ctx.fillText('⚜', cx, cy); ctx.restore();
 }
 function _drawTrayLogoInner(ctx, cx, cy, r) {
   ctx.save();
@@ -1027,6 +1019,7 @@ ro.observe(document.getElementById('preview3D'));
 buildPalette();buildAccPane();buildSizes();updateWristUI();resizeTray();drawTray();updateUI();
 // Load mineral photos in background, refresh palette when ready
 preloadPhotos().then(()=>{buildPalette();buildAccPane();drawTray();});
+loadLogo().then(()=>drawTray());
 // Load Three.js in background — tray works even if this fails
 loadThree();
 </script>
