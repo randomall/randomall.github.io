@@ -11,115 +11,138 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);
-  font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
+body{background:var(--bg);color:var(--text);font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
   display:flex;flex-direction:column;height:100dvh;user-select:none}
 
-/* ── HEADER ── */
 header{display:flex;align-items:center;gap:10px;padding:8px 14px;
-  background:rgba(255,255,255,.03);border-bottom:1px solid var(--border);
-  flex-shrink:0;height:48px}
+  background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;height:48px}
 .logo{font-size:12px;font-weight:800;letter-spacing:.07em;color:var(--accent);flex:1}
-.logo small{display:block;font-size:10px;font-weight:400;color:var(--muted);letter-spacing:.04em}
+.logo small{display:block;font-size:10px;font-weight:400;color:var(--muted)}
 .hbtn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;
   padding:6px 12px;font-size:12px;color:var(--text);cursor:pointer;font-weight:600;
-  transition:all .15s;white-space:nowrap;min-height:34px}
-.hbtn:hover,.hbtn.active{background:var(--accent);border-color:var(--accent);color:#000}
+  white-space:nowrap;min-height:34px;transition:all .15s}
+.hbtn:hover,.hbtn.active{background:var(--accent);border-color:var(--accent);color:#fff}
 
-/* ── LAYOUT ── */
-/* Mobile-first: vertical stack */
 .app-body{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
 
-/* Tray area — main view on mobile */
+/* ── TRAY AREA ── */
 .tray-area{flex:1;min-height:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;background:var(--tray-bg);
-  position:relative;padding:10px 10px 6px}
+  align-items:center;justify-content:center;background:var(--tray-bg);position:relative;padding:10px 10px 4px}
 #trayCanvas{touch-action:none;cursor:pointer;display:block;max-width:100%;max-height:100%}
-.tray-btns{display:flex;gap:8px;margin-top:8px;flex-shrink:0}
-.tbtn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
-  border-radius:8px;padding:7px 14px;font-size:12px;color:var(--text);cursor:pointer;
-  transition:background .15s;min-height:36px;font-weight:600}
-.tbtn:hover{background:rgba(255,255,255,.14)}
-.tbtn.primary{background:var(--accent);border-color:var(--accent);color:#000}
-.tbtn.primary:hover{background:#d8b070}
+.tray-btns{display:flex;gap:8px;margin-top:6px;flex-shrink:0;align-items:center}
+.tbtn{background:rgba(255,255,255,.55);border:1px solid var(--border);
+  border-radius:8px;padding:6px 13px;font-size:12px;color:var(--text);cursor:pointer;font-weight:600;min-height:34px;transition:all .15s}
+.tbtn:hover{background:rgba(255,255,255,.9)}
+.tbtn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.tbtn.primary:hover{opacity:.88}
 
-/* Bottom palette — mobile horizontal strip */
-.bottom-bar{flex-shrink:0;background:var(--surface);
-  border-top:1px solid var(--border);display:flex;flex-direction:column}
+/* ── BOTTOM BAR ── */
+.bottom-bar{flex-shrink:0;background:var(--surface);border-top:1px solid var(--border);display:flex;flex-direction:column}
+.tab-row{display:flex;border-bottom:1px solid var(--border);flex-shrink:0}
+.tab-btn{flex:1;padding:7px 8px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;
+  text-align:center;border:none;background:none;transition:all .15s;border-bottom:2px solid transparent}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
 
-.size-strip{display:flex;gap:5px;padding:7px 12px;
-  overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border);flex-shrink:0}
+.palette-pane{display:none;flex-direction:column;overflow:hidden}
+.palette-pane.active{display:flex}
+.size-strip{display:flex;gap:5px;padding:6px 10px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border);flex-shrink:0}
 .size-strip::-webkit-scrollbar{display:none}
-.sbtn{flex-shrink:0;padding:5px 10px;font-size:12px;font-weight:700;
-  border:1.5px solid var(--border);border-radius:7px;cursor:pointer;
-  background:var(--surface2);color:var(--muted);transition:all .15s;min-height:30px}
-.sbtn.active{border-color:var(--accent);color:var(--accent);background:rgba(200,160,96,.12)}
-.wrist-row{display:flex;align-items:center;gap:8px;padding:6px 12px;
-  border-bottom:1px solid var(--border);flex-shrink:0;font-size:12px}
-.wrist-label{color:var(--muted);flex-shrink:0}
-.wrist-val{color:var(--accent);font-weight:700;min-width:48px;text-align:center}
-.wbtn{background:var(--surface2);border:1px solid var(--border);border-radius:6px;
-  width:28px;height:28px;cursor:pointer;color:var(--text);font-size:16px;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  transition:background .15s;line-height:1}
-.wbtn:hover{background:var(--accent);color:#000;border-color:var(--accent)}
-.wrist-info{font-size:10px;color:var(--muted);flex:1;text-align:right}
-
-.bead-strip{display:flex;gap:8px;padding:8px 12px;
-  overflow-x:auto;scrollbar-width:none;align-items:center;flex-shrink:0;min-height:82px}
+.sbtn{flex-shrink:0;padding:5px 9px;font-size:11px;font-weight:700;border:1.5px solid var(--border);
+  border-radius:7px;cursor:pointer;background:var(--surface2);color:var(--muted);transition:all .15s;min-height:28px}
+.sbtn.active{border-color:var(--accent);color:var(--accent);background:rgba(200,128,74,.1)}
+.bead-strip{display:flex;gap:6px;padding:6px 10px;overflow-x:auto;scrollbar-width:none;
+  align-items:center;flex-shrink:0;min-height:76px}
 .bead-strip::-webkit-scrollbar{display:none}
-.bead-btn{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;
-  padding:6px 7px;border:1.5px solid transparent;border-radius:10px;cursor:pointer;
-  background:var(--surface2);transition:all .15s;min-width:54px}
+.bead-btn{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:5px 6px;border:1.5px solid transparent;border-radius:10px;cursor:pointer;
+  background:var(--surface2);transition:all .15s;min-width:50px}
 .bead-btn:hover{border-color:var(--border)}
-.bead-btn.selected{border-color:var(--accent);background:rgba(200,160,96,.13)}
+.bead-btn.selected{border-color:var(--accent);background:rgba(200,128,74,.1)}
 .bead-btn canvas{border-radius:50%;display:block}
 .bead-btn span{font-size:10px;text-align:center;color:var(--muted);line-height:1.2;
-  white-space:nowrap;max-width:52px;overflow:hidden;text-overflow:ellipsis}
-.acc-sep{width:1px;background:var(--border);flex-shrink:0;height:50px;margin:0 4px}
+  white-space:nowrap;max-width:50px;overflow:hidden;text-overflow:ellipsis}
+.acc-sep{width:1px;background:var(--border);flex-shrink:0;height:46px;margin:0 3px}
 
-/* ── 3D PREVIEW OVERLAY (mobile full-screen) ── */
-.preview-overlay{position:fixed;inset:0;z-index:200;background:#1a1410;
+/* Accessories pane */
+.acc-pane{display:none;flex-direction:row;gap:8px;padding:8px 10px;overflow-x:auto;scrollbar-width:none;min-height:76px;align-items:flex-start}
+.acc-pane.active{display:flex}
+.acc-pane::-webkit-scrollbar{display:none}
+.acc-card{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:6px 8px;border:1.5px solid transparent;border-radius:10px;cursor:pointer;
+  background:var(--surface2);transition:all .15s;min-width:56px}
+.acc-card:hover{border-color:var(--border)}
+.acc-card.selected{border-color:var(--accent);background:rgba(200,128,74,.1)}
+.acc-icon{font-size:24px;line-height:1.2;text-align:center}
+.acc-card span{font-size:10px;color:var(--muted);text-align:center;line-height:1.3}
+
+/* Wrist row */
+.wrist-row{display:flex;align-items:center;gap:8px;padding:5px 10px;border-top:1px solid var(--border);flex-shrink:0}
+.wrist-label{font-size:11px;color:var(--muted);flex-shrink:0}
+.wrist-val{font-size:12px;font-weight:700;color:var(--accent);min-width:44px;text-align:center}
+.wbtn{background:var(--surface2);border:1px solid var(--border);border-radius:6px;
+  width:26px;height:26px;cursor:pointer;font-size:15px;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;transition:all .15s;line-height:1}
+.wbtn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.wrist-used{font-size:11px;color:var(--muted);flex:1;text-align:right}
+
+/* ── SUMMARY PANEL ── */
+.summary-btn{position:absolute;top:8px;right:8px;background:rgba(255,248,240,.9);
+  border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;
+  font-weight:700;cursor:pointer;color:var(--accent);z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.12);
+  display:flex;align-items:center;gap:5px}
+.summary-overlay{position:fixed;inset:0;z-index:300;display:none;align-items:flex-end;justify-content:center;
+  background:rgba(0,0,0,.35)}
+.summary-overlay.open{display:flex}
+.summary-sheet{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;
+  padding:20px 20px 32px;max-height:70vh;overflow-y:auto}
+.summary-sheet h2{font-size:15px;font-weight:800;margin-bottom:12px;color:var(--text)}
+.summary-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.summary-row:last-child{border-bottom:none}
+.summary-swatch{width:28px;height:28px;border-radius:50%;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.summary-name{flex:1;font-size:13px;font-weight:600}
+.summary-meta{font-size:12px;color:var(--muted)}
+.summary-count{font-size:14px;font-weight:800;color:var(--accent);min-width:24px;text-align:right}
+.summary-total{margin-top:12px;padding:10px 12px;background:var(--surface2);border-radius:10px;font-size:12px;color:var(--muted)}
+.summary-total strong{color:var(--text);font-size:14px}
+.summary-close{width:100%;margin-top:12px;padding:10px;background:var(--accent);border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:14px;cursor:pointer}
+
+/* ── 3D OVERLAY ── */
+.preview-overlay{position:fixed;inset:0;z-index:200;background:#14100c;
   flex-direction:column;display:none}
 .preview-overlay.open{display:flex}
 .preview-topbar{display:flex;align-items:center;gap:10px;padding:8px 14px;
-  background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0;color:#f0ede8}
-.preview-topbar .back{font-size:18px;cursor:pointer;padding:4px 8px;color:var(--muted)}
-.preview-topbar .back:hover{color:var(--text)}
-.preview-topbar .title{flex:1;font-size:13px;font-weight:700}
+  background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.1);
+  flex-shrink:0;color:#f0ede8}
+.preview-topbar .back{font-size:18px;cursor:pointer;padding:4px 8px;color:rgba(255,255,255,.5)}
+.preview-topbar .back:hover{color:#fff}
+.preview-topbar .title{flex:1;font-size:13px;font-weight:700;color:#f0ede8}
 #threeCanvas{flex:1;display:block;width:100%;min-height:0}
 .preview-btmbar{display:flex;align-items:center;gap:8px;padding:8px 14px;
-  background:rgba(255,255,255,.03);border-top:1px solid var(--border);flex-shrink:0;
-  flex-wrap:wrap}
-#beadCountLbl{font-size:11px;color:var(--muted);flex:1}
-.pbtn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;
-  padding:7px 13px;font-size:12px;color:var(--text);cursor:pointer;
-  transition:all .15s;min-height:34px;font-weight:600}
-.pbtn:hover{background:var(--accent);border-color:var(--accent);color:#000}
-.pbtn.active{background:rgba(200,160,96,.2);border-color:var(--accent);color:var(--accent)}
+  background:rgba(255,255,255,.04);border-top:1px solid rgba(255,255,255,.1);flex-shrink:0;flex-wrap:wrap}
+#beadCountLbl{font-size:11px;color:rgba(255,255,255,.45);flex:1}
+.pbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:8px;
+  padding:6px 12px;font-size:12px;color:#f0ede8;cursor:pointer;min-height:32px;font-weight:600;transition:all .15s}
+.pbtn:hover{background:var(--accent);border-color:var(--accent)}
+.pbtn.active{background:rgba(200,128,74,.3);border-color:var(--accent);color:var(--accent)}
 
-/* ── DESKTOP: 3-column layout ── */
+/* Desktop */
 @media(min-width:768px){
   .app-body{flex-direction:row}
-  /* Left: vertical palette */
-  .bottom-bar{flex-direction:column;width:180px;border-top:none;
-    border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0}
-  .size-strip{flex-direction:column;border-bottom:none;border-top:1px solid var(--border);
-    overflow-x:visible;overflow-y:visible;flex-wrap:wrap;gap:4px;padding:8px}
-  .wrist-row{flex-wrap:wrap;}
-  .sbtn{flex:none}
-  .bead-strip{flex-direction:column;overflow-y:auto;overflow-x:hidden;
-    min-height:0;padding:8px;flex:1}
-  .bead-btn{width:100%;min-width:unset;flex-direction:row;gap:8px;padding:6px 8px}
-  .bead-btn canvas{flex-shrink:0}
-  .bead-btn span{font-size:11px;text-align:left;max-width:none}
-  .acc-sep{width:100%;height:1px;margin:4px 0}
-  /* Tray: middle column */
-  .tray-area{flex:1}
-  /* 3D: right column, always visible (not overlay) */
+  .bottom-bar{flex-direction:column;width:190px;border-top:none;border-right:1px solid var(--border);flex-shrink:0}
+  .tab-row{display:none}
+  .palette-pane{display:flex !important;flex:1;overflow:hidden}
+  .size-strip{flex-wrap:wrap;overflow-x:hidden;padding:6px 8px}
+  .bead-strip{flex-direction:column;overflow-y:auto;overflow-x:hidden;padding:6px 8px;min-height:0;flex:1}
+  .bead-btn{width:100%;flex-direction:row;gap:8px;min-width:unset}
+  .bead-btn span{text-align:left;max-width:none}
+  .acc-sep{width:100%;height:1px;margin:3px 0}
+  .acc-pane{display:none !important} /* merged into palette on desktop */
   .preview-overlay{position:static;display:flex !important;flex:1;z-index:auto}
   .preview-topbar .back{display:none}
-  .show3d-btn{display:none} /* no need for open button on desktop */
+  .show3d-btn{display:none}
+  .tray-area{flex:1}
+  .wrist-row{border-top:1px solid var(--border)}
 }
 </style>
 </head>
@@ -133,30 +156,41 @@ header{display:flex;align-items:center;gap:10px;padding:8px 14px;
 </header>
 
 <div class="app-body">
-  <!-- Left / Bottom: palette -->
+  <!-- Palette / Bottom bar -->
   <div class="bottom-bar" id="paletteBar">
-    <div class="size-strip" id="sizeStrip"></div>
+    <div class="tab-row">
+      <button class="tab-btn active" data-pane="beads">珠子</button>
+      <button class="tab-btn" data-pane="acc">配饰</button>
+    </div>
+    <!-- Beads pane -->
+    <div class="palette-pane active" id="beadsPane">
+      <div class="size-strip" id="sizeStrip"></div>
+      <div class="bead-strip" id="beadStrip"></div>
+    </div>
+    <!-- Accessories pane -->
+    <div class="acc-pane" id="accPane"></div>
+    <!-- Wrist control -->
     <div class="wrist-row">
       <span class="wrist-label">手围</span>
       <button class="wbtn" id="wristMinus">−</button>
       <span class="wrist-val" id="wristVal">16.5cm</span>
       <button class="wbtn" id="wristPlus">+</button>
-      <span class="wrist-info" id="wristInfo"></span>
+      <span class="wrist-used" id="wristUsed"></span>
     </div>
-    <div class="bead-strip" id="beadStrip"></div>
   </div>
 
-  <!-- Center: tray -->
+  <!-- Tray -->
   <div class="tray-area" id="trayArea">
+    <button class="summary-btn" id="summaryBtn">📿 <span id="summaryCount">0颗</span></button>
     <canvas id="trayCanvas"></canvas>
     <div class="tray-btns">
       <button class="tbtn" id="clearBtn">清空</button>
-      <button class="tbtn" id="randomBtn">随机</button>
+      <button class="tbtn" id="undoBtn">撤销</button>
       <button class="tbtn primary show3d-btn" id="render3dBtn">渲染 3D →</button>
     </div>
   </div>
 
-  <!-- Right / Overlay: 3D preview -->
+  <!-- 3D Preview -->
   <div class="preview-overlay" id="preview3D">
     <div class="preview-topbar">
       <span class="back" id="backBtn">←</span>
@@ -166,8 +200,18 @@ header{display:flex;align-items:center;gap:10px;padding:8px 14px;
     </div>
     <canvas id="threeCanvas"></canvas>
     <div class="preview-btmbar">
-      <span id="beadCountLbl">0 颗珠子</span>
+      <span id="beadCountLbl"></span>
     </div>
+  </div>
+</div>
+
+<!-- Summary overlay -->
+<div class="summary-overlay" id="summaryOverlay">
+  <div class="summary-sheet">
+    <h2>📿 手串汇总</h2>
+    <div id="summaryList"></div>
+    <div class="summary-total" id="summaryTotal"></div>
+    <button class="summary-close" id="summaryClose">关闭</button>
   </div>
 </div>
 
@@ -182,11 +226,11 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-// ══════════════════════════════════════════════════════════
-//  REAL MINERAL PHOTO URLS (Wikipedia Commons, CC licensed)
-// ══════════════════════════════════════════════════════════
-const W = 'https://upload.wikimedia.org/wikipedia/commons/thumb/';
-const BEAD_PHOTOS = {
+// ═══════════════════════════════════════════════════════════
+//  PHOTO URLS (Wikipedia Commons CC)
+// ═══════════════════════════════════════════════════════════
+const W='https://upload.wikimedia.org/wikipedia/commons/thumb/';
+const BEAD_PHOTOS={
   green_phantom: W+'6/6a/QuartzFantome.jpg/512px-QuartzFantome.jpg',
   rose_quartz:   W+'3/3a/Rose_quartz_12.jpg/512px-Rose_quartz_12.jpg',
   clear_quartz:  W+'2/2f/Pure_Quartz_at_Senckenberg_Natural_History_Museum.jpg/512px-Pure_Quartz_at_Senckenberg_Natural_History_Museum.jpg',
@@ -208,133 +252,85 @@ const BEAD_PHOTOS = {
   malachite:     W+'5/55/Malachite%2C_Zaire.jpg/512px-Malachite%2C_Zaire.jpg',
   labradorite:   W+'3/38/Labradorite_polie_3%28Madagascar%29.jpg/512px-Labradorite_polie_3%28Madagascar%29.jpg',
 };
-const loadedImgs = {}; // id → HTMLImageElement
-const loadedTex  = {}; // id → THREE.Texture
-
-async function preloadPhotos() {
-  await Promise.all(Object.entries(BEAD_PHOTOS).map(([id,url])=>
-    new Promise(res=>{
-      const img=new Image(); img.crossOrigin='anonymous';
-      img.onload=()=>{loadedImgs[id]=img;res();};
-      img.onerror=()=>res(); // graceful fallback to gradient
-      img.src=url;
-    })
-  ));
+const loadedImgs={}, loadedTex={};
+async function preloadPhotos(){
+  await Promise.all(Object.entries(BEAD_PHOTOS).map(([id,url])=>new Promise(res=>{
+    const img=new Image(); img.crossOrigin='anonymous';
+    img.onload=()=>{loadedImgs[id]=img;res();}; img.onerror=()=>res(); img.src=url;
+  })));
 }
 
-// ══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  BEAD DATABASE
-// ══════════════════════════════════════════════════════════
-const BEADS = [
-  { id:'green_phantom', name:'绿幽灵', cat:'crystal',
-    tray:{g:['#d8f0e4','#7ab898','#2e6848','#142e1e'],alpha:.9},
-    m3:{color:0x78b090,roughness:.018,transmission:.88,ior:1.544,thick:12,att:0x50a070,attD:20,envI:2.2},special:'phantom_green'},
-  { id:'rose_quartz', name:'粉水晶', cat:'crystal',
-    tray:{g:['#fff0f0','#f5c0c0','#de8080','#a85050'],alpha:.8},
-    m3:{color:0xf0b0b0,roughness:.025,transmission:.7,ior:1.544,thick:10,att:0xe09090,attD:22,envI:1.8}},
-  { id:'clear_quartz', name:'白水晶', cat:'crystal',
-    tray:{g:['#ffffff','#eef0ee','#c8d0c8','#98a898'],alpha:.93},
-    m3:{color:0xf0f0ee,roughness:.015,transmission:.93,ior:1.544,thick:14,att:0xf8f8f8,attD:40,envI:2.5}},
-  { id:'amethyst', name:'紫水晶', cat:'crystal',
-    tray:{g:['#f0d8ff','#c090f0','#7030c0','#3a1070'],alpha:.78},
-    m3:{color:0xa060d8,roughness:.02,transmission:.65,ior:1.544,thick:10,att:0x8840b8,attD:18,envI:2.0}},
-  { id:'citrine', name:'黄水晶', cat:'crystal',
-    tray:{g:['#fff8c0','#f8d840','#c8a010','#805808'],alpha:.82},
-    m3:{color:0xf0c030,roughness:.022,transmission:.72,ior:1.544,thick:10,att:0xe0a800,attD:20,envI:1.9}},
-  { id:'aquamarine', name:'海蓝宝', cat:'crystal',
-    tray:{g:['#d8f8ff','#70d0f0','#1880c0','#004898'],alpha:.84},
-    m3:{color:0x58b8e0,roughness:.018,transmission:.78,ior:1.567,thick:12,att:0x3898c8,attD:28,envI:2.1}},
-  { id:'smoky', name:'茶晶', cat:'crystal',
-    tray:{g:['#c0a890','#8a6040','#503018','#281008'],alpha:.75},
-    m3:{color:0x785840,roughness:.025,transmission:.58,ior:1.544,thick:10,att:0x583820,attD:16,envI:1.6}},
-  { id:'moonstone', name:'月光石', cat:'crystal',
-    tray:{g:['#ffffff','#d8e0f8','#98b0e8','#5878c0'],alpha:.72},
-    m3:{color:0xd0d8f0,roughness:.06,transmission:.45,ior:1.52,thick:8,att:0xc0c8e8,attD:15,envI:1.5},special:'moonstone'},
-  { id:'strawberry', name:'草莓晶', cat:'crystal',
-    tray:{g:['#ffe0e0','#f09090','#c83838','#880018'],alpha:.74},
-    m3:{color:0xe06060,roughness:.03,transmission:.5,ior:1.544,thick:9,att:0xc83030,attD:14,envI:1.7},special:'strawberry'},
-  { id:'garnet', name:'石榴石', cat:'crystal',
-    tray:{g:['#ff7070','#c01818','#780000','#380000'],alpha:.68},
-    m3:{color:0xa81010,roughness:.02,transmission:.42,ior:1.76,thick:8,att:0x880808,attD:10,envI:2.0}},
-  { id:'rutile_gold', name:'金钛晶', cat:'crystal',
-    tray:{g:['#fffff0','#f8e870','#c8a000','#785800'],alpha:.87},
-    m3:{color:0xecd838,roughness:.015,transmission:.82,ior:1.544,thick:12,att:0xd8c018,attD:30,envI:2.3},special:'rutile_gold'},
-  { id:'obsidian', name:'黑曜石', cat:'opaque',
-    tray:{g:['#585858','#181818','#060606','#000000'],alpha:1},
-    m3:{color:0x0c0c0c,roughness:.005,metalness:.15,transmission:0,envI:2.5}},
-  { id:'blue_goldstone', name:'蓝砂石', cat:'opaque',
-    tray:{g:['#3858c0','#081860','#040c28','#020610'],alpha:1},
-    m3:{color:0x081848,roughness:.04,metalness:.05,transmission:0,envI:1.2},special:'goldstone_blue'},
-  { id:'red_goldstone', name:'金砂石', cat:'opaque',
-    tray:{g:['#c06828','#881808','#401008','#180600'],alpha:1},
-    m3:{color:0x681800,roughness:.04,metalness:.05,transmission:0,envI:1.2},special:'goldstone_red'},
-  { id:'tigers_eye', name:'虎眼石', cat:'opaque',
-    tray:{g:['#e0b858','#b07818','#704800','#301800'],alpha:1},
-    m3:{color:0x986818,roughness:.08,transmission:0,envI:1.0},special:'tigers_eye'},
-  { id:'lapis', name:'青金石', cat:'opaque',
-    tray:{g:['#3858e0','#181878','#080838','#040618'],alpha:1},
-    m3:{color:0x182068,roughness:.12,transmission:0,envI:.8},special:'lapis'},
-  { id:'turquoise', name:'绿松石', cat:'opaque',
-    tray:{g:['#78d8d0','#289090','#106050','#083028'],alpha:1},
-    m3:{color:0x208888,roughness:.18,transmission:0,envI:.7}},
-  { id:'red_agate', name:'红玛瑙', cat:'opaque',
-    tray:{g:['#ff7858','#d02808','#881000','#380800'],alpha:1},
-    m3:{color:0xb81808,roughness:.1,transmission:0,envI:.9},special:'agate_red'},
-  { id:'malachite', name:'孔雀石', cat:'opaque',
-    tray:{g:['#78d878','#188038','#085020','#022808'],alpha:1},
-    m3:{color:0x106028,roughness:.15,transmission:0,envI:.8},special:'malachite'},
-  { id:'labradorite', name:'拉长石', cat:'opaque',
-    tray:{g:['#788898','#38404e','#181e28','#080a10'],alpha:1},
-    m3:{color:0x202830,roughness:.06,transmission:0,envI:1.5},special:'labradorite'},
+// ═══════════════════════════════════════════════════════════
+const BEADS=[
+  {id:'green_phantom',name:'绿幽灵',cat:'crystal',tray:{g:['#d8f0e4','#7ab898','#2e6848','#142e1e'],alpha:.9},m3:{color:0x78b090,roughness:.018,transmission:.88,ior:1.544,thick:12,att:0x50a070,attD:20,envI:2.2},special:'phantom_green'},
+  {id:'rose_quartz',name:'粉水晶',cat:'crystal',tray:{g:['#fff0f0','#f5c0c0','#de8080','#a85050'],alpha:.8},m3:{color:0xf0b0b0,roughness:.025,transmission:.7,ior:1.544,thick:10,att:0xe09090,attD:22,envI:1.8}},
+  {id:'clear_quartz',name:'白水晶',cat:'crystal',tray:{g:['#ffffff','#eef0ee','#c8d0c8','#98a898'],alpha:.93},m3:{color:0xf0f0ee,roughness:.015,transmission:.93,ior:1.544,thick:14,att:0xf8f8f8,attD:40,envI:2.5}},
+  {id:'amethyst',name:'紫水晶',cat:'crystal',tray:{g:['#f0d8ff','#c090f0','#7030c0','#3a1070'],alpha:.78},m3:{color:0xa060d8,roughness:.02,transmission:.65,ior:1.544,thick:10,att:0x8840b8,attD:18,envI:2.0}},
+  {id:'citrine',name:'黄水晶',cat:'crystal',tray:{g:['#fff8c0','#f8d840','#c8a010','#805808'],alpha:.82},m3:{color:0xf0c030,roughness:.022,transmission:.72,ior:1.544,thick:10,att:0xe0a800,attD:20,envI:1.9}},
+  {id:'aquamarine',name:'海蓝宝',cat:'crystal',tray:{g:['#d8f8ff','#70d0f0','#1880c0','#004898'],alpha:.84},m3:{color:0x58b8e0,roughness:.018,transmission:.78,ior:1.567,thick:12,att:0x3898c8,attD:28,envI:2.1}},
+  {id:'smoky',name:'茶晶',cat:'crystal',tray:{g:['#c0a890','#8a6040','#503018','#281008'],alpha:.75},m3:{color:0x785840,roughness:.025,transmission:.58,ior:1.544,thick:10,att:0x583820,attD:16,envI:1.6}},
+  {id:'moonstone',name:'月光石',cat:'crystal',tray:{g:['#ffffff','#d8e0f8','#98b0e8','#5878c0'],alpha:.72},m3:{color:0xd0d8f0,roughness:.06,transmission:.45,ior:1.52,thick:8,att:0xc0c8e8,attD:15,envI:1.5},special:'moonstone'},
+  {id:'strawberry',name:'草莓晶',cat:'crystal',tray:{g:['#ffe0e0','#f09090','#c83838','#880018'],alpha:.74},m3:{color:0xe06060,roughness:.03,transmission:.5,ior:1.544,thick:9,att:0xc83030,attD:14,envI:1.7},special:'strawberry'},
+  {id:'garnet',name:'石榴石',cat:'crystal',tray:{g:['#ff7070','#c01818','#780000','#380000'],alpha:.68},m3:{color:0xa81010,roughness:.02,transmission:.42,ior:1.76,thick:8,att:0x880808,attD:10,envI:2.0}},
+  {id:'rutile_gold',name:'金钛晶',cat:'crystal',tray:{g:['#fffff0','#f8e870','#c8a000','#785800'],alpha:.87},m3:{color:0xecd838,roughness:.015,transmission:.82,ior:1.544,thick:12,att:0xd8c018,attD:30,envI:2.3},special:'rutile_gold'},
+  {id:'obsidian',name:'黑曜石',cat:'opaque',tray:{g:['#585858','#181818','#060606','#000000'],alpha:1},m3:{color:0x0c0c0c,roughness:.005,metalness:.15,transmission:0,envI:2.5}},
+  {id:'blue_goldstone',name:'蓝砂石',cat:'opaque',tray:{g:['#3858c0','#081860','#040c28','#020610'],alpha:1},m3:{color:0x081848,roughness:.04,metalness:.05,transmission:0,envI:1.2},special:'goldstone_blue'},
+  {id:'red_goldstone',name:'金砂石',cat:'opaque',tray:{g:['#c06828','#881808','#401008','#180600'],alpha:1},m3:{color:0x681800,roughness:.04,metalness:.05,transmission:0,envI:1.2},special:'goldstone_red'},
+  {id:'tigers_eye',name:'虎眼石',cat:'opaque',tray:{g:['#e0b858','#b07818','#704800','#301800'],alpha:1},m3:{color:0x986818,roughness:.08,transmission:0,envI:1.0},special:'tigers_eye'},
+  {id:'lapis',name:'青金石',cat:'opaque',tray:{g:['#3858e0','#181878','#080838','#040618'],alpha:1},m3:{color:0x182068,roughness:.12,transmission:0,envI:.8},special:'lapis'},
+  {id:'turquoise',name:'绿松石',cat:'opaque',tray:{g:['#78d8d0','#289090','#106050','#083028'],alpha:1},m3:{color:0x208888,roughness:.18,transmission:0,envI:.7}},
+  {id:'red_agate',name:'红玛瑙',cat:'opaque',tray:{g:['#ff7858','#d02808','#881000','#380800'],alpha:1},m3:{color:0xb81808,roughness:.1,transmission:0,envI:.9},special:'agate_red'},
+  {id:'malachite',name:'孔雀石',cat:'opaque',tray:{g:['#78d878','#188038','#085020','#022808'],alpha:1},m3:{color:0x106028,roughness:.15,transmission:0,envI:.8},special:'malachite'},
+  {id:'labradorite',name:'拉长石',cat:'opaque',tray:{g:['#788898','#38404e','#181e28','#080a10'],alpha:1},m3:{color:0x202830,roughness:.06,transmission:0,envI:1.5},special:'labradorite'},
 ];
 
-const ACCESSORIES = [
-  { id:'spacer_silver', name:'银隔片', icon:'○', shape:'spacer', color:0xcccccc },
-  { id:'spacer_gold',   name:'金隔片', icon:'◎', shape:'spacer', color:0xc8a040 },
-  { id:'charm_peace',   name:'平安扣', icon:'◉', shape:'charm_ring' },
+// Accessories — each has a fixed default sizeMm (overridable)
+const ACCESSORIES=[
+  {id:'spacer_silver_2',name:'银隔片 2mm',icon:'▬',sizeMm:2,color:'#c8c8c8',metalColor:0xcccccc,isAcc:true},
+  {id:'spacer_silver_4',name:'银隔片 4mm',icon:'▬',sizeMm:4,color:'#c8c8c8',metalColor:0xcccccc,isAcc:true},
+  {id:'spacer_gold_2',  name:'金隔片 2mm',icon:'▬',sizeMm:2,color:'#c8a040',metalColor:0xc8a040,isAcc:true},
+  {id:'spacer_gold_4',  name:'金隔片 4mm',icon:'▬',sizeMm:4,color:'#c8a040',metalColor:0xc8a040,isAcc:true},
+  {id:'charm_ruyi',     name:'如意牌',icon:'☯',sizeMm:10,color:'#aaa',isAcc:true,isCharm:true},
+  {id:'charm_peace',    name:'平安扣',icon:'◉',sizeMm:10,color:'#aaa',isAcc:true,isCharm:true},
+  {id:'charm_star',     name:'星形坠',icon:'★',sizeMm:8, color:'#c8a040',isAcc:true,isCharm:true},
+  {id:'charm_heart',    name:'爱心坠',icon:'♥',sizeMm:8, color:'#e06060',isAcc:true,isCharm:true},
 ];
 
-const SIZES = [4,6,8,10,12,14,16];
-const WRIST_R = 26;
-// Wrist circumference range (mm), step 5mm
-const WRIST_MIN = 130, WRIST_MAX = 220, WRIST_STEP = 5;
-function beadCount(sizeMm, wristMm) {
-  // beads fit around the circumference with ~2% gap
-  return Math.max(3, Math.floor((wristMm * 1.02) / sizeMm));
-}
+const ALL_ITEMS=[...BEADS,...ACCESSORIES];
+const SIZES=[4,6,8,10,12,14,16];
+const WRIST_R=26, WRIST_MIN=130, WRIST_MAX=220, WRIST_STEP=5;
 
-// ══════════════════════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════════════════════
-const state = {
-  selectedId: null,
-  sizeMm: 8,
-  wristMm: 165,
-  slots: [],
-  viewMode: 'product',
-  autoRotate: true,
-  rendered: false,
+// ═══════════════════════════════════════════════════════════
+//  STATE — arc-based: each placed item has its own sizeMm
+// ═══════════════════════════════════════════════════════════
+const state={
+  placed:[],        // [{id, sizeMm}] ordered around bracelet
+  history:[],       // for undo
+  selectedId:null,
+  selectedSizeMm:8,
+  wristMm:165,
+  viewMode:'product',
+  autoRotate:true,
+  rendered:false,
 };
-function initSlots(){
-  const n=beadCount(state.sizeMm, state.wristMm);
-  const old=state.slots.slice();
-  state.slots=Array.from({length:n},(_,i)=>old[i]??null);
-}
-function updateWristUI(){
-  document.getElementById('wristVal').textContent=(state.wristMm/10).toFixed(1)+'cm';
-  document.getElementById('wristInfo').textContent=`${beadCount(state.sizeMm,state.wristMm)}颗`;
-}
+function lookupItem(id){ return ALL_ITEMS.find(x=>x.id===id); }
+function usedMm(){ return state.placed.reduce((s,b)=>s+b.sizeMm,0); }
+function remainingMm(){ return Math.max(0,state.wristMm-usedMm()); }
 
-// ══════════════════════════════════════════════════════════
-//  TEXTURE GENERATORS
-// ══════════════════════════════════════════════════════════
+function pushHistory(){ state.history.push(JSON.parse(JSON.stringify(state.placed))); if(state.history.length>50)state.history.shift(); }
+function undo(){ if(state.history.length>0){state.placed=state.history.pop();redraw();} }
+
+// ═══════════════════════════════════════════════════════════
+//  TEXTURE GENERATORS (same as before)
+// ═══════════════════════════════════════════════════════════
 const texCache={};
-function mkTex(id,fn){if(texCache[id])return texCache[id];const c=document.createElement('canvas');c.width=c.height=256;fn(c.getContext('2d'),256);const t=new THREE.CanvasTexture(c);texCache[id]=t;return t;}
+function mkTex(id,fn){if(texCache[id])return texCache[id];const c=document.createElement('canvas');c.width=c.height=256;fn(c.getContext('2d'),256);return texCache[id]=new THREE.CanvasTexture(c);}
 function rng(s){let v=s;return()=>{v=(v*16807)%2147483647;return(v-1)/2147483646;};}
-
 function texPhantomGreen(){return mkTex('phg',(ctx,S)=>{const r=rng(42);for(let i=0;i<10;i++){const cx=r()*S,cy=r()*S,rad=18+r()*65;const g=ctx.createRadialGradient(cx,cy,0,cx,cy,rad);g.addColorStop(0,`rgba(6,18,10,${.3+r()*.45})`);g.addColorStop(.5,`rgba(12,30,16,${.12+r()*.18})`);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,rad,0,Math.PI*2);ctx.fill();}});}
 function texWispGreen(){return mkTex('wsg',(ctx,S)=>{const r=rng(99);for(let i=0;i<14;i++){const x1=r()*S,y1=r()*S,x2=r()*S,y2=r()*S;const g=ctx.createLinearGradient(x1,y1,x2,y2);g.addColorStop(0,'rgba(0,100,40,0)');g.addColorStop(.5,`rgba(20,170,60,${.35+r()*.55})`);g.addColorStop(1,'rgba(0,70,25,0)');ctx.strokeStyle=g;ctx.lineWidth=1+r()*5;ctx.beginPath();ctx.moveTo(x1,y1);ctx.bezierCurveTo(r()*S,r()*S,r()*S,r()*S,x2,y2);ctx.stroke();}});}
-function texGoldstone(blue){return mkTex(blue?'gsb':'gsr',(ctx,S)=>{ctx.fillStyle=blue?'#04102a':'#240800';ctx.fillRect(0,0,S,S);const r=rng(blue?11:22);for(let i=0;i<600;i++){const x=r()*S,y=r()*S,sz=.3+r()*2;const br=.5+r()*.5;ctx.fillStyle=blue?`rgba(70,110,255,${br})`:`rgba(255,130,30,${br})`;ctx.beginPath();ctx.arc(x,y,sz,0,Math.PI*2);ctx.fill();}});}
+function texGoldstone(blue){return mkTex(blue?'gsb':'gsr',(ctx,S)=>{ctx.fillStyle=blue?'#04102a':'#240800';ctx.fillRect(0,0,S,S);const r=rng(blue?11:22);for(let i=0;i<600;i++){const x=r()*S,y=r()*S,sz=.3+r()*2;ctx.fillStyle=blue?`rgba(70,110,255,${.5+r()*.5})`:`rgba(255,130,30,${.5+r()*.5})`;ctx.beginPath();ctx.arc(x,y,sz,0,Math.PI*2);ctx.fill();}});}
 function texTigersEye(){return mkTex('tge',(ctx,S)=>{for(let y=0;y<S;y++){const v=(Math.sin(y*.07+.5)*.5+.5)*.7+Math.sin(y*.22)*.08+.15;ctx.fillStyle=`rgb(${Math.round(155+v*85)},${Math.round(85+v*50)},0)`;ctx.fillRect(0,y,S,1);}const g=ctx.createLinearGradient(0,0,S,0);g.addColorStop(0,'rgba(255,215,70,0)');g.addColorStop(.45,'rgba(255,235,150,.4)');g.addColorStop(.55,'rgba(255,235,150,.4)');g.addColorStop(1,'rgba(255,215,70,0)');ctx.fillStyle=g;ctx.fillRect(0,0,S,S);});}
 function texLapis(){return mkTex('lap',(ctx,S)=>{ctx.fillStyle='#0e1440';ctx.fillRect(0,0,S,S);const r=rng(3);for(let i=0;i<8;i++){const g=ctx.createRadialGradient(r()*S,r()*S,0,r()*S,r()*S,55+r()*55);g.addColorStop(0,`rgba(4,12,72,${.35+r()*.28})`);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(0,0,S,S);}for(let i=0;i<40;i++){ctx.fillStyle=`rgba(215,178,0,${.3+r()*.7})`;ctx.fillRect(r()*S,r()*S,r()*4+1,r()*4+1);}});}
 function texMalachite(){return mkTex('mal',(ctx,S)=>{const r=rng(5);for(let i=0;i<12;i++){const cx=r()*S*1.2-S*.1,cy=r()*S*1.2-S*.1,base=18+r()*55;for(let j=0;j<6;j++){const rad=base+j*13;ctx.strokeStyle=j%2===0?`rgba(12,90,35,.9)`:`rgba(35,165,65,.85)`;ctx.lineWidth=4+r()*4;ctx.beginPath();ctx.arc(cx,cy,rad,0,Math.PI*2);ctx.stroke();}}});}
@@ -343,233 +339,299 @@ function texLabradorite(){return mkTex('lab',(ctx,S)=>{ctx.fillStyle='#161e28';c
 function texRutileGold(){return mkTex('rtg',(ctx,S)=>{const r=rng(17);for(let i=0;i<20;i++){const x1=r()*S,y1=r()*S,dx=(r()-.5)*S*.6,dy=(r()-.5)*S*.5;const g=ctx.createLinearGradient(x1,y1,x1+dx,y1+dy);g.addColorStop(0,'rgba(210,170,0,0)');g.addColorStop(.5,`rgba(255,205,15,${.5+r()*.5})`);g.addColorStop(1,'rgba(175,125,0,0)');ctx.strokeStyle=g;ctx.lineWidth=1+r()*3;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x1+dx,y1+dy);ctx.stroke();}});}
 function texStrawberry(){return mkTex('stw',(ctx,S)=>{const r=rng(23);for(let i=0;i<30;i++){const x=r()*S,y=r()*S,sz=1.5+r()*7;ctx.fillStyle=`rgba(175,15,15,${.35+r()*.6})`;ctx.beginPath();ctx.arc(x,y,sz,0,Math.PI*2);ctx.fill();}});}
 
-// ══════════════════════════════════════════════════════════
-//  2D TRAY
-// ══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+//  2D TRAY — arc-based proportional layout
+// ═══════════════════════════════════════════════════════════
 const trayC=document.getElementById('trayCanvas');
 const trayCtx=trayC.getContext('2d');
-let TRAY_SIZE=300, hoverSlot=-1;
+let TRAY_SIZE=300, hoverIdx=-1, selectedPlacedIdx=-1;
+const TR_FRAC=0.37; // tray ring radius as fraction of size
+
+function TR(){ return TRAY_SIZE*TR_FRAC; }
 
 function resizeTray(){
   const area=document.getElementById('trayArea');
   const W=area.clientWidth-20, H=area.clientHeight-60;
-  TRAY_SIZE=Math.max(180,Math.min(W,H,420));
+  TRAY_SIZE=Math.max(180,Math.min(W,H,440));
   trayC.width=trayC.height=TRAY_SIZE;
   drawTray();
 }
 
-function beadR(){
-  const n=state.slots.length,TRAY_R=TRAY_SIZE*.37;
-  return Math.min((2*Math.PI*TRAY_R/n)*.46,TRAY_SIZE*.1);
+// Calculate angular positions for each placed item
+// Returns array of {startAngle, endAngle, midAngle, beadR}
+function calcAngles(){
+  const total=state.wristMm;
+  const maxVisR=TR()*.22, minVisR=TR()*.04;
+  let angle=-Math.PI/2;
+  return state.placed.map(b=>{
+    const arc=(b.sizeMm/total)*Math.PI*2;
+    const mid=angle+arc/2;
+    const end=angle+arc;
+    // Visual radius proportional to bead size but capped
+    const visR=Math.max(minVisR,Math.min(maxVisR,(b.sizeMm/16)*TR()*.22));
+    const res={startAngle:angle,endAngle:end,midAngle:mid,arc,visR};
+    angle=end;
+    return res;
+  });
 }
 
-function drawTrayLogo(ctx, cx, cy, r) {
+// Empty arc segments (remaining space shown as ghost slots)
+function calcEmptySlots(afterAngle){
+  const rem=remainingMm();
+  if(rem<=0) return [];
+  const sz=state.selectedSizeMm;
+  if(sz>rem) return [];
+  const total=state.wristMm;
+  const count=Math.floor(rem/sz);
+  const slots=[];
+  let angle=afterAngle??-Math.PI/2+((usedMm()/total)*Math.PI*2);
+  for(let i=0;i<count;i++){
+    const arc=(sz/total)*Math.PI*2;
+    slots.push({midAngle:angle+arc/2,arc,sizeMm:sz});
+    angle+=arc;
+  }
+  return slots;
+}
+
+function drawTrayLogo(ctx,cx,cy,r){
   ctx.save();
-  // Orange rounded square background
-  const sq = r * .78;
-  ctx.shadowColor = 'rgba(0,0,0,.25)'; ctx.shadowBlur = r*.2;
-  ctx.fillStyle = '#e8762a';
-  roundRect(ctx, cx-sq, cy-sq, sq*2, sq*2, sq*.22);
-  ctx.fill();
-  ctx.shadowColor = 'transparent';
-  // Mermaid silhouette (simplified)
-  ctx.fillStyle = 'rgba(255,255,255,.92)';
-  ctx.beginPath();
-  // Body (teardrop shape rotated)
-  const hx = cx, hy = cy - r*.12;
-  ctx.ellipse(hx, hy, r*.22, r*.3, 0, 0, Math.PI*2);
-  ctx.fill();
-  // Tail fins
-  ctx.beginPath();
-  ctx.moveTo(hx, hy+r*.28);
-  ctx.bezierCurveTo(hx-r*.28, hy+r*.48, hx-r*.38, hy+r*.38, hx, hy+r*.52);
-  ctx.bezierCurveTo(hx+r*.38, hy+r*.38, hx+r*.28, hy+r*.48, hx, hy+r*.28);
-  ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.fill();
-  // Brand text
-  ctx.fillStyle = 'rgba(255,255,255,.95)';
-  ctx.font = `bold ${r*.18}px 'Inter',sans-serif`;
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText('LARME', cx, cy + r*.65);
-  ctx.font = `${r*.13}px 'Inter',sans-serif`;
-  ctx.fillText('DE SIRÈNE', cx, cy + r*.82);
+  const sq=r*.78;
+  ctx.shadowColor='rgba(0,0,0,.2)';ctx.shadowBlur=r*.2;
+  ctx.fillStyle='#e8762a';
+  roundRect(ctx,cx-sq,cy-sq,sq*2,sq*2,sq*.22);ctx.fill();
+  ctx.shadowColor='transparent';
+  ctx.fillStyle='rgba(255,255,255,.92)';
+  const hx=cx,hy=cy-r*.1;
+  ctx.beginPath();ctx.ellipse(hx,hy,r*.2,r*.28,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.moveTo(hx,hy+r*.26);
+  ctx.bezierCurveTo(hx-r*.26,hy+r*.44,hx-r*.35,hy+r*.36,hx,hy+r*.5);
+  ctx.bezierCurveTo(hx+r*.35,hy+r*.36,hx+r*.26,hy+r*.44,hx,hy+r*.26);
+  ctx.fillStyle='rgba(255,255,255,.82)';ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.95)';
+  ctx.font=`bold ${r*.16}px 'Inter',sans-serif`;
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('LARME',cx,cy+r*.62);
+  ctx.font=`${r*.12}px 'Inter',sans-serif`;
+  ctx.fillText('DE SIRÈNE',cx,cy+r*.8);
   ctx.restore();
 }
-
-function roundRect(ctx, x, y, w, h, radius) {
-  ctx.beginPath();
-  ctx.moveTo(x+radius, y);
-  ctx.lineTo(x+w-radius, y); ctx.arcTo(x+w,y,x+w,y+radius,radius);
-  ctx.lineTo(x+w, y+h-radius); ctx.arcTo(x+w,y+h,x+w-radius,y+h,radius);
-  ctx.lineTo(x+radius, y+h); ctx.arcTo(x,y+h,x,y+h-radius,radius);
-  ctx.lineTo(x, y+radius); ctx.arcTo(x,y,x+radius,y,radius);
-  ctx.closePath();
+function roundRect(ctx,x,y,w,h,radius){
+  ctx.beginPath();ctx.moveTo(x+radius,y);
+  ctx.lineTo(x+w-radius,y);ctx.arcTo(x+w,y,x+w,y+radius,radius);
+  ctx.lineTo(x+w,y+h-radius);ctx.arcTo(x+w,y+h,x+w-radius,y+h,radius);
+  ctx.lineTo(x+radius,y+h);ctx.arcTo(x,y+h,x,y+h-radius,radius);
+  ctx.lineTo(x,y+radius);ctx.arcTo(x,y,x+radius,y,radius);ctx.closePath();
 }
 
 function drawTray(){
-  const S=TRAY_SIZE,cx=S/2,cy=S/2,TR=S*.37,bR=beadR(),n=state.slots.length;
+  const S=TRAY_SIZE,cx=S/2,cy=S/2,tr=TR();
   trayCtx.clearRect(0,0,S,S);
-  // Dish
+
+  // Dish background
   const dg=trayCtx.createRadialGradient(cx-S*.07,cy-S*.07,0,cx,cy,S*.47);
-  dg.addColorStop(0,'#241a08');dg.addColorStop(.7,'#151005');dg.addColorStop(1,'#0a0804');
+  dg.addColorStop(0,'#f0e4cc');dg.addColorStop(.7,'#e0d0aa');dg.addColorStop(1,'#c8b880');
   trayCtx.beginPath();trayCtx.arc(cx,cy,S*.47,0,Math.PI*2);
   trayCtx.fillStyle=dg;trayCtx.fill();
-  trayCtx.beginPath();trayCtx.arc(cx,cy,S*.47,0,Math.PI*2);
-  trayCtx.strokeStyle='rgba(200,160,80,.25)';trayCtx.lineWidth=1.5;trayCtx.stroke();
+  trayCtx.strokeStyle='rgba(180,140,60,.5)';trayCtx.lineWidth=2;trayCtx.stroke();
   // Groove
-  trayCtx.beginPath();trayCtx.arc(cx,cy,TR,0,Math.PI*2);
-  trayCtx.strokeStyle='rgba(200,160,80,.12)';trayCtx.lineWidth=bR*2.3;trayCtx.stroke();
-  // Center logo — Larme De Sirène brand mark
-  drawTrayLogo(trayCtx, cx, cy, S*.16);
-  // Beads
-  for(let i=0;i<n;i++){
-    const a=(i/n)*Math.PI*2-Math.PI/2;
-    const bx=cx+Math.cos(a)*TR,by=cy+Math.sin(a)*TR;
-    drawBead2D(trayCtx,bx,by,bR,state.slots[i],i===hoverSlot);
-  }
+  trayCtx.beginPath();trayCtx.arc(cx,cy,tr,0,Math.PI*2);
+  trayCtx.strokeStyle='rgba(160,120,40,.2)';trayCtx.lineWidth=state.selectedSizeMm/state.wristMm*tr*2.5+4;trayCtx.stroke();
+
+  // Center logo
+  drawTrayLogo(trayCtx,cx,cy,S*.14);
+
+  const angles=calcAngles();
+
+  // Draw empty (ghost) slots first
+  const emptyAfterAngle=angles.length>0?angles[angles.length-1].endAngle:(-Math.PI/2);
+  const emptySlots=calcEmptySlots(emptyAfterAngle);
+  emptySlots.forEach((slot,i)=>{
+    const bx=cx+Math.cos(slot.midAngle)*tr;
+    const by=cy+Math.sin(slot.midAngle)*tr;
+    const r=Math.max(6,Math.min(S*.09,(slot.sizeMm/16)*tr*.22));
+    const isHov=(i===hoverIdx-state.placed.length);
+    trayCtx.beginPath();trayCtx.arc(bx,by,r,0,Math.PI*2);
+    trayCtx.strokeStyle=isHov?'rgba(200,128,74,.7)':'rgba(140,100,40,.3)';
+    trayCtx.lineWidth=isHov?1.5:1;trayCtx.setLineDash([2.5,2.5]);trayCtx.stroke();trayCtx.setLineDash([]);
+    if(isHov){trayCtx.fillStyle='rgba(200,128,74,.08)';trayCtx.fill();}
+    // Size label
+    trayCtx.font=`${Math.max(7,r*.55)}px sans-serif`;
+    trayCtx.fillStyle='rgba(140,100,40,.55)';trayCtx.textAlign='center';trayCtx.textBaseline='middle';
+    trayCtx.fillText(slot.sizeMm+'mm',bx,by);
+  });
+
+  // Draw placed beads
+  angles.forEach(({midAngle,visR},i)=>{
+    const bx=cx+Math.cos(midAngle)*tr;
+    const by=cy+Math.sin(midAngle)*tr;
+    const isHov=i===hoverIdx;
+    const isSel=i===selectedPlacedIdx;
+    drawBeadAt(trayCtx,bx,by,visR,state.placed[i].id,isHov,isSel);
+  });
 }
 
-function drawBead2D(ctx,cx,cy,r,id,hover){
-  if(!id){
-    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
-    ctx.strokeStyle=hover?'rgba(200,160,80,.65)':'rgba(255,255,255,.18)';
-    ctx.lineWidth=hover?1.5:1;ctx.setLineDash([2.5,2.5]);ctx.stroke();ctx.setLineDash([]);
-    if(hover){ctx.fillStyle='rgba(200,160,80,.07)';ctx.fill();}
-    return;
-  }
-  const bead=BEADS.find(b=>b.id===id)||ACCESSORIES.find(a=>a.id===id);
-  if(!bead)return;
-
+function drawBeadAt(ctx,cx,cy,r,id,hover,selected){
+  const item=lookupItem(id);if(!item)return;
   // Shadow
-  ctx.save();
-  ctx.shadowColor='rgba(0,0,0,.6)';ctx.shadowBlur=r*.7;ctx.shadowOffsetY=r*.25;
-  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle='#000';ctx.fill();
-  ctx.restore();
-
-  // Clip to circle
-  ctx.save();
-  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.clip();
-
-  if(bead.icon){
-    ctx.fillStyle=bead.shape==='spacer'?(bead.color===0xc8a040?'#c8a040':'#c0c0c0'):'#909090';
-    ctx.fill();
+  ctx.save();ctx.shadowColor='rgba(0,0,0,.45)';ctx.shadowBlur=r*.7;ctx.shadowOffsetY=r*.2;
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle='#000';ctx.fill();ctx.restore();
+  // Clip + draw content
+  ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.clip();
+  if(item.isAcc){
+    // Accessory: colored disc with icon
+    ctx.fillStyle=item.color||'#aaa';ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
+    if(item.isCharm){
+      ctx.font=`${r*1.1}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillStyle='rgba(255,255,255,.9)';ctx.fillText(item.icon,cx,cy);
+    } else {
+      // Spacer: concentric rings
+      ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=r*.25;
+      ctx.beginPath();ctx.arc(cx,cy,r*.65,0,Math.PI*2);ctx.stroke();
+    }
   } else {
     const img=loadedImgs[id];
     if(img){
-      // Draw real mineral photo, zoomed slightly for better crop
-      const s=r*2.2;
-      try{ ctx.drawImage(img,cx-s/2,cy-s/2,s,s); }catch(e){drawGradBead(ctx,cx,cy,r,bead);}
-    } else {
-      drawGradBead(ctx,cx,cy,r,bead);
-    }
-    // Darken edges (sphere shading)
-    const edge=ctx.createRadialGradient(cx,cy,r*.5,cx,cy,r);
-    edge.addColorStop(0,'rgba(0,0,0,0)');edge.addColorStop(1,'rgba(0,0,0,.52)');
-    ctx.fillStyle=edge;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
-    // For translucent stones, add slight inner glow
-    const{alpha}=bead.tray;
-    if((alpha??1)<.95){
-      const glow=ctx.createRadialGradient(cx,cy,0,cx,cy,r*.7);
-      glow.addColorStop(0,`rgba(255,255,255,${.08*(1-alpha)})`);glow.addColorStop(1,'rgba(255,255,255,0)');
-      ctx.fillStyle=glow;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
-    }
+      const s=r*2.3;
+      try{ctx.drawImage(img,cx-s/2,cy-s/2,s,s);}catch(e){drawGradBead(ctx,cx,cy,r,item);}
+      const edge=ctx.createRadialGradient(cx,cy,r*.38,cx,cy,r);
+      edge.addColorStop(0,'rgba(0,0,0,0)');edge.addColorStop(1,'rgba(0,0,0,.52)');
+      ctx.fillStyle=edge;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
+    } else { drawGradBead(ctx,cx,cy,r,item); }
   }
   ctx.restore();
-
-  // Specular highlight (top-left)
-  const hl=ctx.createRadialGradient(cx-r*.32,cy-r*.38,0,cx-r*.16,cy-r*.22,r*.62);
-  hl.addColorStop(0,'rgba(255,255,255,.92)');hl.addColorStop(.3,'rgba(255,255,255,.38)');
-  hl.addColorStop(.7,'rgba(255,255,255,.06)');hl.addColorStop(1,'rgba(255,255,255,0)');
+  // Specular highlight
+  const hl=ctx.createRadialGradient(cx-r*.32,cy-r*.38,0,cx-r*.14,cy-r*.22,r*.62);
+  hl.addColorStop(0,'rgba(255,255,255,.88)');hl.addColorStop(.32,'rgba(255,255,255,.32)');hl.addColorStop(1,'rgba(255,255,255,0)');
   ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=hl;ctx.fill();
-  // Secondary glint (bottom-right)
-  const hl2=ctx.createRadialGradient(cx+r*.3,cy+r*.32,0,cx+r*.15,cy+r*.18,r*.38);
-  hl2.addColorStop(0,'rgba(255,255,255,.18)');hl2.addColorStop(1,'rgba(255,255,255,0)');
-  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=hl2;ctx.fill();
-
-  if(hover){ctx.beginPath();ctx.arc(cx,cy,r+2,0,Math.PI*2);ctx.strokeStyle='rgba(200,160,80,.7)';ctx.lineWidth=2;ctx.stroke();}
+  // Selection / hover ring
+  if(selected||hover){
+    ctx.beginPath();ctx.arc(cx,cy,r+2,0,Math.PI*2);
+    ctx.strokeStyle=selected?'rgba(200,128,74,1)':'rgba(200,128,74,.6)';
+    ctx.lineWidth=selected?2.5:1.5;ctx.stroke();
+  }
 }
-
 function drawGradBead(ctx,cx,cy,r,bead){
-  const{g,alpha}=bead.tray;
+  const{g,alpha}=bead.tray||{g:['#eee','#aaa','#666','#333'],alpha:1};
   const grad=ctx.createRadialGradient(cx-r*.37,cy-r*.42,r*.04,cx,cy,r);
   grad.addColorStop(0,g[0]);grad.addColorStop(.33,g[1]);grad.addColorStop(.7,g[2]);grad.addColorStop(1,g[3]);
   ctx.globalAlpha=alpha??1;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();ctx.globalAlpha=1;
 }
 
-function slotAt(x,y){
-  const S=TRAY_SIZE,TR=S*.37,n=state.slots.length,bR=beadR();
-  for(let i=0;i<n;i++){
-    const a=(i/n)*Math.PI*2-Math.PI/2;
-    const dx=x-(S/2+Math.cos(a)*TR),dy=y-(S/2+Math.sin(a)*TR);
-    if(dx*dx+dy*dy<=bR*bR*1.3)return i;
-  }
-  return -1;
-}
-function xy(e){const rect=trayC.getBoundingClientRect(),sc=TRAY_SIZE/rect.width;
+// ── Hit detection (arc-based) ──────────────────────────────
+function getXY(e){
+  const rect=trayC.getBoundingClientRect(),sc=TRAY_SIZE/rect.width;
   if(e.touches)return{x:(e.touches[0].clientX-rect.left)*sc,y:(e.touches[0].clientY-rect.top)*sc};
-  return{x:(e.clientX-rect.left)*sc,y:(e.clientY-rect.top)*sc};}
+  return{x:(e.clientX-rect.left)*sc,y:(e.clientY-rect.top)*sc};
+}
 
-let longT=null,touchMoved=false;
-trayC.addEventListener('mousemove',e=>{const{x,y}=xy(e);hoverSlot=slotAt(x,y);drawTray();});
-trayC.addEventListener('mouseleave',()=>{hoverSlot=-1;drawTray();});
-trayC.addEventListener('click',e=>{
-  const{x,y}=xy(e);const i=slotAt(x,y);if(i<0)return;
-  state.slots[i]=state.selectedId||null;drawTray();updateCount();
-  if(state.rendered)buildBracelet();
+function hitTest(x,y){
+  const cx=TRAY_SIZE/2,cy=TRAY_SIZE/2,tr=TR();
+  const dx=x-cx,dy=y-cy,dist=Math.sqrt(dx*dx+dy*dy);
+  if(dist<tr*.6||dist>tr*1.4)return-1;
+  let clickAngle=Math.atan2(dy,dx);
+
+  // Check placed beads
+  const angles=calcAngles();
+  for(let i=0;i<angles.length;i++){
+    let diff=clickAngle-angles[i].midAngle;
+    while(diff>Math.PI)diff-=Math.PI*2;while(diff<-Math.PI)diff+=Math.PI*2;
+    if(Math.abs(diff)<=angles[i].arc/2*1.1)return i;
+  }
+  // Check empty slots
+  const emptyAfter=angles.length>0?angles[angles.length-1].endAngle:-Math.PI/2;
+  const emptySlots=calcEmptySlots(emptyAfter);
+  for(let i=0;i<emptySlots.length;i++){
+    let diff=clickAngle-emptySlots[i].midAngle;
+    while(diff>Math.PI)diff-=Math.PI*2;while(diff<-Math.PI)diff+=Math.PI*2;
+    if(Math.abs(diff)<=emptySlots[i].arc/2*1.1)return state.placed.length+i;
+  }
+  return-1;
+}
+
+// ── Tray interaction ───────────────────────────────────────
+function handleTrayClick(x,y){
+  const idx=hitTest(x,y);
+  if(idx<0){selectedPlacedIdx=-1;drawTray();return;}
+  if(idx<state.placed.length){
+    // Placed bead tapped
+    if(state.selectedId){
+      // Replace with selected
+      pushHistory();
+      state.placed[idx]={id:state.selectedId,sizeMm:state.selectedSizeMm};
+      selectedPlacedIdx=-1;
+    } else {
+      // Select/deselect placed bead
+      selectedPlacedIdx=selectedPlacedIdx===idx?-1:idx;
+    }
+  } else {
+    // Empty slot
+    if(state.selectedId&&remainingMm()>=state.selectedSizeMm){
+      pushHistory();
+      const emptySlotLocalIdx=idx-state.placed.length;
+      // Insert at the correct position in the ordered array
+      // Insert after all currently placed beads (append), maintaining arc order
+      state.placed.push({id:state.selectedId,sizeMm:state.selectedSizeMm});
+      selectedPlacedIdx=-1;
+    }
+  }
+  redraw();
+}
+
+trayC.addEventListener('mousemove',e=>{const{x,y}=getXY(e);const i=hitTest(x,y);hoverIdx=i;drawTray();});
+trayC.addEventListener('mouseleave',()=>{hoverIdx=-1;drawTray();});
+trayC.addEventListener('click',e=>{const{x,y}=getXY(e);handleTrayClick(x,y);});
+trayC.addEventListener('contextmenu',e=>{
+  e.preventDefault();const{x,y}=getXY(e);const idx=hitTest(x,y);
+  if(idx>=0&&idx<state.placed.length){pushHistory();state.placed.splice(idx,1);selectedPlacedIdx=-1;redraw();}
 });
-trayC.addEventListener('contextmenu',e=>{e.preventDefault();const{x,y}=xy(e);const i=slotAt(x,y);if(i>=0){state.slots[i]=null;drawTray();updateCount();}});
-trayC.addEventListener('touchstart',e=>{touchMoved=false;const{x,y}=xy(e);const i=slotAt(x,y);if(i<0)return;longT=setTimeout(()=>{if(!touchMoved){state.slots[i]=null;drawTray();updateCount();}},500);},{passive:true});
+// Long-press on mobile to remove
+let longT=null,touchMoved=false;
+trayC.addEventListener('touchstart',e=>{touchMoved=false;const{x,y}=getXY(e);const idx=hitTest(x,y);
+  if(idx>=0&&idx<state.placed.length){longT=setTimeout(()=>{if(!touchMoved){pushHistory();state.placed.splice(idx,1);selectedPlacedIdx=-1;redraw();}},600);}
+},{passive:true});
 trayC.addEventListener('touchmove',()=>{touchMoved=true;},{passive:true});
 trayC.addEventListener('touchend',()=>clearTimeout(longT),{passive:true});
 
-// ── Drag-and-drop onto tray ─────────────────────────────
-trayC.addEventListener('dragover',e=>{
-  e.preventDefault(); e.dataTransfer.dropEffect='copy';
-  const{x,y}=xy(e); hoverSlot=slotAt(x,y); drawTray();
-});
-trayC.addEventListener('dragleave',()=>{hoverSlot=-1;drawTray();});
+// Desktop drag-and-drop onto tray
+trayC.addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='copy';const{x,y}=getXY(e);hoverIdx=hitTest(x,y);drawTray();});
+trayC.addEventListener('dragleave',()=>{hoverIdx=-1;drawTray();});
 trayC.addEventListener('drop',e=>{
   e.preventDefault();
-  const id=e.dataTransfer.getData('beadId');
-  const{x,y}=xy(e); const i=slotAt(x,y);
-  if(i>=0&&id){state.slots[i]=id;state.selectedId=id;}
-  hoverSlot=-1; drawTray(); updateCount();
-  if(state.rendered)buildBracelet();
+  const data=JSON.parse(e.dataTransfer.getData('itemData')||'null');
+  if(!data)return;
+  const{x,y}=getXY(e);const idx=hitTest(x,y);
+  const sizeMm=data.sizeMm||state.selectedSizeMm;
+  if(idx>=0&&idx<state.placed.length){
+    pushHistory();state.placed[idx]={id:data.id,sizeMm};
+  } else if(remainingMm()>=sizeMm){
+    pushHistory();state.placed.push({id:data.id,sizeMm});
+  }
+  hoverIdx=-1;redraw();
 });
 
-// ── Drag beads OUT of tray (from tray to remove) ────────
-let dragSlotIdx=-1;
-trayC.addEventListener('dragstart',e=>{
-  const{x,y}=xy(e); const i=slotAt(x,y);
-  if(i>=0&&state.slots[i]){
-    dragSlotIdx=i;
-    e.dataTransfer.setData('beadId',state.slots[i]);
-    e.dataTransfer.effectAllowed='move';
-  } else { e.preventDefault(); }
-});
-trayC.draggable=true;
+function redraw(){drawTray();updateUI();if(state.rendered)buildBracelet();}
 
-// ══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  THREE.JS
-// ══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 const threeC=document.getElementById('threeCanvas');
 const renderer=new THREE.WebGLRenderer({canvas:threeC,antialias:true,alpha:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x14100c);
-const camera=new THREE.PerspectiveCamera(45,1,.1,1000);camera.position.set(0,55,85);
+const camera=new THREE.PerspectiveCamera(45,1,.1,1000);camera.position.set(0,30,80);
 const controls=new OrbitControls(camera,threeC);
-controls.enableDamping=true;controls.dampingFactor=.08;controls.minDistance=40;controls.maxDistance=220;
+controls.enableDamping=true;controls.dampingFactor=.08;controls.minDistance=30;controls.maxDistance=250;
 controls.autoRotate=true;controls.autoRotateSpeed=1.2;controls.target.set(0,0,0);
 
 const pmrem=new THREE.PMREMGenerator(renderer);
 scene.environment=pmrem.fromScene(new RoomEnvironment()).texture;
-
-scene.add(new THREE.AmbientLight(0xfff8f0,.4));
-const key=new THREE.DirectionalLight(0xfff5e8,2.8);key.position.set(40,70,50);key.castShadow=true;key.shadow.mapSize.set(2048,2048);key.shadow.bias=-.001;scene.add(key);
-const fill=new THREE.DirectionalLight(0xe0e8ff,.8);fill.position.set(-50,30,-40);scene.add(fill);
-const rim=new THREE.PointLight(0xffeedd,.9,200);rim.position.set(0,60,-60);scene.add(rim);
+scene.add(new THREE.AmbientLight(0xfff8f0,.45));
+const key=new THREE.DirectionalLight(0xfff5e8,3);key.position.set(40,70,50);key.castShadow=true;key.shadow.mapSize.set(2048,2048);key.shadow.bias=-.001;scene.add(key);
+scene.add(Object.assign(new THREE.DirectionalLight(0xe0e8ff,.9),{position:new THREE.Vector3(-50,30,-40)}));
+scene.add(Object.assign(new THREE.PointLight(0xffeedd,1,200),{position:new THREE.Vector3(0,60,-60)}));
 
 const ground=new THREE.Mesh(new THREE.CircleGeometry(120,64),new THREE.MeshPhysicalMaterial({color:0x1e1610,roughness:.9}));
 ground.rotation.x=-Math.PI/2;ground.position.y=-1;ground.receiveShadow=true;scene.add(ground);
@@ -591,24 +653,29 @@ function getMat(id){
   else if(special==='agate_red')map=texRedAgate();
   else if(special==='labradorite')map=texLabradorite();
   else if(special==='rutile_gold')map=texRutileGold();
+  if(!map&&BEAD_PHOTOS[id]){
+    if(loadedTex[id])map=loadedTex[id];
+    else{const t=new THREE.TextureLoader().load(BEAD_PHOTOS[id]);t.wrapS=t.wrapT=THREE.RepeatWrapping;loadedTex[id]=t;map=t;}
+  }
   const p={color:m3.color,roughness:m3.roughness??0,metalness:m3.metalness??0,envMapIntensity:m3.envI??1.5};
   if(m3.transmission>0){p.transmission=m3.transmission;p.transparent=true;p.ior=m3.ior??1.5;p.thickness=m3.thick??8;
     if(m3.att){p.attenuationColor=new THREE.Color(m3.att);p.attenuationDistance=m3.attD??20;}}
-  // Use real Wikipedia photo texture if no procedural map
-  if(!map && BEAD_PHOTOS[id]){
-    if(loadedTex[id]){ map=loadedTex[id]; }
-    else { const t=new THREE.TextureLoader().load(BEAD_PHOTOS[id]);t.wrapS=t.wrapT=THREE.RepeatWrapping;loadedTex[id]=t;map=t; }
-  }
   if(map)p.map=map;
   return matCache[id]=new THREE.MeshPhysicalMaterial(p);
 }
 
-function mkBeadMesh(id,r){
-  const seg=r>5?32:24;
+function mkBeadMesh3D(id,radiusMm){
+  const r=radiusMm,seg=r>5?32:24;
   const acc=ACCESSORIES.find(a=>a.id===id);
   if(acc){
-    if(acc.shape==='spacer'){const m=new THREE.Mesh(new THREE.CylinderGeometry(r*.9,r*.9,r*.4,24),new THREE.MeshPhysicalMaterial({color:acc.color,metalness:.85,roughness:.1}));return m;}
-    const m=new THREE.Mesh(new THREE.TorusGeometry(r*.6,r*.22,16,32),new THREE.MeshPhysicalMaterial({color:0xdddddd,metalness:.9,roughness:.08}));return m;
+    if(acc.isCharm){
+      const g=new THREE.Group();
+      const disc=new THREE.Mesh(new THREE.CylinderGeometry(r*.7,r*.7,r*.3,24),new THREE.MeshPhysicalMaterial({color:acc.metalColor||0xdddddd,metalness:.9,roughness:.1}));
+      g.add(disc);return g;
+    }
+    // Spacer
+    const m=new THREE.Mesh(new THREE.CylinderGeometry(r*.85,r*.85,r*.35,24),new THREE.MeshPhysicalMaterial({color:acc.metalColor||0xcccccc,metalness:.88,roughness:.08}));
+    return m;
   }
   const b=BEADS.find(x=>x.id===id);if(!b)return null;
   if(b.special==='phantom_green'){
@@ -625,92 +692,88 @@ function mkBeadMesh(id,r){
     return g;
   }
   if(b.special==='strawberry'){
-    const g=new THREE.Group();
-    g.add(new THREE.Mesh(new THREE.SphereGeometry(r,seg,seg),getMat(id)));
-    g.add(new THREE.Mesh(new THREE.SphereGeometry(r*.72,20,20),new THREE.MeshPhysicalMaterial({map:texStrawberry(),transparent:true,opacity:.55,roughness:.2})));
-    return g;
+    const g=new THREE.Group();g.add(new THREE.Mesh(new THREE.SphereGeometry(r,seg,seg),getMat(id)));
+    g.add(new THREE.Mesh(new THREE.SphereGeometry(r*.72,20,20),new THREE.MeshPhysicalMaterial({map:texStrawberry(),transparent:true,opacity:.55,roughness:.2})));return g;
   }
   if(b.special==='rutile_gold'){
-    const g=new THREE.Group();
-    g.add(new THREE.Mesh(new THREE.SphereGeometry(r,seg,seg),getMat(id)));
-    g.add(new THREE.Mesh(new THREE.SphereGeometry(r*.65,18,18),new THREE.MeshPhysicalMaterial({map:texRutileGold(),transparent:true,opacity:.65,roughness:.15,emissive:new THREE.Color(0x281800),emissiveIntensity:.5})));
-    return g;
+    const g=new THREE.Group();g.add(new THREE.Mesh(new THREE.SphereGeometry(r,seg,seg),getMat(id)));
+    g.add(new THREE.Mesh(new THREE.SphereGeometry(r*.65,18,18),new THREE.MeshPhysicalMaterial({map:texRutileGold(),transparent:true,opacity:.65,roughness:.15,emissive:new THREE.Color(0x281800),emissiveIntensity:.5})));return g;
   }
   const m=new THREE.Mesh(new THREE.SphereGeometry(r,seg,seg),getMat(id));
   m.castShadow=true;m.receiveShadow=true;return m;
 }
 
 function buildBracelet(){
-  if(braceletGroup){scene.remove(braceletGroup);}
+  if(braceletGroup)scene.remove(braceletGroup);
   braceletGroup=new THREE.Group();
-  const bR=state.sizeMm/2,n=state.slots.length;
-  const bracR=state.viewMode==='wrist'?WRIST_R+bR+.5:n*bR*1.02/Math.PI;
-  for(let i=0;i<n;i++){
-    const id=state.slots[i];if(!id)continue;
-    const a=(i/n)*Math.PI*2;
-    const mesh=mkBeadMesh(id,bR);if(!mesh)continue;
-    mesh.position.set(Math.cos(a)*bracR,0,Math.sin(a)*bracR);
-    mesh.rotation.y=a+Math.PI/2;
+  const total=state.wristMm;
+  const bracR=state.viewMode==='wrist'?WRIST_R+8:usedMm()/(2*Math.PI)||30;
+  let angle=0;
+  for(const b of state.placed){
+    const arc=(b.sizeMm/total)*Math.PI*2;
+    const mid=angle+arc/2;
+    const x=Math.cos(mid)*bracR,z=Math.sin(mid)*bracR;
+    const mesh=mkBeadMesh3D(b.id,b.sizeMm/2);
+    if(!mesh){angle+=arc;continue;}
+    mesh.position.set(x,0,z);mesh.rotation.y=mid+Math.PI/2;
     braceletGroup.add(mesh);
+    angle+=arc;
   }
-  // Cord
-  const pts=[];for(let i=0;i<=64;i++){const a=(i/64)*Math.PI*2;pts.push(new THREE.Vector3(Math.cos(a)*bracR,0,Math.sin(a)*bracR));}
-  braceletGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,true),128,bR*.07,8,true),new THREE.MeshStandardMaterial({color:0x0a0a0a,roughness:.9})));
+  if(state.placed.length>0){
+    const pts=[];for(let i=0;i<=64;i++){const a=(i/64)*Math.PI*2;pts.push(new THREE.Vector3(Math.cos(a)*bracR,0,Math.sin(a)*bracR));}
+    braceletGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,true),128,1.2,8,true),new THREE.MeshStandardMaterial({color:0x0a0a0a,roughness:.9})));
+  }
   scene.add(braceletGroup);
-  state.rendered=true;
-  updateCamera();
+  updateCamera();state.rendered=true;
 }
 
 function updateCamera(){
-  const bR=state.sizeMm/2,n=state.slots.length;
-  const bracR=state.viewMode==='wrist'?WRIST_R+bR+.5:n*bR*1.02/Math.PI;
+  const bracR=state.viewMode==='wrist'?WRIST_R+12:Math.max(20,usedMm()/(2*Math.PI));
   if(state.viewMode==='wrist'){
-    // Side-angle view of wrist
-    camera.position.set(bracR*1.8, bracR*1.0, bracR*2.2);
-    wrist.visible=true; ground.visible=false; controls.autoRotateSpeed=.8;
+    camera.position.set(bracR*1.8,bracR*1.0,bracR*2.2);
+    wrist.visible=true;ground.visible=false;controls.autoRotateSpeed=.8;
   } else {
-    // Product photo angle: low elevation, bracelet fills frame nicely
-    camera.position.set(0, bracR*0.55, bracR*2.4);
-    wrist.visible=false; ground.visible=true; controls.autoRotateSpeed=.5;
+    camera.position.set(0,bracR*0.55,bracR*2.4);
+    wrist.visible=false;ground.visible=true;controls.autoRotateSpeed=.5;
   }
-  controls.target.set(0,0,0); controls.update();
+  controls.target.set(0,0,0);controls.update();
 }
 
 function resizeRenderer(){
   const el=document.getElementById('preview3D');
-  const W=el.clientWidth,H=el.clientHeight-48-44;
+  const W=el.clientWidth,H=el.clientHeight-48-40;
   if(W<1||H<1)return;
   renderer.setSize(W,Math.max(H,100));
   camera.aspect=W/Math.max(H,1);camera.updateProjectionMatrix();
 }
 
+function open3D(){
+  buildBracelet();
+  const ov=document.getElementById('preview3D');ov.classList.add('open');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{resizeRenderer();updateCamera();controls.update();renderer.render(scene,camera);}));
+}
+
 function animate(){requestAnimationFrame(animate);controls.update();renderer.render(scene,camera);}
 animate();
 
-// ══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  PALETTE UI
-// ══════════════════════════════════════════════════════════
-function mkIcon(bead,size=40){
+// ═══════════════════════════════════════════════════════════
+function mkIcon(item,size=40){
   const c=document.createElement('canvas');c.width=c.height=size;
   const ctx=c.getContext('2d'),r=size/2-1,cx=size/2,cy=size/2;
-  if(bead.icon){
-    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
-    ctx.fillStyle=bead.shape==='spacer'?(bead.color===0xc8a040?'#c8a040':'#ccc'):'#888';ctx.fill();
-    ctx.font=`${size*.5}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillStyle='rgba(0,0,0,.5)';ctx.fillText(bead.icon,cx+.5,cy+.5);
-    ctx.fillStyle='#fff';ctx.fillText(bead.icon,cx,cy);
+  if(item.isAcc){
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=item.color||'#aaa';ctx.fill();
+    ctx.font=`${size*.55}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillStyle='rgba(255,255,255,.9)';ctx.fillText(item.icon,cx,cy);
     return c;
   }
   ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.clip();
-  const img=loadedImgs[bead.id];
-  if(img){
-    try{ctx.drawImage(img,0,0,size,size);}catch(e){drawGradBead(ctx,cx,cy,r,bead);}
-    const edge=ctx.createRadialGradient(cx,cy,r*.38,cx,cy,r);
-    edge.addColorStop(0,'rgba(0,0,0,0)');edge.addColorStop(1,'rgba(0,0,0,.48)');
+  const img=loadedImgs[item.id];
+  if(img){try{ctx.drawImage(img,0,0,size,size);}catch(e){drawGradBead(ctx,cx,cy,r,item);}
+    const edge=ctx.createRadialGradient(cx,cy,r*.38,cx,cy,r);edge.addColorStop(0,'rgba(0,0,0,0)');edge.addColorStop(1,'rgba(0,0,0,.48)');
     ctx.fillStyle=edge;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
-  } else {
-    drawGradBead(ctx,cx,cy,r,bead);
-  }
+  } else {drawGradBead(ctx,cx,cy,r,item);}
   ctx.restore();
   const hl=ctx.createRadialGradient(cx-r*.32,cy-r*.38,0,cx-r*.14,cy-r*.2,r*.55);
   hl.addColorStop(0,'rgba(255,255,255,.82)');hl.addColorStop(.35,'rgba(255,255,255,.28)');hl.addColorStop(1,'rgba(255,255,255,0)');
@@ -720,75 +783,122 @@ function mkIcon(bead,size=40){
 
 function buildPalette(){
   const strip=document.getElementById('beadStrip');strip.innerHTML='';
-  const all=[...BEADS,...ACCESSORIES];
-  all.forEach((b,idx)=>{
-    if(idx===BEADS.length){const sep=document.createElement('div');sep.className='acc-sep';strip.appendChild(sep);}
+  BEADS.forEach(b=>{
     const btn=document.createElement('div');btn.className='bead-btn';btn.dataset.id=b.id;
-    btn.appendChild(mkIcon(b,40));
+    btn.appendChild(mkIcon(b,38));
     const lbl=document.createElement('span');lbl.textContent=b.name;btn.appendChild(lbl);
-    btn.addEventListener('click',()=>selectBead(b.id));
-    // Desktop drag-and-drop
+    btn.addEventListener('click',()=>selectItem(b.id,b.cat==='crystal'||b.cat==='opaque'));
     btn.draggable=true;
-    btn.addEventListener('dragstart',e=>{
-      e.dataTransfer.setData('beadId',b.id);
-      e.dataTransfer.effectAllowed='copy';
-      selectBead(b.id);
-    });
+    btn.addEventListener('dragstart',e=>{e.dataTransfer.setData('itemData',JSON.stringify({id:b.id,sizeMm:state.selectedSizeMm}));e.dataTransfer.effectAllowed='copy';selectItem(b.id,true);});
     strip.appendChild(btn);
+  });
+}
+
+function buildAccPane(){
+  const pane=document.getElementById('accPane');pane.innerHTML='';
+  ACCESSORIES.forEach(a=>{
+    const card=document.createElement('div');card.className='acc-card';card.dataset.id=a.id;
+    const icon=document.createElement('div');icon.className='acc-icon';icon.textContent=a.icon;
+    card.appendChild(icon);
+    const lbl=document.createElement('span');lbl.textContent=`${a.name}`;card.appendChild(lbl);
+    const szlbl=document.createElement('span');szlbl.textContent=`占位 ${a.sizeMm}mm`;szlbl.style.color='var(--accent)';card.appendChild(szlbl);
+    card.addEventListener('click',()=>selectItem(a.id,false,a.sizeMm));
+    card.draggable=true;
+    card.addEventListener('dragstart',e=>{e.dataTransfer.setData('itemData',JSON.stringify({id:a.id,sizeMm:a.sizeMm}));e.dataTransfer.effectAllowed='copy';selectItem(a.id,false,a.sizeMm);});
+    pane.appendChild(card);
   });
 }
 
 function buildSizes(){
   const strip=document.getElementById('sizeStrip');strip.innerHTML='';
   SIZES.forEach(s=>{
-    const n=beadCount(s,state.wristMm);
-    const btn=document.createElement('button');btn.className='sbtn'+(s===state.sizeMm?' active':'');
-    btn.textContent=`${s}mm`;btn.title=`${n}颗`;
-    btn.addEventListener('click',()=>{state.sizeMm=s;initSlots();buildSizes();updateWristUI();drawTray();updateCount();if(state.rendered)buildBracelet();});
+    const btn=document.createElement('button');btn.className='sbtn'+(s===state.selectedSizeMm?' active':'');
+    btn.textContent=s+'mm';
+    btn.addEventListener('click',()=>{state.selectedSizeMm=s;buildSizes();drawTray();});
     strip.appendChild(btn);
   });
 }
 
-function selectBead(id){
+function selectItem(id,useSelectedSize=true,fixedSize=null){
+  const sizeMm=fixedSize||state.selectedSizeMm;
   state.selectedId=state.selectedId===id?null:id;
-  document.querySelectorAll('.bead-btn').forEach(b=>b.classList.toggle('selected',b.dataset.id===state.selectedId));
+  if(fixedSize&&state.selectedId)state.selectedSizeMm=fixedSize;
+  document.querySelectorAll('.bead-btn,.acc-card').forEach(b=>b.classList.toggle('selected',b.dataset.id===state.selectedId));
 }
 
-function updateCount(){const t=state.slots.filter(Boolean).length;document.getElementById('beadCountLbl').textContent=`${t} / ${state.slots.length} 颗珠子`;}
+// ── Tabs (mobile) ──────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
+    const pane=btn.dataset.pane;
+    document.getElementById('beadsPane').classList.toggle('active',pane==='beads');
+    document.getElementById('accPane').classList.toggle('active',pane==='acc');
+  });
+});
 
-// ── Wrist size ─────────────────────────────────────────────
-function changeWrist(delta){
-  state.wristMm=Math.max(WRIST_MIN,Math.min(WRIST_MAX,state.wristMm+delta));
-  initSlots();updateWristUI();buildSizes();drawTray();updateCount();
-  if(state.rendered)buildBracelet();
+// ── Wrist ──────────────────────────────────────────────────
+function updateWristUI(){
+  document.getElementById('wristVal').textContent=(state.wristMm/10).toFixed(1)+'cm';
+  const used=usedMm(),rem=remainingMm();
+  document.getElementById('wristUsed').textContent=`已用${used}mm / 余${rem}mm`;
 }
-document.getElementById('wristMinus').addEventListener('click',()=>changeWrist(-WRIST_STEP));
-document.getElementById('wristPlus').addEventListener('click',()=>changeWrist(WRIST_STEP));
+function changeWrist(d){state.wristMm=Math.max(WRIST_MIN,Math.min(WRIST_MAX,state.wristMm+d));redraw();updateWristUI();}
+document.getElementById('wristMinus').addEventListener('click',()=>changeWrist(-5));
+document.getElementById('wristPlus').addEventListener('click',()=>changeWrist(5));
 
-// ── Controls ───────────────────────────────────────────────
-document.getElementById('clearBtn').addEventListener('click',()=>{state.slots.fill(null);drawTray();updateCount();if(state.rendered)buildBracelet();});
-document.getElementById('randomBtn').addEventListener('click',()=>{const ids=BEADS.map(b=>b.id);state.slots=state.slots.map(()=>ids[Math.floor(Math.random()*ids.length)]);drawTray();updateCount();if(state.rendered)buildBracelet();});
-
-function open3D(){
-  buildBracelet();
-  const ov=document.getElementById('preview3D');
-  ov.classList.add('open');
-  // Wait for DOM layout after display change before resizing
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    resizeRenderer(); updateCamera(); controls.update();
-    renderer.render(scene,camera);
-  }));
-}
+// ── Buttons ────────────────────────────────────────────────
+document.getElementById('clearBtn').addEventListener('click',()=>{pushHistory();state.placed=[];selectedPlacedIdx=-1;redraw();});
+document.getElementById('undoBtn').addEventListener('click',()=>undo());
 document.getElementById('render3dBtn').addEventListener('click',open3D);
 document.getElementById('show3dBtn')?.addEventListener('click',open3D);
 document.getElementById('backBtn').addEventListener('click',()=>document.getElementById('preview3D').classList.remove('open'));
-
 document.getElementById('viewProductBtn').addEventListener('click',function(){state.viewMode='product';this.classList.add('active');document.getElementById('viewWristBtn').classList.remove('active');if(state.rendered)buildBracelet();});
 document.getElementById('viewWristBtn').addEventListener('click',function(){state.viewMode='wrist';this.classList.add('active');document.getElementById('viewProductBtn').classList.remove('active');if(state.rendered)buildBracelet();});
-
 const arBtn=document.getElementById('autoRotBtn');
 arBtn.addEventListener('click',()=>{state.autoRotate=!state.autoRotate;controls.autoRotate=state.autoRotate;arBtn.classList.toggle('active',state.autoRotate);arBtn.textContent=state.autoRotate?'⟳ 旋转':'⟳ 暂停';});
 document.getElementById('saveBtn').addEventListener('click',()=>{renderer.render(scene,camera);const a=document.createElement('a');a.href=threeC.toDataURL('image/png');a.download='larme-bracelet.png';a.click();});
+
+// ── Summary panel ──────────────────────────────────────────
+function openSummary(){
+  const list=document.getElementById('summaryList');
+  list.innerHTML='';
+  // Group by id + sizeMm
+  const groups={};
+  state.placed.forEach(b=>{
+    const key=`${b.id}__${b.sizeMm}`;
+    if(!groups[key])groups[key]={id:b.id,sizeMm:b.sizeMm,count:0};
+    groups[key].count++;
+  });
+  Object.values(groups).sort((a,b)=>b.count-a.count).forEach(g=>{
+    const item=lookupItem(g.id);if(!item)return;
+    const row=document.createElement('div');row.className='summary-row';
+    // Swatch
+    const sw=document.createElement('canvas');sw.width=sw.height=28;sw.className='summary-swatch';
+    const ctx=sw.getContext('2d');
+    if(item.isAcc){ctx.beginPath();ctx.arc(14,14,13,0,Math.PI*2);ctx.fillStyle=item.color||'#aaa';ctx.fill();ctx.font='14px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#fff';ctx.fillText(item.icon,14,14);}
+    else{const img=loadedImgs[g.id];if(img){ctx.save();ctx.beginPath();ctx.arc(14,14,13,0,Math.PI*2);ctx.clip();try{ctx.drawImage(img,0,0,28,28);}catch(e){}ctx.restore();}else drawGradBead(ctx,14,14,13,item);}
+    row.appendChild(sw);
+    const name=document.createElement('span');name.className='summary-name';name.textContent=item.name;row.appendChild(name);
+    const meta=document.createElement('span');meta.className='summary-meta';meta.textContent=`${g.sizeMm}mm`;row.appendChild(meta);
+    const cnt=document.createElement('span');cnt.className='summary-count';cnt.textContent=`×${g.count}`;row.appendChild(cnt);
+    list.appendChild(row);
+  });
+  if(state.placed.length===0){list.innerHTML='<p style="color:var(--muted);font-size:13px;padding:8px 0">暂无珠子，请在制作盘上放置</p>';}
+  const used=usedMm(),total=state.wristMm;
+  document.getElementById('summaryTotal').innerHTML=
+    `共 <strong>${state.placed.length}</strong> 颗 &nbsp;·&nbsp; 已占用 <strong>${used}mm</strong> / ${total}mm &nbsp;·&nbsp; 剩余 <strong>${total-used}mm</strong>`;
+  document.getElementById('summaryOverlay').classList.add('open');
+}
+document.getElementById('summaryBtn').addEventListener('click',openSummary);
+document.getElementById('summaryClose').addEventListener('click',()=>document.getElementById('summaryOverlay').classList.remove('open'));
+document.getElementById('summaryOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('open');});
+
+function updateUI(){
+  const n=state.placed.length;
+  document.getElementById('summaryCount').textContent=`${n}颗`;
+  document.getElementById('beadCountLbl').textContent=`${n}颗 | 已用${usedMm()}mm / ${state.wristMm}mm`;
+  updateWristUI();
+}
 
 // ── Resize ─────────────────────────────────────────────────
 const ro=new ResizeObserver(()=>{resizeTray();resizeRenderer();});
@@ -796,13 +906,8 @@ ro.observe(document.getElementById('trayArea'));
 ro.observe(document.getElementById('preview3D'));
 
 // ── Init ───────────────────────────────────────────────────
-initSlots();buildSizes();updateWristUI();resizeTray();resizeRenderer();drawTray();updateCount();
-// Load real mineral photos, then refresh palette and tray
-buildPalette(); // build with fallback gradients first
-preloadPhotos().then(()=>{
-  buildPalette(); // rebuild with real photos
-  drawTray();     // redraw tray beads with real photos
-});
+buildPalette();buildAccPane();buildSizes();updateWristUI();resizeTray();resizeRenderer();drawTray();updateUI();
+preloadPhotos().then(()=>{buildPalette();buildAccPane();drawTray();});
 </script>
 </body>
 </html>
