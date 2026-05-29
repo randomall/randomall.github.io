@@ -365,7 +365,8 @@ function calcAngles(){
     const mid=angle+arc/2;
     const end=angle+arc;
     // Visual radius proportional to bead size but capped
-    const visR=Math.max(minVisR,Math.min(maxVisR,(b.sizeMm/16)*TR()*.22));
+    // Bead visual radius = half-chord of its arc, so adjacent beads touch (real bracelet)
+    const visR=Math.max(3, TR()*Math.sin(arc/2));
     const res={startAngle:angle,endAngle:end,midAngle:mid,arc,visR};
     angle=end;
     return res;
@@ -548,7 +549,7 @@ function drawTray(){
   emptySlots.forEach((slot,i)=>{
     const bx=cx+Math.cos(slot.midAngle)*tr;
     const by=cy+Math.sin(slot.midAngle)*tr;
-    const r=Math.max(6,Math.min(S*.09,(slot.sizeMm/16)*tr*.22));
+    const r=Math.max(3, tr*Math.sin(slot.arc/2));
     const isHov=(i===hoverIdx-state.placed.length);
     trayCtx.beginPath();trayCtx.arc(bx,by,r,0,Math.PI*2);
     trayCtx.strokeStyle=isHov?'rgba(200,128,74,.7)':'rgba(140,100,40,.3)';
